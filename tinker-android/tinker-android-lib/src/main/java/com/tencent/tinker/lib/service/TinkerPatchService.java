@@ -55,6 +55,7 @@ public class TinkerPatchService extends IntentService {
 
     public static void runPatchService(final Context context, final String path) {
         TinkerLog.i(TAG, "run patch service...");
+        TinkerLog.i(TAG, "hello  GitHub");
         Intent intent = new Intent(context, TinkerPatchService.class);
         intent.putExtra(PATCH_PATH_EXTRA, path);
         intent.putExtra(RESULT_CLASS_EXTRA, resultServiceClass.getName());
