@@ -28,6 +28,7 @@ import java.io.InputStream;
 public class TinkerZipUtil {
     private static final int BUFFER_SIZE = 16384;
 
+    // 修改并保存
     public static void extractTinkerEntry(TinkerZipFile apk, TinkerZipEntry zipEntry, TinkerZipOutputStream outputStream) throws IOException {
         InputStream in = null;
         try {

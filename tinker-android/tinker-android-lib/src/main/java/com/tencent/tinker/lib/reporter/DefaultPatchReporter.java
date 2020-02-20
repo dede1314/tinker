@@ -38,6 +38,7 @@ import java.util.List;
  * you can extent it for your own work
  * all is running in the :patch process
  */
+// 补丁patch过程中的reporter
 public class DefaultPatchReporter implements PatchReporter {
     private static final String TAG = "Tinker.DefaultPatchReporter";
     private static boolean shouldRetry = false;

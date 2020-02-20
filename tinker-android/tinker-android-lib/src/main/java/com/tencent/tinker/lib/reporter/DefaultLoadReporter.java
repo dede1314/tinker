@@ -38,6 +38,7 @@ import java.io.File;
  * you can extent it for your own work
  * all is running in the process which loading the patch
  */
+// 加载补丁中的report
 public class DefaultLoadReporter implements LoadReporter {
     private static final String TAG = "Tinker.DefaultLoadReporter";
     protected final Context context;

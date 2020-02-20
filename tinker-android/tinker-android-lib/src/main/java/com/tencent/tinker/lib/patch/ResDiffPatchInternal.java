@@ -155,7 +155,7 @@ public class ResDiffPatchInternal extends BasePatchInternal {
                         }
                     }
                 }
-
+                //先处理manifest文件
                 //process manifest
                 TinkerZipEntry manifestZipEntry = oldApk.getEntry(ShareConstants.RES_MANIFEST);
                 if (manifestZipEntry == null) {
@@ -166,6 +166,7 @@ public class ResDiffPatchInternal extends BasePatchInternal {
                 TinkerZipUtil.extractTinkerEntry(oldApk, manifestZipEntry, out);
                 totalEntryCount++;
 
+                // 改动较大的资源文件
                 for (String name : resPatchInfo.largeModRes) {
                     TinkerZipEntry largeZipEntry = oldApk.getEntry(name);
                     if (largeZipEntry == null) {
@@ -178,6 +179,8 @@ public class ResDiffPatchInternal extends BasePatchInternal {
                     totalEntryCount++;
                 }
 
+
+                //然后处理新增的资源文件
                 for (String name : resPatchInfo.addRes) {
                     TinkerZipEntry addZipEntry = newApk.getEntry(name);
                     if (addZipEntry == null) {
@@ -194,6 +197,7 @@ public class ResDiffPatchInternal extends BasePatchInternal {
                     totalEntryCount++;
                 }
 
+                // 然后处理修改的资源文件
                 for (String name : resPatchInfo.modRes) {
                     TinkerZipEntry modZipEntry = newApk.getEntry(name);
                     if (modZipEntry == null) {

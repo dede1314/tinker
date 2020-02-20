@@ -43,6 +43,7 @@ import java.io.File;
 /**
  * Created by zhangshaowen on 16/3/10.
  */
+// 构造者模式
 public class Tinker {
     private static final String TAG = "Tinker.Tinker";
 
@@ -76,6 +77,7 @@ public class Tinker {
      */
     private boolean loaded = false;
 
+    // 构建者➕单例模式
     private Tinker(Context context, int tinkerFlags, LoadReporter loadReporter, PatchReporter patchReporter,
                    PatchListener listener, File patchDirectory, File patchInfoFile, File patchInfoLockFile,
                    boolean isInMainProc, boolean isPatchProcess, boolean tinkerLoadVerifyFlag) {

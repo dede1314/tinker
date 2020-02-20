@@ -29,6 +29,8 @@ import com.tencent.tinker.lib.util.TinkerLog;
 /**
  * Created by zhangshaowen on 16/3/19.
  */
+// tinker 入口类
+// 外观模式
 public class TinkerInstaller {
     private static final String TAG = "Tinker.TinkerInstaller";
 
@@ -56,10 +58,11 @@ public class TinkerInstaller {
      * @param resultServiceClass
      * @param upgradePatchProcessor
      */
+    // install tinker
     public static Tinker install(ApplicationLike applicationLike, LoadReporter loadReporter, PatchReporter patchReporter,
                                  PatchListener listener, Class<? extends AbstractResultService> resultServiceClass,
                                  AbstractPatch upgradePatchProcessor) {
-
+        // 构造者模式
         Tinker tinker = new Tinker.Builder(applicationLike.getApplication())
             .tinkerFlags(applicationLike.getTinkerFlags())
             .loadReport(loadReporter)
@@ -87,6 +90,7 @@ public class TinkerInstaller {
      * @param context
      * @param patchLocation
      */
+    // install 补丁
     public static void onReceiveUpgradePatch(Context context, String patchLocation) {
         Tinker.with(context).getPatchListener().onPatchReceived(patchLocation);
     }

@@ -64,6 +64,7 @@ import java.util.Arrays;
 /**
  * Created by tangyinsheng on 2016/6/30.
  */
+// 真正处理dex文件的地方
 public class DexPatchApplier {
     private final Dex oldDex;
     private final Dex patchedDex;
@@ -106,6 +107,7 @@ public class DexPatchApplier {
         this.oldToPatchedIndexMap = new SparseIndexMap();
     }
 
+    // 真正处理dex文件的地方
     public void executeAndSaveTo(OutputStream out) throws IOException {
         // Before executing, we should check if this patch can be applied to
         // old dex we passed in.
@@ -223,6 +225,7 @@ public class DexPatchApplier {
                 patchFile, oldDex, patchedDex, oldToPatchedIndexMap
         );
 
+        // 将修改的内容从内存中写到本地
         this.stringDataSectionPatchAlg.execute();
         this.typeIdSectionPatchAlg.execute();
         this.typeListSectionPatchAlg.execute();

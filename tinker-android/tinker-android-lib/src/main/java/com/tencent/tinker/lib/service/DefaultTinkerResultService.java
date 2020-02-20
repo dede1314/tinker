@@ -53,6 +53,7 @@ public class DefaultTinkerResultService extends AbstractResultService {
         if (result.isSuccess) {
             deleteRawPatchFile(new File(result.rawPatchFilePath));
             if (checkIfNeedKill(result)) {
+                //直接杀掉当前进程，用户体验不好！
                 android.os.Process.killProcess(android.os.Process.myPid());
             } else {
                 TinkerLog.i(TAG, "I have already install the newly patch version!");
