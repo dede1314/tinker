@@ -53,6 +53,8 @@ public class TinkerPatchService extends IntentService {
         super("TinkerPatchService");
     }
 
+
+    // note 1,可以以这种方式启动service
     public static void runPatchService(final Context context, final String path) {
         TinkerLog.i(TAG, "run patch service...");
         TinkerLog.i(TAG, "hello  GitHub");

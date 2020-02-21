@@ -84,6 +84,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
         }
         String patchDirectoryPath = patchDirectoryFile.getAbsolutePath();
 
+        // Q&A 7： 什么时候创建的目录？  --》 上面的getPatchDirectory方法
         //check patch directory whether exist
         if (!patchDirectoryFile.exists()) {
             Log.w(TAG, "tryLoadPatchFiles:patch dir not exist:" + patchDirectoryPath);
@@ -104,6 +105,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
         //new = 2c150d8560334966952678930ba67fa8
         File patchInfoLockFile = SharePatchFileUtil.getPatchInfoLockFile(patchDirectoryPath);
 
+        // Q&A 8： patchInfo是什么时候写入的？
         patchInfo = SharePatchInfo.readAndCheckPropertyWithLock(patchInfoFile, patchInfoLockFile);
         if (patchInfo == null) {
             ShareIntentUtil.setIntentReturnCode(resultIntent, ShareConstants.ERROR_LOAD_PATCH_INFO_CORRUPTED);
@@ -189,6 +191,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
 
         File patchVersionDirectoryFile = new File(patchVersionDirectory);
 
+        // Q&A 6：patch文件是什么时候存储的？
         if (!patchVersionDirectoryFile.exists()) {
             Log.w(TAG, "tryLoadPatchFiles:onPatchVersionDirectoryNotFound");
             //we may delete patch info file

@@ -56,6 +56,7 @@ public abstract class TinkerApplication extends Application {
      * so we don't have to verity them every time for quicker!
      * default:false
      */
+    // Q&A 1   :patch process 如何检查的md5, 如果检查没问题，为何还要单独加参数做成可以配置的？
     private final boolean tinkerLoadVerifyFlag;
     private final String delegateClassName;
     private final String loaderClassName;
@@ -69,6 +70,7 @@ public abstract class TinkerApplication extends Application {
     private ClassLoader mCurrentClassLoader = null;
     private Handler mInlineFence = null;
 
+    // Q&A 2 代理模式？  不改造原有application，直接加注解？
     protected TinkerApplication(int tinkerFlags) {
         this(tinkerFlags, "com.tencent.tinker.entry.DefaultApplicationLike",
                 TinkerLoader.class.getName(), false);
@@ -109,6 +111,8 @@ public abstract class TinkerApplication extends Application {
                                       long applicationStartMillisTime,
                                       Intent resultIntent) {
         try {
+            // Q&A 4 看注释意思是：通过反射创建代理，所以不需要访问primary dex。那么问题来来，如果不需要去primary dex，那是在哪个dex中？
+            // 如果不用反射，还可以使用什么办法？
             // Use reflection to create the delegate so it doesn't need to go into the primary dex.
             // And we can also patch it
             final Class<?> delegateClass = Class.forName(delegateClassName, false, mCurrentClassLoader);
@@ -116,12 +120,14 @@ public abstract class TinkerApplication extends Application {
                     long.class, long.class, Intent.class);
             final Object appLike = constructor.newInstance(app, tinkerFlags, tinkerLoadVerifyFlag,
                     applicationStartElapsedTime, applicationStartMillisTime, resultIntent);
+            // Q&A 5 此处为何通过反射的方式创建，此时知道完全限定名。
             final Class<?> inlineFenceClass = Class.forName(
                     "com.tencent.tinker.entry.TinkerApplicationInlineFence", false, mCurrentClassLoader);
             final Class<?> appLikeClass = Class.forName(
                     "com.tencent.tinker.entry.ApplicationLike", false, mCurrentClassLoader);
             final Constructor<?> inlineFenceCtor = inlineFenceClass.getConstructor(appLikeClass);
             inlineFenceCtor.setAccessible(true);
+            // Q&A 4   内联？？？？
             return (Handler) inlineFenceCtor.newInstance(appLike);
         } catch (Throwable thr) {
             throw new TinkerRuntimeException("createInlineFence failed", thr);
@@ -139,6 +145,7 @@ public abstract class TinkerApplication extends Application {
                     tinkerResultIntent);
             TinkerInlineFenceAction.callOnBaseContextAttached(mInlineFence, base);
             //reset save mode
+            // Q&A 3 安全模式如何生效
             if (useSafeMode) {
                 ShareTinkerInternals.setSafeModeCount(this, 0);
             }

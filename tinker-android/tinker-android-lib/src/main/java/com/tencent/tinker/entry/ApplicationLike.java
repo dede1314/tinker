@@ -44,6 +44,7 @@ public abstract class ApplicationLike implements ApplicationLifeCycle {
         this.tinkerLoadVerifyFlag = tinkerLoadVerifyFlag;
         this.applicationStartElapsedTime = applicationStartElapsedTime;
         this.applicationStartMillisTime = applicationStartMillisTime;
+        // note 2:此处的intent是TinkerApplication中传递过来的
         this.tinkerResultIntent = tinkerResultIntent;
     }
 

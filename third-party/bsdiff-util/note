@@ -1,0 +1,15 @@
+1 tinker的参数及其意义
+
+2 每次启动都进行patch？
+
+3 加固模式的处理
+
+4 tinker配置项的意义以及生效地方
+
+5 如何关闭开发模式下的tinker
+
+6 tinkerId的作用
+
+7 main进程的判断
+
+8 clean patch 这种补救措施的原理

@@ -511,7 +511,7 @@ public class ShareTinkerInternals {
                 Log.e(TAG, "getProcessNameInternal exception:" + e.getMessage());
             }
         }
-
+        // note3: 如果从activityManager中获取进程名失败，还可以考虑从proc下获取。
         byte[] b = new byte[128];
         FileInputStream in = null;
         try {
