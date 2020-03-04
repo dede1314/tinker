@@ -338,6 +338,8 @@ public final class IncrementComponentManager {
         }
     };
 
+    // note 通过比较两个apk的manifest,判断是否有新增的四大组件
+    // 生成patch时ManifestDecoder的patch方法会进行比较，如果manifest有变化，就将新增的内容写入到assets/inc_component_meta.txt
     public static synchronized boolean init(Context context, ShareSecurityCheck checker) throws IOException {
         if (!checker.getMetaContentMap().containsKey(EnvConsts.INCCOMPONENT_META_FILE)) {
             Log.i(TAG, "package has no incremental component meta, skip init.");

@@ -127,6 +127,9 @@ public class ApkDecoder extends BaseDecoder {
     //         ii. 这个设计非常优雅和科学，毕竟你在遍历文件系统时想要做的事情无外乎发生在这几个时间点上，Java全部为你考虑好了，并搭好了框架！多么的贴心！！
     public boolean patch(File oldFile, File newFile) throws Exception {
         writeToLogFile(oldFile, newFile);
+        // Q&A 为什么针对manifest 单独处理？而不是下面的walkFileTree 的方式？因为manifest只有一个？
+        // 为什么manifest是直接从两个apk中解析比较？而其他的是先解压后进行比较？
+        // 为什么需要先进行manifest的patch?
         //check manifest change first
         manifestDecoder.patch(oldFile, newFile);
 
