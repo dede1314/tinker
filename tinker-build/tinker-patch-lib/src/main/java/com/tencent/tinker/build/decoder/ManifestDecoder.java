@@ -118,6 +118,7 @@ public class ManifestDecoder extends BaseDecoder {
 
             // generate increment manifest.
             if (hasIncComponent) {
+                // note 生成新增的manifest
                 final Document newXmlDoc = DocumentHelper.parseText(newAndroidManifest.xml);
                 final Document incXmlDoc = DocumentHelper.createDocument();
 

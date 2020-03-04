@@ -37,7 +37,7 @@ import java.lang.reflect.Modifier
  *
  * @author zhangshaowen
  */
-
+// tinker的插件
 class TinkerPatchPlugin implements Plugin<Project> {
     public static final String TINKER_INTERMEDIATES = "build/intermediates/tinker_intermediates/"
     public static final String ISSUE_URL = "https://github.com/Tencent/tinker/issues"
@@ -364,6 +364,8 @@ class TinkerPatchPlugin implements Plugin<Project> {
             tinkerPatchBuildTask.buildApkPath = output.outputFile
         }
 
+
+        //note  确定tinkerPatchBuildTask的执行时机?
         if (variant.metaClass.hasProperty(variant, 'assembleProvider')) {
             tinkerPatchBuildTask.dependsOn variant.assembleProvider.get()
         } else {

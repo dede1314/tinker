@@ -89,6 +89,9 @@ public class ApkDecoder extends BaseDecoder {
         unzipApkFile(newFile, this.mNewApkDir);
     }
 
+    // 构建日志
+    //old apk: app-pp_release-release.apk, size=24103923, md5=fd9e01ee6f4f86f267d7368949143e50
+    //new apk: app-pp_release-release.apk, size=24103739, md5=9944ec291fc80f57bf3e3e2b4ab607dd
     private void writeToLogFile(File oldFile, File newFile) throws IOException {
         String line1 = "old apk1131: " + oldFile.getName() + ", size=" + FileOperation.getFileSizes(oldFile) + ", md5=" + MD5.getMD5(oldFile);
         String line2 = "new apk: " + newFile.getName() + ", size=" + FileOperation.getFileSizes(newFile) + ", md5=" + MD5.getMD5(newFile);
@@ -106,6 +109,22 @@ public class ApkDecoder extends BaseDecoder {
         resPatchDecoder.onAllPatchesStart();
     }
 
+    // Files.walkFileTree
+    // 2) NIO.2的Files工具类提供了一个静态工具方法walkFileTree来高效并优雅地遍历文件系统；
+    //
+    //    3) walkFileTree：
+    //
+    //         i. 原型：static Path Files.walkFileTree(Path start, FileVisitor<? super Path> visitor);
+    //
+    //         ii. 表示从start代表的节点开始遍历文件系统；
+    //
+    //         iii. 其中visitor是遍历过程中的行为控制器；
+    //
+    //    4) 遍历行为控制器——FileVisitor：
+    //
+    //         i. 它是一个接口，里面定义了4个方法用来指定当你访问一个节点之前、之中、之后、失败时应该采取什么行动；
+    //
+    //         ii. 这个设计非常优雅和科学，毕竟你在遍历文件系统时想要做的事情无外乎发生在这几个时间点上，Java全部为你考虑好了，并搭好了框架！多么的贴心！！
     public boolean patch(File oldFile, File newFile) throws Exception {
         writeToLogFile(oldFile, newFile);
         //check manifest change first
@@ -158,6 +177,9 @@ public class ApkDecoder extends BaseDecoder {
             this.oldApkPath = oldPath;
         }
 
+
+        // note  真正进行patch的地方
+        // visitFile 正在访问一个文件时要干啥
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 

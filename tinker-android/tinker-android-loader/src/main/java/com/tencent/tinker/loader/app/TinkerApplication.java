@@ -145,7 +145,7 @@ public abstract class TinkerApplication extends Application {
                     tinkerResultIntent);
             TinkerInlineFenceAction.callOnBaseContextAttached(mInlineFence, base);
             //reset save mode
-            // Q&A 3 安全模式如何生效
+            // Q&A 3 安全模式如何生效   不是影响下一次启动，useSafeMode这个变量存在于内存中
             if (useSafeMode) {
                 ShareTinkerInternals.setSafeModeCount(this, 0);
             }

@@ -150,6 +150,7 @@ public class AndroidParser {
         }
     }
 
+    // note  从apk中获取到manifest
     public static AndroidParser getAndroidManifest(File file) throws IOException, ParseException {
         ZipFile zf = null;
         try {

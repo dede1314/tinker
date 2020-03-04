@@ -272,7 +272,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
         //only work for art platform oat，because of interpret, refuse 4.4 art oat
         //android o use quicken default, we don't need to use interpret mode
         boolean isSystemOTA = ShareTinkerInternals.isVmArt()
-            && ShareTinkerInternals.isSystemOTA(patchInfo.fingerPrint)
+            && ShareTinkerInternals.isSystemOTA(patchInfo.fingerPrint)//Q&A  patchinfo 怎样持有fingerPrint
             && Build.VERSION.SDK_INT >= 21 && !ShareTinkerInternals.isAfterAndroidO();
 
         resultIntent.putExtra(ShareIntentUtil.INTENT_PATCH_SYSTEM_OTA, isSystemOTA);
@@ -366,7 +366,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
 
     private boolean checkSafeModeCount(TinkerApplication application) {
         int count = ShareTinkerInternals.getSafeModeCount(application);
-        if (count >= ShareConstants.TINKER_SAFE_MODE_MAX_COUNT - 1) {
+        if (count >= ShareConstants.TINKER_SAFE_MODE_MAX_COUNT - 1) {// 如果尝试patch次数过多，返回false
             ShareTinkerInternals.setSafeModeCount(application, 0);
             return false;
         }

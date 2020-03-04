@@ -27,6 +27,9 @@ import java.io.IOException;
 /**
  * Created by zhangshaowen on 2/26/16.
  */
+// 生成patch 有两种方式，一种是使用命令行，一种是使用gradle
+// 命令行对应CliMain,gradle对应TinkerPatchSchemaTask
+// gradle 中调用Java方法
 public class Runner {
     public static final int ERRNO_ERRORS = 1;
     public static final int ERRNO_USAGE  = 2;
@@ -58,10 +61,37 @@ public class Runner {
         }
     }
 
+    //
+    //configuration:
+    //oldApk:XXX/Documents/jenkins/jobs/Tinker_Patcher/workspace/app/build/bakApk/app-0517-23-39-37/release/app-release.apk
+    //newApk:XXX//Documents/jenkins/jobs/Tinker_Patcher/workspace/app/build/outputs/apk/release/release/app-release.apk
+    //outputFolder:/Users/huiwan/Documents/jenkins/jobs/Tinker_Patcher/workspace/app/build/outputs/apk/release/tinkerPatch/release/release
+    //isIgnoreWarning:false
+    //isProtectedApp:true
+    //7-ZipPath:/XX/.gradle/caches/modules-2/files-2.1/com.tencent.mm/SevenZip/1.1.10/cc390e6c704b74496d9ba0e9b46d2cf8a2a96b84/SevenZip-1.1.10-osx-x86_64.exe
+    //useSignAPk:true
+    //package meta fields:
+    //dex configs:
+    //dexMode: jar
+    //dexPattern:classes.*\.dex
+    //dexPattern:assets/secondary-dex-.\.jar
+    //dex loader:XXX.RealApplication
+    //dex loader:com.tencent.tinker.loader.*
+    //lib configs:
+    //libPattern:lib/.*/.*\.so
+    //resource configs:
+    //resPattern:assets/.*
+    //resPattern:resources\.arsc
+    //resPattern:r/.*
+    //resPattern:res/.*
+    //resPattern:AndroidManifest\.xml
+    //resIgnore change:assets/.*_meta\.txt
+    //largeModSize:100kb
+    //useApplyResource:true
     protected void tinkerPatch() {
         Logger.d("-----------------------Tinker patch begin-----------------------");
 
-        Logger.d(mConfig.toString());
+            Logger.d(mConfig.toString());
         try {
             //gen patch
             ApkDecoder decoder = new ApkDecoder(mConfig);

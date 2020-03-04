@@ -46,6 +46,7 @@ public class TinkerPatchSchemaTask extends DefaultTask {
 
     @TaskAction
     def tinkerPatch() {
+        //开始打包patch
         configuration.checkParameter()
         configuration.buildConfig.checkParameter()
         configuration.res.checkParameter()
@@ -64,6 +65,7 @@ public class TinkerPatchSchemaTask extends DefaultTask {
 
         }
 
+        // patch的参数，从tinker.gradle中读取配置信息
         builder.setOldApk(configuration.oldApk)
                .setNewApk(buildApkPath)
                .setOutBuilder(outputFolder)
@@ -71,7 +73,7 @@ public class TinkerPatchSchemaTask extends DefaultTask {
                .setAllowLoaderInAnyDex(configuration.allowLoaderInAnyDex)
                .setRemoveLoaderForAllDex(configuration.removeLoaderForAllDex)
                .setDexFilePattern(new ArrayList<String>(configuration.dex.pattern))
-               .setIsProtectedApp(configuration.buildConfig.isProtectedApp)
+               .setIsProtectedApp(configuration.buildConfig.isProtectedApp)//  note  isProtectedApp,是在tinker.gradle中配置
                .setIsComponentHotplugSupported(configuration.buildConfig.supportHotplugComponent)
                .setDexLoaderPattern(new ArrayList<String>(configuration.dex.loader))
                .setDexIgnoreWarningLoaderPattern(new ArrayList<String>(configuration.dex.ignoreWarningLoader))

@@ -470,7 +470,7 @@ public class ShareTinkerInternals {
      * @return
      */
     public static String getProcessName(final Context context) {
-        if (processName != null) {
+        if (processName != null) {//note4 缓存
             return processName;
         }
         //will not null
