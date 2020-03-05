@@ -222,6 +222,7 @@ public class ApkDecoder extends BaseDecoder {
                 }
                 return FileVisitResult.CONTINUE;
             }
+            // Q&A 此处有对manifest进行处理，为什么要处理两次
             if (Utils.checkFileInPattern(config.mResFilePattern, patternKey)) {
                 try {
                     resDecoder.patch(oldFile, file.toFile());

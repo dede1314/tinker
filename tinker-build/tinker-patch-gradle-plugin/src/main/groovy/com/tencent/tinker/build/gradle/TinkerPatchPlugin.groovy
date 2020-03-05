@@ -365,7 +365,7 @@ class TinkerPatchPlugin implements Plugin<Project> {
         }
 
 
-        //note  确定tinkerPatchBuildTask的执行时机?
+        //note  确定tinkerPatchBuildTask的执行时机?从日志上来看是在相应的variant的assemble之后执行。
         if (variant.metaClass.hasProperty(variant, 'assembleProvider')) {
             tinkerPatchBuildTask.dependsOn variant.assembleProvider.get()
         } else {
