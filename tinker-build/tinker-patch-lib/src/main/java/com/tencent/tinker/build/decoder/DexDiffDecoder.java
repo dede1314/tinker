@@ -445,6 +445,7 @@ public class DexDiffDecoder extends BaseDecoder {
         ensureDirectoryExist(dexDiffOut.getParentFile());
 
         try {
+            // dex patch文件的生成
             DexPatchGenerator dexPatchGen = new DexPatchGenerator(oldDexFile, newDexFile);
             dexPatchGen.setAdditionalRemovingClassPatterns(config.mDexLoaderPattern);
 

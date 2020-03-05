@@ -70,6 +70,12 @@ public class ShareDexDiffPatchInfo {
         }
     }
 
+    // 读取assets/dex_meta.txt中的内容
+    // 打包patch时生成文件在DexDiffDecoder中的DexDiffDecoder方法
+    // 内容写入在DexDiffDecoder，ResDiffDecoder等Decoder中。
+    // 内容如下所示：
+    // changed_classes.dex,,5d4ce4b80d4d5168006a63a5a16d94b3,5d4ce4b80d4d5168006a63a5a16d94b3,0,0,0,jar
+    // test.dex,,56900442eb5b7e1de45449d0685e6e00,56900442eb5b7e1de45449d0685e6e00,0,0,0,jar
     public static void parseDexDiffPatchInfo(String meta, ArrayList<ShareDexDiffPatchInfo> dexList) {
         if (meta == null || meta.length() == 0) {
             return;

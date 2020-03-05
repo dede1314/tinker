@@ -66,6 +66,13 @@ public class ShareSecurityCheck {
      *
      * @return HashMap<String, String>
      */
+    // assets/package_meta.txt中的文件如下所示：
+
+    //#base package config field
+    //#Tue Jun 25 15:32:59 CST 2019
+    //NEW_TINKER_ID=pp_releaseRelease_6.1.0-base
+    //TINKER_ID=pp_releaseRelease_6.1.0-base
+    // 在打包patch时生成，PatchInfoGen的构造方法中产生文件，内容在PatchInfo的gen方法中写入，在tinkerPatch()方法执行时调用。
     public HashMap<String, String> getPackagePropertiesIfPresent() {
         if (!packageProperties.isEmpty()) {
             return packageProperties;
