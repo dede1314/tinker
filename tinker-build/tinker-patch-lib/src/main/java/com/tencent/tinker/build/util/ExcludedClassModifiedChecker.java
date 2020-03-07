@@ -94,6 +94,8 @@ public final class ExcludedClassModifiedChecker {
                  * 6. Loader classes are found in secondary old dexes.
                  * 7. Loader classes are found in secondary new dexes.
                  */
+                // note Loader classes必须出现在主dex中，以上7种情况报错。
+                // note Loader classes中的值在TinkerManifestTask中的addApplicationToLoaderPattern中加入，默认情况只有application和com.tencent.tinker.loader.*这些
                 case STMCODE_START: {
                     boolean isPrimaryDex = isPrimaryDex((oldFile == null ? newFile : oldFile));
 
@@ -151,6 +153,9 @@ public final class ExcludedClassModifiedChecker {
                                 }
                             }
                             if (!oldClassesDescToCheck.isEmpty()) {
+                                // Q&A：Tinker的机制决定了在dalvik机器上loader类目前还是必须出现在主dex里
+                                // min sdk >=21会报错，此处问题较多  https://github.com/Tencent/tinker/issues/1084
+                                // 为什么加入removeLoaderForAllDex和allowLoaderInAnyDex这两个参数就正常了？
                                 stmCode = STMCODE_ERROR_LOADER_CLASS_FOUND_IN_SECONDARY_OLD_DEX;
                                 break;
                             }

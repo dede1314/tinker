@@ -290,6 +290,7 @@ public class SystemClassLoaderAdder {
             Field pathListField = ShareReflectUtil.findField(loader, "pathList");
             Object dexPathList = pathListField.get(loader);
             ArrayList<IOException> suppressedExceptions = new ArrayList<IOException>();
+            // note 如果dex文件没有优化安装，makePathElements会触发dex2oat.
             ShareReflectUtil.expandFieldArray(dexPathList, "dexElements", makeDexElements(dexPathList,
                 new ArrayList<File>(additionalClassPathEntries), optimizedDirectory,
                 suppressedExceptions));

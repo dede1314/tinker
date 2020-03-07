@@ -389,7 +389,7 @@ public class TinkerLoadLibrary {
             final ArrayList<IOException> suppressedExceptions = new ArrayList<>();
 
             final Object[] elements = (Object[]) makeElements.invoke(dexPathList, newLibDirs, null, suppressedExceptions);
-
+            // note 如果dex文件没有优化安装，makePathElements会触发dex2oat.
             final Field nativeLibraryPathElements = ShareReflectUtil.findField(dexPathList, "nativeLibraryPathElements");
             nativeLibraryPathElements.set(dexPathList, elements);
         }
@@ -425,7 +425,7 @@ public class TinkerLoadLibrary {
             final List<File> newLibDirs = new ArrayList<>(origLibDirs.size() + origSystemLibDirs.size() + 1);
             newLibDirs.addAll(origLibDirs);
             newLibDirs.addAll(origSystemLibDirs);
-
+            // note 如果dex文件没有优化安装，makePathElements会触发dex2oat.
             final Method makeElements = ShareReflectUtil.findMethod(dexPathList, "makePathElements", List.class);
 
             final Object[] elements = (Object[]) makeElements.invoke(dexPathList, newLibDirs);

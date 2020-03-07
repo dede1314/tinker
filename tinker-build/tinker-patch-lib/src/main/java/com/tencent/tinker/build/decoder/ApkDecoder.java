@@ -185,9 +185,10 @@ public class ApkDecoder extends BaseDecoder {
         // visitFile 正在访问一个文件时要干啥
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-
+            //Constructs a relative path between this path and a given path.
             Path relativePath = newApkPath.relativize(file);
 
+            //Resolve the given path against this path.
             Path oldPath = oldApkPath.resolve(relativePath);
 
             File oldFile = null;

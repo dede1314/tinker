@@ -44,6 +44,7 @@ final class NewClassLoaderInjector {
         return newClassLoader;
     }
 
+    // Q&A  为什么是trigger？ 如果dex文件没有优化安装，makePathElements会触发dex2oat.
     public static void triggerDex2Oat(Context context, String... dexPaths) throws Throwable {
         // Suggestion from Huawei: Only PathClassLoader (Perhaps other ClassLoaders known by system
         // like DexClassLoader also works ?) can be used here to trigger dex2oat so that JIT
