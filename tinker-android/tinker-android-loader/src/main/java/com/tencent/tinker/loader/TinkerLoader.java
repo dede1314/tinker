@@ -113,6 +113,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
         //tinker/patch.info
         File patchInfoFile = SharePatchFileUtil.getPatchInfoFile(patchDirectoryPath);
 
+        // 检查 patch.info 补丁信息文件是否存在
         //check patch info file whether exist
         if (!patchInfoFile.exists()) {
             Log.w(TAG, "tryLoadPatchFiles:patch info not exist:" + patchInfoFile.getAbsolutePath());
@@ -121,6 +122,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
         }
         //old = 641e634c5b8f1649c75caf73794acbdf
         //new = 2c150d8560334966952678930ba67fa8
+        // 读取 patch.info 文件，并包装成一个 SharePatchInfo ，并检查 patchInfo 是否为空 (先加锁 file lock 再解锁)
         File patchInfoLockFile = SharePatchFileUtil.getPatchInfoLockFile(patchDirectoryPath);
 
         // Q&A 8： patchInfo是什么时候写入的？
@@ -150,27 +152,33 @@ public class TinkerLoader extends AbstractTinkerLoader {
         // So far new version is not loaded in main process and other processes.
         // We can remove new version directory safely.
         if (mainProcess && isRemoveNewVersion) {
+            // 如果发现 patchInfo 中的 isRemoveNewVersion 为 true 并且在主进程中运行的话，就代表需要清除补丁了
             Log.w(TAG, "found clean patch mark and we are in main process, delete patch file now.");
             String patchName = SharePatchFileUtil.getPatchVersionDirectory(newVersion);
             if (patchName != null) {
                 // oldVersion.equals(newVersion) means the new version has been loaded at least once
                 // after it was applied.
+                // 如果旧版本和新版本一致，就把 oldVersion 和 newVersion 设置为空来清除补丁
                 final boolean isNewVersionLoadedBefore = oldVersion.equals(newVersion);
                 if (isNewVersionLoadedBefore) {
                     // Set oldVersion and newVersion to empty string to clean patch
                     // if current patch has been loaded before.
                     oldVersion = "";
                 }
+                // 如果 !oldVersion.equals(newVersion) 意味着新补丁已经应用了，需要回退到原来的旧版本
                 newVersion = oldVersion;
                 patchInfo.oldVersion = oldVersion;
                 patchInfo.newVersion = newVersion;
                 patchInfo.isRemoveNewVersion = false;
+                // 把数据重新写入 patchInfo 文件中
                 SharePatchInfo.rewritePatchInfoFileWithLock(patchInfoFile, patchInfo, patchInfoLockFile);
 
+                // 删除新的补丁文件夹
                 String patchVersionDirFullPath = patchDirectoryPath + "/" + patchName;
                 SharePatchFileUtil.deleteDir(patchVersionDirFullPath);
 
                 if (isNewVersionLoadedBefore) {
+                    // 杀掉主进程以外的所有进程
                     ShareTinkerInternals.killProcessExceptMain(app);
                     ShareIntentUtil.setIntentReturnCode(resultIntent, ShareConstants.ERROR_LOAD_PATCH_DIRECTORY_NOT_EXIST);
                     return;
@@ -187,6 +195,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
         resultIntent.putExtra(ShareIntentUtil.INTENT_PATCH_OAT_DIR, oatDex);
 
         String version = oldVersion;
+        // 根据版本变化和是否是主进程的条件决定是否允许加载最新的补丁
         if (versionChanged && mainProcess) {
             version = newVersion;
         }
@@ -197,6 +206,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
         }
 
         //patch-641e634c
+        // 检查当前新版本补丁文件夹是否存在
         String patchName = SharePatchFileUtil.getPatchVersionDirectory(version);
         if (patchName == null) {
             Log.w(TAG, "tryLoadPatchFiles:patchName is null");
@@ -229,7 +239,10 @@ public class TinkerLoader extends AbstractTinkerLoader {
         }
 
         ShareSecurityCheck securityCheck = new ShareSecurityCheck(app);
-
+        // 检查补丁文件签名以及补丁文件中的 tinker id 和基准包的 tinker id 是否一致。
+        // 1. 检查补丁包 apk 的签名
+        // 2. 检查基准包的 tinker id 与补丁包中是否一致
+        // 3. 检查 tinker 设置与补丁包中的类型是否符合
         int returnCode = ShareTinkerInternals.checkTinkerPackage(app, tinkerFlag, patchVersionFile, securityCheck);
         if (returnCode != ShareConstants.ERROR_PACKAGE_CHECK_OK) {
             Log.w(TAG, "tryLoadPatchFiles:checkTinkerPackage");
@@ -261,6 +274,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
 
         final boolean isEnabledForArkHot = ShareTinkerInternals.isTinkerEnabledForArkHot(tinkerFlag);
         if (isArkHotRuning && isEnabledForArkHot) {
+            // 如果开启了支持 dex 热修复，检查 dex_meta.txt 文件中记录的dex文件信息对应的dex文件是否存在
             boolean arkHotCheck = TinkerArkHotLoader.checkComplete(patchVersionDirectory, securityCheck, resultIntent);
             if (!arkHotCheck) {
                 // file not found, do not load patch
@@ -271,7 +285,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
 
 
         final boolean isEnabledForNativeLib = ShareTinkerInternals.isTinkerEnabledForNativeLib(tinkerFlag);
-
+        // 如果开启了支持 so 热修复，检查 so_meta.txt 文件中记录的so文件信息对应的so文件是否存在
         if (isEnabledForNativeLib) {
             //tinker/patch.info/patch-641e634c/lib
             boolean libCheck = TinkerSoLoader.checkComplete(patchVersionDirectory, securityCheck, resultIntent);
@@ -285,6 +299,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
         //check resource
         final boolean isEnabledForResource = ShareTinkerInternals.isTinkerEnabledForResource(tinkerFlag);
         Log.w(TAG, "tryLoadPatchFiles:isEnabledForResource:" + isEnabledForResource);
+        // 如果开启了支持 res 热修复，检查 res_meta.txt 文件中记录的res文件信息对应的res文件是否存在
         if (isEnabledForResource) {
             boolean resourceCheck = TinkerResourceLoader.checkComplete(app, patchVersionDirectory, securityCheck, resultIntent);
             if (!resourceCheck) {
@@ -295,13 +310,15 @@ public class TinkerLoader extends AbstractTinkerLoader {
         }
         //only work for art platform oat，because of interpret, refuse 4.4 art oat
         //android o use quicken default, we don't need to use interpret mode
+        // 只要用户是ART环境并且做了OTA升级，则在加载dex补丁的时候就会先把最近一次的补丁全部DexFile.loadDex一遍重新生成odex，再加载dex补丁。否则会报错
         boolean isSystemOTA = ShareTinkerInternals.isVmArt()
-            && ShareTinkerInternals.isSystemOTA(patchInfo.fingerPrint)//Q&A  patchinfo 怎样持有fingerPrint
-            && Build.VERSION.SDK_INT >= 21 && !ShareTinkerInternals.isAfterAndroidO();
+                && ShareTinkerInternals.isSystemOTA(patchInfo.fingerPrint)//Q&A  patchinfo 怎样持有fingerPrint
+                && Build.VERSION.SDK_INT >= 21 && !ShareTinkerInternals.isAfterAndroidO();
 
         resultIntent.putExtra(ShareIntentUtil.INTENT_PATCH_SYSTEM_OTA, isSystemOTA);
 
         //we should first try rewrite patch info file, if there is a error, we can't load jar
+        // 符合条件的话就更新版本信息,并将最新的patch info更新入文件.
         if (mainProcess) {
             if (versionChanged) {
                 patchInfo.oldVersion = version;
@@ -315,6 +332,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
             }
         }
 
+        // 加载补丁的安全次数最多三次
         if (!checkSafeModeCount(app)) {
             resultIntent.putExtra(ShareIntentUtil.INTENT_PATCH_EXCEPTION, new TinkerRuntimeException("checkSafeModeCount fail"));
             ShareIntentUtil.setIntentReturnCode(resultIntent, ShareConstants.ERROR_LOAD_PATCH_UNCAUGHT_EXCEPTION);
@@ -327,6 +345,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
             // 在收到补丁时已经完成了dex2oat的操作，这次直接load
             boolean loadTinkerJars = TinkerDexLoader.loadTinkerJars(app, patchVersionDirectory, oatDex, resultIntent, isSystemOTA, isProtectedApp);
 
+            // 如果是 ota 的话，更新 oat 的文件夹路径
             if (isSystemOTA) {
                 // update fingerprint after load success
                 patchInfo.fingerPrint = Build.FINGERPRINT;

@@ -191,6 +191,7 @@ public class DexDiffPatchInternal extends BasePatchInternal {
         TinkerLog.i(TAG, "legal files to do dexopt: " + legalFiles);
 
         final String optimizeDexDirectory = patchVersionDirectory + "/" + DEX_OPTIMIZE_PATH + "/";
+        // 对 dex 做 opt 优化
         return dexOptimizeDexFiles(context, legalFiles, optimizeDexDirectory, patchFile);
 
     }
@@ -429,6 +430,7 @@ public class DexDiffPatchInternal extends BasePatchInternal {
     private static boolean extractDexDiffInternals(Context context, String dir, String meta, File patchFile, int type) {
         //parse
         patchList.clear();
+        // 读取 dex_meta.txt 中的信息
         ShareDexDiffPatchInfo.parseDexDiffPatchInfo(meta, patchList);
 
         if (patchList.isEmpty()) {
@@ -451,17 +453,21 @@ public class DexDiffPatchInternal extends BasePatchInternal {
                 TinkerLog.w(TAG, "applicationInfo == null!!!!");
                 return false;
             }
-
+            // 获取到基准包apk的路径
             String apkPath = applicationInfo.sourceDir;
+            // 基准包文件
             apk = new ZipFile(apkPath);
+            // 补丁包文件
             patch = new ZipFile(patchFile);
             if (checkClassNDexFiles(dir)) {
                 TinkerLog.w(TAG, "class n dex file %s is already exist, and md5 match, just continue", ShareConstants.CLASS_N_APK_NAME);
                 return true;
             }
+            // 遍历 ShareDexDiffPatchInfo
             for (ShareDexDiffPatchInfo info : patchList) {
                 long start = System.currentTimeMillis();
 
+                // 补丁dex文件路径
                 final String infoPath = info.path;
                 String patchRealPath;
                 if (infoPath.equals("")) {
@@ -473,12 +479,13 @@ public class DexDiffPatchInternal extends BasePatchInternal {
                 String dexDiffMd5 = info.dexDiffMd5;
                 String oldDexCrc = info.oldDexCrC;
 
+                // 如果是 dvm 虚拟机环境，但是补丁dex是art环境的，就跳过
                 if (!isVmArt && info.destMd5InDvm.equals("0")) {
                     TinkerLog.w(TAG, "patch dex %s is only for art, just continue", patchRealPath);
                     continue;
                 }
                 String extractedFileMd5 = isVmArt ? info.destMd5InArt : info.destMd5InDvm;
-
+                // 检查 md5 值
                 if (!SharePatchFileUtil.checkIfMd5Valid(extractedFileMd5)) {
                     TinkerLog.w(TAG, "meta file md5 invalid, type:%s, name: %s, md5: %s", ShareTinkerInternals.getTypeString(type), info.rawName, extractedFileMd5);
                     manager.getPatchReporter().onPatchPackageCheckFail(patchFile, BasePatchInternal.getMetaCorruptedCode(type));
@@ -488,12 +495,15 @@ public class DexDiffPatchInternal extends BasePatchInternal {
                 File extractedFile = new File(dir + info.realName);
 
                 //check file whether already exist
+                // 如果合成的dex文件已经存在了
                 if (extractedFile.exists()) {
+                    // 就校验合成的 dex 文件md5值，如果通过就跳过
                     if (SharePatchFileUtil.verifyDexFileMd5(extractedFile, extractedFileMd5)) {
                         //it is ok, just continue
                         TinkerLog.w(TAG, "dex file %s is already exist, and md5 match, just continue", extractedFile.getPath());
                         continue;
                     } else {
+                        // 否则删除文件
                         TinkerLog.w(TAG, "have a mismatch corrupted dex " + extractedFile.getPath());
                         extractedFile.delete();
                     }
@@ -504,7 +514,9 @@ public class DexDiffPatchInternal extends BasePatchInternal {
                 ZipEntry patchFileEntry = patch.getEntry(patchRealPath);
                 ZipEntry rawApkFileEntry = apk.getEntry(patchRealPath);
 
+                // 从这里开始，就是遍历 patchList 中的记录，进行一个个 dex 文件合成了。一开头会去校验合成的文件是否存在，存在的话就跳过，进行下一个。
                 if (oldDexCrc.equals("0")) {// oldDexCrc什么情况下等于0？新增的dex.
+                    // 如果 oldDexCrc 为0，就说明基准包中对应的 oldDex 文件不存在，直接按照 patch 信息重新打包 dex 即可。
                     if (patchFileEntry == null) {
                         TinkerLog.w(TAG, "patch entry is null. path:" + patchRealPath);
                         manager.getPatchReporter().onPatchTypeExtractFail(patchFile, extractedFile, info.rawName, type);
@@ -518,11 +530,13 @@ public class DexDiffPatchInternal extends BasePatchInternal {
                         return false;
                     }
                 } else if (dexDiffMd5.equals("0")) {// dexDiffMd5什么情况下等于0，加固模式下等于0
+                    // 如果 oldDexCrc 为0，就说明基准包中对应的 oldDex 文件不存在，直接按照 patch 信息重新打包 dex 即可 ---》适用于非加固模式
                     // skip process old dex for real dalvik vm
                     if (!isVmArt) {
                         continue;
                     }
 
+                    // 检查基准包中的 dex 是否为空
                     if (rawApkFileEntry == null) {
                         TinkerLog.w(TAG, "apk entry is null. path:" + patchRealPath);
                         manager.getPatchReporter().onPatchTypeExtractFail(patchFile, extractedFile, info.rawName, type);
@@ -530,6 +544,7 @@ public class DexDiffPatchInternal extends BasePatchInternal {
                     }
 
                     //check source crc instead of md5 for faster
+                    // 检查基准包中的 dex 的 crc 值和 dex_meta.txt 中是否一致
                     String rawEntryCrc = String.valueOf(rawApkFileEntry.getCrc());
                     if (!rawEntryCrc.equals(oldDexCrc)) {
                         TinkerLog.e(TAG, "apk entry %s crc is not equal, expect crc: %s, got crc: %s", patchRealPath, oldDexCrc, rawEntryCrc);
@@ -539,15 +554,18 @@ public class DexDiffPatchInternal extends BasePatchInternal {
 
                     // Small patched dex generating strategy was disabled, we copy full original dex directly now.
                     //patchDexFile(apk, patch, rawApkFileEntry, null, info, smallPatchInfoFile, extractedFile);
+                    // 直接复制 ：copy full original dex directly now.
                     extractDexFile(apk, rawApkFileEntry, extractedFile, info);
 
+                    // 复制完后校验一下md5值是否一致
                     if (!SharePatchFileUtil.verifyDexFileMd5(extractedFile, extractedFileMd5)) {
                         TinkerLog.w(TAG, "Failed to recover dex file when verify patched dex: " + extractedFile.getPath());
                         manager.getPatchReporter().onPatchTypeExtractFail(patchFile, extractedFile, info.rawName, type);
                         SharePatchFileUtil.safeDeleteFile(extractedFile);
                         return false;
                     }
-                } else {//  需要进行dex的patch，此种情况下适合非加固模式
+                } else {//  需要进行dex的patch，此种情况下适合非加固模式？
+                    // 检查补丁包中 dex 是否存在
                     if (patchFileEntry == null) {
                         TinkerLog.w(TAG, "patch entry is null. path:" + patchRealPath);
                         manager.getPatchReporter().onPatchTypeExtractFail(patchFile, extractedFile, info.rawName, type);
@@ -560,12 +578,14 @@ public class DexDiffPatchInternal extends BasePatchInternal {
                         return false;
                     }
 
+                    // 检查基准包中的 dex 是否存在
                     if (rawApkFileEntry == null) {
                         TinkerLog.w(TAG, "apk entry is null. path:" + patchRealPath);
                         manager.getPatchReporter().onPatchTypeExtractFail(patchFile, extractedFile, info.rawName, type);
                         return false;
                     }
                     //check source crc instead of md5 for faster
+                    // 检查基准包中的 dex 的 crc 值是否一致
                     String rawEntryCrc = String.valueOf(rawApkFileEntry.getCrc());
                     if (!rawEntryCrc.equals(oldDexCrc)) {
                         TinkerLog.e(TAG, "apk entry %s crc is not equal, expect crc: %s, got crc: %s", patchRealPath, oldDexCrc, rawEntryCrc);
@@ -574,8 +594,10 @@ public class DexDiffPatchInternal extends BasePatchInternal {
                     }
 
                     // 真正开始进行dex的patch操作
+                    // 执行合成操作
                     patchDexFile(apk, patch, rawApkFileEntry, patchFileEntry, info, extractedFile);
 
+                    // 检查合成出来的dex的 md5 值是否一致
                     if (!SharePatchFileUtil.verifyDexFileMd5(extractedFile, extractedFileMd5)) {
                         TinkerLog.w(TAG, "Failed to recover dex file when verify patched dex: " + extractedFile.getPath());
                         manager.getPatchReporter().onPatchTypeExtractFail(patchFile, extractedFile, info.rawName, type);
@@ -691,13 +713,16 @@ public class DexDiffPatchInternal extends BasePatchInternal {
         InputStream oldDexStream = null;
         InputStream patchFileStream = null;
         try {
+            // 基准包 dex 文件输入流
             oldDexStream = new BufferedInputStream(baseApk.getInputStream(oldDexEntry));
+            // 补丁包 dex 文件输入流
             patchFileStream = (patchFileEntry != null ? new BufferedInputStream(patchPkg.getInputStream(patchFileEntry)) : null);
 
             final boolean isRawDexFile = SharePatchFileUtil.isRawDexFile(patchInfo.rawName);
             if (!isRawDexFile || patchInfo.isJarMode) {
                 ZipOutputStream zos = null;
                 try {
+                    // 合成 dex 文件的输出流
                     zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(patchedDexFile)));
                     zos.putNextEntry(new ZipEntry(ShareConstants.DEX_IN_JAR));
                     // Old dex is not a raw dex file.

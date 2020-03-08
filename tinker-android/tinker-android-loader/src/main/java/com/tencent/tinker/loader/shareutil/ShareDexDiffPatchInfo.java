@@ -77,6 +77,17 @@ public class ShareDexDiffPatchInfo {
     // changed_classes.dex,,5d4ce4b80d4d5168006a63a5a16d94b3,5d4ce4b80d4d5168006a63a5a16d94b3,0,0,0,jar
     // test.dex,,56900442eb5b7e1de45449d0685e6e00,56900442eb5b7e1de45449d0685e6e00,0,0,0,jar
     // 打包patch时，在DexDiffDecoder的onAllPatchesEnd方法中生成
+
+    //dex_meta.txt 记录着
+    //
+    //name ：补丁 dex 名字
+    //path ：补丁 dex 路径
+    //destMd5InDvm ：合成新 dex 在 dvm 中的 md5 值
+    //destMd5InArt ：合成新 dex 在 art 中的 md5 值
+    //dexDiffMd5 ：补丁包 dex 文件的 md5 值
+    //oldDexCrc ：基准包中对应 dex 的 crc 值
+    //newDexCrc ：合成新 dex 的 crc 值
+    //dexMode ：dex 类型，为 jar 类型
     public static void parseDexDiffPatchInfo(String meta, ArrayList<ShareDexDiffPatchInfo> dexList) {
         if (meta == null || meta.length() == 0) {
             return;

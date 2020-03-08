@@ -44,19 +44,19 @@ import java.util.zip.ZipFile;
  * Created by zhangshaowen on 16/3/10.
  */
 public class ShareTinkerInternals {
-    private static final String  TAG                   = "Tinker.TinkerInternals";
-    private static final boolean VM_IS_ART             = isVmArt(System.getProperty("java.vm.version"));
-    private static final boolean VM_IS_JIT             = isVmJitInternal();
-    private static final String  PATCH_PROCESS_NAME    = ":patch";
+    private static final String TAG = "Tinker.TinkerInternals";
+    private static final boolean VM_IS_ART = isVmArt(System.getProperty("java.vm.version"));
+    private static final boolean VM_IS_JIT = isVmJitInternal();
+    private static final String PATCH_PROCESS_NAME = ":patch";
 
-    private static       Boolean isPatchProcess        = null;
-    private static       Boolean isARKHotRunning       = null;
+    private static Boolean isPatchProcess = null;
+    private static Boolean isARKHotRunning = null;
     /**
      * or you may just hardcode them in your app
      */
-    private static       String  processName           = null;
-    private static       String  tinkerID              = null;
-    private static       String  currentInstructionSet = null;
+    private static String processName = null;
+    private static String tinkerID = null;
+    private static String currentInstructionSet = null;
 
     public static boolean isVmArt() {
         return VM_IS_ART || Build.VERSION.SDK_INT >= 21;
@@ -74,7 +74,7 @@ public class ShareTinkerInternals {
         Class<?> arkApplicationInfo = null;
         try {
             arkApplicationInfo = ClassLoader.getSystemClassLoader()
-                .getParent().loadClass("com.huawei.ark.app.ArkApplicationInfo");
+                    .getParent().loadClass("com.huawei.ark.app.ArkApplicationInfo");
             Method isRunningInArkHot = null;
             isRunningInArkHot = arkApplicationInfo.getDeclaredMethod("isRunningInArk");
             isRunningInArkHot.setAccessible(true);
@@ -114,9 +114,9 @@ public class ShareTinkerInternals {
     public static boolean isSystemOTA(String lastFingerPrint) {
         String currentFingerprint = Build.FINGERPRINT;
         if (lastFingerPrint == null
-            || lastFingerPrint.equals("")
-            || currentFingerprint == null
-            || currentFingerprint.equals("")) {
+                || lastFingerPrint.equals("")
+                || currentFingerprint == null
+                || currentFingerprint.equals("")) {
             Log.d(TAG, "fingerprint empty:" + lastFingerPrint + ",current:" + currentFingerprint);
             return false;
         } else {
@@ -139,7 +139,7 @@ public class ShareTinkerInternals {
                 newName = "classes.dex";
             }
             return new ShareDexDiffPatchInfo(newName, rawDexInfo.path, rawDexInfo.destMd5InDvm, rawDexInfo.destMd5InArt,
-                rawDexInfo.dexDiffMd5, rawDexInfo.oldDexCrC, rawDexInfo.newOrPatchedDexCrC, rawDexInfo.dexMode);
+                    rawDexInfo.dexDiffMd5, rawDexInfo.oldDexCrC, rawDexInfo.newOrPatchedDexCrC, rawDexInfo.dexMode);
         }
 
         return null;
@@ -162,8 +162,12 @@ public class ShareTinkerInternals {
      * @return
      */
     public static int checkTinkerPackage(Context context, int tinkerFlag, File patchFile, ShareSecurityCheck securityCheck) {
+        // 检查补丁文件签名和 tinker id 是否一致
+        // 这里为了快速校验,就只检验补丁包内部以meta.txt结尾的文件的签名，而其他的文件的合法性则通过meta.txt文件内部记录的补丁文件Md5值来校验
         int returnCode = checkSignatureAndTinkerID(context, patchFile, securityCheck);
         if (returnCode == ShareConstants.ERROR_PACKAGE_CHECK_OK) {
+            // 检查配置的 tinker flag 和 meta.txt 是否匹配
+            // 如果不匹配的话，中断接下来的流程
             returnCode = checkPackageAndTinkerFlag(securityCheck, tinkerFlag);
         }
         return returnCode;
@@ -272,8 +276,8 @@ public class ShareTinkerInternals {
         }
         try {
             ApplicationInfo appInfo = context.getPackageManager()
-                .getApplicationInfo(context.getPackageName(),
-                    PackageManager.GET_META_DATA);
+                    .getApplicationInfo(context.getPackageName(),
+                            PackageManager.GET_META_DATA);
 
             Object object = appInfo.metaData.get(ShareConstants.TINKER_ID);
             if (object != null) {
@@ -426,7 +430,7 @@ public class ShareTinkerInternals {
             return;
         }
         List<ActivityManager.RunningAppProcessInfo> appProcessList = am
-            .getRunningAppProcesses();
+                .getRunningAppProcesses();
 
         if (appProcessList == null) {
             return;
@@ -488,12 +492,12 @@ public class ShareTinkerInternals {
 
         ActivityManager.RunningAppProcessInfo myProcess = null;
         ActivityManager activityManager =
-            (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+                (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 
         if (activityManager != null) {
             try {
                 List<ActivityManager.RunningAppProcessInfo> appProcessList = activityManager
-                    .getRunningAppProcesses();
+                        .getRunningAppProcesses();
 
                 if (appProcessList != null) {
                     for (ActivityManager.RunningAppProcessInfo process : appProcessList) {
@@ -556,8 +560,8 @@ public class ShareTinkerInternals {
                     int major = Integer.parseInt(matcher.group(1));
                     int minor = Integer.parseInt(matcher.group(2));
                     isArt = (major > 2)
-                        || ((major == 2)
-                        && (minor >= 1));
+                            || ((major == 2)
+                            && (minor >= 1));
                 } catch (NumberFormatException e) {
                     // let isMultidexCapable be false
                 }

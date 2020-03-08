@@ -80,8 +80,10 @@ public class SystemClassLoaderAdder {
             sPatchDexCount = files.size();
             Log.i(TAG, "after loaded classloader: " + classLoader + ", dex size:" + sPatchDexCount);
 
-            // 对patch加载是否成功进行判断，怎么变成true的
+            // Q&A ：对patch加载是否成功进行判断，怎么变成true的
             // 如何查看特定文件是否打包进去apk
+            // 在没有补丁加载的情况下都是返回 false 的, 在补丁中修改 isPatch 属性为 true 。
+            // 所以只要反射拿到isPatch 的属性为 true 就说明补丁已经成功加载进来了。否则就调用 SystemClassLoaderAdder.uninstallPatchDex 执行卸载
             if (!checkDexInstall(classLoader)) {
                 //reset patch dex
                 SystemClassLoaderAdder.uninstallPatchDex(classLoader);
@@ -107,6 +109,8 @@ public class SystemClassLoaderAdder {
         }
     }
 
+    // 卸载补丁可以说是加载补丁的逆向操作，具体操作可以分成 v4 和 v14 两个版本
+    // 具体的内容就是把 dexElements 中的头部 element 去除了。
     public static void uninstallPatchDex(ClassLoader classLoader) throws Throwable {
         if (sPatchDexCount <= 0) {
             return;
@@ -278,6 +282,8 @@ public class SystemClassLoaderAdder {
     /**
      * Installer for platform versions 19.
      */
+    // 首先反射拿到反射得到 PathClassLoader 中的 pathList 对象,再将补丁文件通过反射调用makeDexElements 得到补丁文件的 Element[] ,
+    // 再将补丁包的 Element[] 数组插入到 dexElements 中
     private static final class V19 {
 
         private static void install(ClassLoader loader, List<File> additionalClassPathEntries,

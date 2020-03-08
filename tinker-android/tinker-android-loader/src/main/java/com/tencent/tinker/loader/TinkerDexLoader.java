@@ -110,6 +110,7 @@ public class TinkerDexLoader {
             legalFiles.add(file);
         }
         // verify merge classN.apk
+        // Q&A: 如果是 art 虚拟机并且是 Android N 及以上的环境，会另外加上 tinker_classN.apk
         if (isVmArt && !classNDexInfo.isEmpty()) {
             File classNFile = new File(dexPath + ShareConstants.CLASS_N_APK_NAME);
             long start = System.currentTimeMillis();
@@ -130,6 +131,8 @@ public class TinkerDexLoader {
         }
         File optimizeDir = new File(directory + "/" + oatDir);
 
+        // 如果用户是ART虚拟机并且做了OTA升级，那么在加载dex补丁的时候就会先把最近一次的补丁全部DexFile.loadDex一遍.
+        // 这么做的原因是有些场景做了OTA后,oat的规则可能发生变化,在这种情况下去加载上个系统版本oat过的dex就会出现问题.
         if (isSystemOTA) {
             final boolean[] parallelOTAResult = {true};
             final Throwable[] parallelOTAThrowable = new Throwable[1];
@@ -156,6 +159,7 @@ public class TinkerDexLoader {
             // change dir
             optimizeDir = new File(directory + "/" + INTERPRET_DEX_OPTIMIZE_PATH);
 
+            // 对 dex 文件作 odex 处理
             TinkerDexOptimizer.optimizeAll(
                 application, legalFiles, optimizeDir, true, targetISA,
                 new TinkerDexOptimizer.ResultCallback() {

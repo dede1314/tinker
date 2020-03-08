@@ -69,6 +69,17 @@ class TinkerResourcePatcher {
     private static Field stringBlocksField = null;
 
     @SuppressWarnings("unchecked")
+    //通过 context 来检查当前环境是否支持加载资源补丁。方法里面做的事就是通过反射来获取各种系统的属性和方法。简单地举例以下几种：
+    //ActivityThread : 当前的 ActivityThread 实例，app主线程的入口。利用 ActivityThread 可以获取到 LoadedApk 对象；
+    //LoadedApk : 通过 LoadedApk 可以获取 mResDir 属性；
+    //mResDir : 这个值很关键，就是资源文件的路径。在后面会被 hook 成资源补丁的路径；
+    //addAssetPath : 通过 addAssetPath 方法将资源补丁文件加载进新的 AssetManager 中；
+    //mActiveResources : ResourcesManager 的 Resources 容器。里面会存储着每个 apk 对应的 Resources 对象。
+    // mActiveResources 是 ArrayMap 类型的，不同的 apk 都有一个不同的 key 来获取对应的 apk 的 Resource 对象；
+    //mAssets : 即 Resources 类中的 mAssets 属性，其实就是一个 AssetManager 对象。
+    // 在资源打补丁的时候，Resources 中原来的 mAssets 对象会被替换成新的 AssetManager 对象。
+    // 这里就不详细讲了，总结起来就一句话：获取 Android 系统中与资源有关的一些属性和方法，为接下来的加载资源补丁做准备。
+    // 如果在 isResourceCanPatch 方法中报出异常了，就认为当前环境不能加载资源补丁了。
     public static void isResourceCanPatch(Context context) throws Throwable {
         //   - Replace mResDir to point to the external resource file instead of the .apk. This is
         //     used as the asset path for new Resources objects.
@@ -173,22 +184,30 @@ class TinkerResourcePatcher {
         final ApplicationInfo appInfo = context.getApplicationInfo();
 
         final Field[] packagesFields;
+        // 准备之前反射好的 packagesFiled 和 resourcePackagesFiled 字段
+        // 利用 packagesFiled 和 resourcePackagesFiled 可以获取 LoadedApk 对象
         if (Build.VERSION.SDK_INT < 27) {
             packagesFields = new Field[]{packagesFiled, resourcePackagesFiled};
         } else {
             packagesFields = new Field[]{packagesFiled};
         }
+        // 遍历 packagesFields ，获取对应的值
         for (Field field : packagesFields) {
+            // 获取 ActivityThread 中 packagesFiled 或 resourcePackagesFiled
+            // value 其实为 Map<String, WeakReference<LoadedApk>> 类型
             final Object value = field.get(currentActivityThread);
 
+            // 再对 value 进行遍历，获取 LoadedApk 对象
             for (Map.Entry<String, WeakReference<?>> entry
                     : ((Map<String, WeakReference<?>>) value).entrySet()) {
                 final Object loadedApk = entry.getValue().get();
                 if (loadedApk == null) {
                     continue;
                 }
+                // 从 LoadedApk 对象中获取 mResDir 属性
                 final String resDirPath = (String) resDir.get(loadedApk);
                 if (appInfo.sourceDir.equals(resDirPath)) {
+                    // 将 mResDir 的值 hook 成资源补丁 apk 的路径
                     resDir.set(loadedApk, externalResourceFile);
                 }
             }
@@ -201,6 +220,7 @@ class TinkerResourcePatcher {
 
         // Kitkat needs this method call, Lollipop doesn't. However, it doesn't seem to cause any harm
         // in L, so we do it unconditionally.
+        // 创建出 AssetManager 后，调用 ensureStringBlocks 来确保资源的字符串索引创建出来
         if (stringBlocksField != null && ensureStringBlocksMethod != null) {
             stringBlocksField.set(newAssetManager, null);
             ensureStringBlocksMethod.invoke(newAssetManager);
@@ -214,17 +234,24 @@ class TinkerResourcePatcher {
             // Set the AssetManager of the Resources instance to our brand new one
             try {
                 //pre-N
+                // Android N 之前的方案
+                // 把原来 resources 的 mAssets 属性替换成新的 AssetManager 对象
                 assetsFiled.set(resources, newAssetManager);
             } catch (Throwable ignore) {
                 // N
+                // Android N 之后， mAssets 属性被放在了 ResourcesImpl 中
+                // 所以需要先获取 ResourcesImpl 对象再进行替换
                 final Object resourceImpl = resourcesImplFiled.get(resources);
                 // for Huawei HwResourcesImpl
                 final Field implAssets = findField(resourceImpl, "mAssets");
                 implAssets.set(resourceImpl, newAssetManager);
             }
 
+            // 在 Resource 中会维护一个 mTypedArrayPool 资源池
+            // 来减少频繁访问 AssetManager ，所以需要去释放这个资源池，否则取到的都是缓存
             clearPreloadTypedArrayIssue(resources);
 
+                // 最后调用 updateConfiguration 方法来确保资源更新了
             resources.updateConfiguration(resources.getConfiguration(), resources.getDisplayMetrics());
         }
 
@@ -242,6 +269,9 @@ class TinkerResourcePatcher {
             }
         }
 
+        // 就是来确认一下资源补丁是否已经加载成功了。具体的方法就是在资源补丁Apk的 assets 中有一个 Tinker 的测试资源，
+        // 名字叫 only_use_to_test_tinker_resource.txt ，如果可以正确读取到并且没报错的话，就证明资源补丁加载成功了。
+        // 否则就抛出异常，会执行 dex 补丁卸载的流程。
         if (!checkResUpdate(context)) {
             throw new TinkerRuntimeException(ShareConstants.CHECK_RES_INSTALL_FAIL);
         }

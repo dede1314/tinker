@@ -53,6 +53,7 @@ public class TinkerResourceLoader {
      * Load tinker resources
      */
     public static boolean loadTinkerResources(TinkerApplication application, String directory, Intent intentResult) {
+        // 检查 res_meta.txt 中读取出来的 md5 值，如果 resPatchInfo 或者 md5 是空的，就说明补丁包中没有资源补丁，不需要加载
         if (resPatchInfo == null || resPatchInfo.resArscMd5 == null) {
             return true;
         }
@@ -74,6 +75,7 @@ public class TinkerResourceLoader {
         } catch (Throwable e) {
             Log.e(TAG, "install resources failed");
             //remove patch dex if resource is installed failed
+            // 如果加载失败了，会把 dex 补丁卸载了。防止 dex 补丁代码中会引用到资源补丁中的资源文件，导致程序崩溃或报错。
             try {
                 SystemClassLoaderAdder.uninstallPatchDex(application.getClassLoader());
             } catch (Throwable throwable) {
@@ -96,12 +98,14 @@ public class TinkerResourceLoader {
      * @return boolean
      */
     public static boolean checkComplete(Context context, String directory, ShareSecurityCheck securityCheck, Intent intentResult) {
+        // 读取 assets/res_meta.txt
         String meta = securityCheck.getMetaContentMap().get(RESOURCE_META_FILE);
         //not found resource
         if (meta == null) {
             return true;
         }
         //only parse first line for faster
+        // res_meta.txt 的第一行主要是资源的 crc 值和 md5 值 ，在后面会做校验。
         ShareResPatchInfo.parseResPatchInfoFirstLine(meta, resPatchInfo);
 
         if (resPatchInfo.resArscMd5 == null) {

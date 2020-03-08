@@ -93,6 +93,9 @@ public class TinkerPatchService extends IntentService {
         return ShareIntentUtil.getStringExtra(intent, RESULT_CLASS_EXTRA);
     }
 
+    // 补丁合成流程
+    //下发的补丁包其实并不能直接加载，因为补丁包只是差异包，需要和本地的 dex 、资源等进行合成后，
+    // 得到全量的 dex 才能被完整地使用。这样也就避免了热修复中 dex 的 pre-verify 问题，也减少了补丁包的体积，方便用户下载。
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         increasingPriority();

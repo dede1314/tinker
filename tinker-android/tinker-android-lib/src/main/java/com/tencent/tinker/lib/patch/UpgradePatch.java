@@ -123,8 +123,10 @@ public class UpgradePatch extends AbstractPatch {
             }
             // if it is interpret now, use changing flag to wait main process
             final String finalOatDir = usingInterpret ? ShareConstants.CHANING_DEX_OPTIMIZE_PATH : oldInfo.oatDir;
+            // 构造新的 patch.info
             newInfo = new SharePatchInfo(oldInfo.oldVersion, patchMd5, isProtectedApp, false, Build.FINGERPRINT, finalOatDir);
         } else {
+            // 构造新的 patch.info
             newInfo = new SharePatchInfo("", patchMd5, isProtectedApp, false, Build.FINGERPRINT, ShareConstants.DEFAULT_DEX_OPTIMIZE_PATH);
         }
 
@@ -143,6 +145,7 @@ public class UpgradePatch extends AbstractPatch {
         try {
             // check md5 first
             if (!patchMd5.equals(SharePatchFileUtil.getMD5(destPatchFile))) {
+                // 复制补丁包到 /data/data/ 中
                 SharePatchFileUtil.copyFileUsingStream(patchFile, destPatchFile);
                 TinkerLog.w(TAG, "UpgradePatch copy patch file, src file: %s size: %d, dest file: %s size:%d", patchFile.getAbsolutePath(), patchFile.length(),
                     destPatchFile.getAbsolutePath(), destPatchFile.length());
@@ -154,6 +157,7 @@ public class UpgradePatch extends AbstractPatch {
         }
 
         //we use destPatchFile instead of patchFile, because patchFile may be deleted during the patch process
+        // 合成 dex
         if (!DexDiffPatchInternal.tryRecoverDexFiles(manager, signatureCheck, context, patchVersionDirectory, destPatchFile)) {
             TinkerLog.e(TAG, "UpgradePatch tryPatch:new patch recover, try patch dex failed");
             return false;
@@ -163,23 +167,26 @@ public class UpgradePatch extends AbstractPatch {
                 context, patchVersionDirectory, destPatchFile)) {
             return false;
         }
-
+        // 合成 so 文件
         if (!BsDiffPatchInternal.tryRecoverLibraryFiles(manager, signatureCheck, context, patchVersionDirectory, destPatchFile)) {
             TinkerLog.e(TAG, "UpgradePatch tryPatch:new patch recover, try patch library failed");
             return false;
         }
 
+        // 合成资源文件
         if (!ResDiffPatchInternal.tryRecoverResourceFiles(manager, signatureCheck, context, patchVersionDirectory, destPatchFile)) {
             TinkerLog.e(TAG, "UpgradePatch tryPatch:new patch recover, try patch resource failed");
             return false;
         }
 
         // check dex opt file at last, some phone such as VIVO/OPPO like to change dex2oat to interpreted
+        // 合成完后，还要对 dex 进行opt优化
         if (!DexDiffPatchInternal.waitAndCheckDexOptFile(patchFile, manager)) {
             TinkerLog.e(TAG, "UpgradePatch tryPatch:new patch recover, check dex opt file failed");
             return false;
         }
 
+        // 最后，就是把结果重新写入到 patch.info ，这样在加载补丁的流程中就能加载新补丁了。
         if (!SharePatchInfo.rewritePatchInfoFileWithLock(patchInfoFile, newInfo, patchInfoLockFile)) {
             TinkerLog.e(TAG, "UpgradePatch tryPatch:new patch recover, rewrite patch info failed");
             manager.getPatchReporter().onPatchInfoCorrupted(patchFile, newInfo.oldVersion, newInfo.newVersion);
