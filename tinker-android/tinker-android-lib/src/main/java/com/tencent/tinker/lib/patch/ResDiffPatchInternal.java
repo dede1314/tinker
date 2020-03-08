@@ -82,8 +82,10 @@ public class ResDiffPatchInternal extends BasePatchInternal {
         return true;
     }
 
+    // 补丁下发成功后资源补丁的合成
     private static boolean extractResourceDiffInternals(Context context, String dir, String meta, File patchFile, int type) {
         ShareResPatchInfo resPatchInfo = new ShareResPatchInfo();
+        // 首先读取res_meta.txt的数据
         ShareResPatchInfo.parseAllResPatchInfo(meta, resPatchInfo);
         TinkerLog.i(TAG, "res dir: %s, meta: %s", dir, resPatchInfo.toString());
         Tinker manager = Tinker.with(context);
@@ -121,7 +123,7 @@ public class ResDiffPatchInternal extends BasePatchInternal {
             }
             String apkPath = applicationInfo.sourceDir;
 
-
+            // 该函数里面会对largeMod的文件进行合成，合成的算法也是采用bsdiff
             if (!checkAndExtractResourceLargeFile(context, apkPath, directory, tempResFileDirectory, patchFile, resPatchInfo, type)) {
                 return false;
             }
@@ -135,6 +137,7 @@ public class ResDiffPatchInternal extends BasePatchInternal {
                 oldApk = new TinkerZipFile(apkPath);
                 newApk = new TinkerZipFile(patchFile);
                 final Enumeration<? extends TinkerZipEntry> entries = oldApk.entries();
+                // 基于oldapk，合并补丁后将这些资源文件写入resources.apk文件中
                 while (entries.hasMoreElements()) {
                     TinkerZipEntry zipEntry = entries.nextElement();
                     if (zipEntry == null) {
@@ -223,6 +226,7 @@ public class ResDiffPatchInternal extends BasePatchInternal {
                 //delete temp files
                 SharePatchFileUtil.deleteDir(tempResFileDirectory);
             }
+            // 最后对resouces.apk文件进行MD5检查，判断是否与resPatchInfo中的MD5一致
             boolean result = SharePatchFileUtil.checkResourceArscMd5(resOutput, resPatchInfo.resArscMd5);
 
             if (!result) {

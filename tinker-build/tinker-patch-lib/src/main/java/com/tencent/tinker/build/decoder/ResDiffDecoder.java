@@ -219,12 +219,14 @@ public class ResDiffDecoder extends BaseDecoder {
     }
 
     private boolean dealWithModifyFile(String name, String newMd5, File oldFile, File newFile, File outputFile) throws IOException {
+        // 大文件采用bsdiff算法,BsDiff属于二进制比较
         if (checkLargeModFile(newFile)) {
             if (!outputFile.getParentFile().exists()) {
                 outputFile.getParentFile().mkdirs();
             }
             BSDiff.bsdiff(oldFile, newFile, outputFile);
             //treat it as normal modify
+            //  对生成的diff文件大小和newFile进行比较，只有在达到我们的压缩效果后才使用diff文件
             if (Utils.checkBsDiffFileSize(outputFile, newFile)) {
                 LargeModeInfo largeModeInfo = new LargeModeInfo();
                 largeModeInfo.path = newFile;

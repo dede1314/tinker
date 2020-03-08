@@ -213,7 +213,8 @@ class TinkerResourcePatcher {
             }
         }
 
-        // Create a new AssetManager instance and point it to the resources installed under
+        // Create a new AssetManager instance and point it to the resources installed under sdcard
+        // 通过反射调用AssetManager的addAssetPath添加资源路径
         if (((Integer) addAssetPathMethod.invoke(newAssetManager, externalResourceFile)) == 0) {
             throw new IllegalStateException("Could not create new AssetManager");
         }

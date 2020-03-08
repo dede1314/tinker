@@ -376,6 +376,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
         }
 
         //now we can load patch resource
+        // 合成好的资源补丁存放在/data/data/${PackageName}/tinker/res/中，名为resources.apk
         if (isEnabledForResource) {
             boolean loadTinkerResources = TinkerResourceLoader.loadTinkerResources(app, patchVersionDirectory, resultIntent);
             if (!loadTinkerResources) {
