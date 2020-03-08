@@ -61,6 +61,24 @@ public class TinkerLoader extends AbstractTinkerLoader {
         return resultIntent;
     }
 
+
+    // 检查项目 参考自https://www.cnblogs.com/yyangblog/p/6249715.html，但貌似版本比较旧
+
+    // tinkerFlag是否开启，否则不加载
+    //tinker目录是否生成，没有则表示没有生成全量的dex，不需要重新加载
+    //tinker目录是否生成，没有则表示没有生成全量的dex，不需要重新加载
+    //tinker/patch.info是否存在，否则不加载
+    //读取patch.info，读取失败则不加载
+    //比较patchInfo的新旧版本，都为空则不加载
+    //判断版本号是否为空，为空则不加载
+    //判断patch version directory（//tinker/patch.info/patch-641e634c）是否存在
+    //判断patchVersionDirectoryFile（//tinker/patch.info/patch-641e634c/patch-641e634c.apk）是否存在
+    //checkTinkerPackage,（如tinkerId和oldTinkerId不能相等，否则不加载)
+    //检测dex的完整性，包括dex是否全部生产，是否对dex做了优化，优化后的文件是否存在（//tinker/patch.info/patch-641e634c/dex）
+    //同样对so res文件进行完整性检测
+    //尝试超过3次不加载
+    //loadTinkerJars/loadTinkerResources/
+
     private void tryLoadPatchFilesInternal(TinkerApplication app, Intent resultIntent) {
         final int tinkerFlag = app.getTinkerFlags();
 
@@ -227,6 +245,12 @@ public class TinkerLoader extends AbstractTinkerLoader {
 
         if (!isArkHotRuning && isEnabledForDex) {
             //tinker/patch.info/patch-641e634c/dex
+            // 检测dex的完整性，包括dex是否全部产生，是否对dex做了优化，优化后的文件是否存在（//tinker/patch.info/patch-641e634c/dex）
+            //  检测到有patch的时候生成优化后的oat?文件，下次启动的是去目录下检测是否有文件.
+            // 那什么是进行patch.dex与app中的classes.dex的合并呢？
+
+            // 主要是用于检查下发的meta文件中记录的dex信息（meta文件，可以查看生成patch的产物，在assets/dex-meta.txt），
+            // 检查meta文件中记录的dex文件信息对应的dex文件是否存在，并把值存在TinkerDexLoader的静态变量dexList中。
             boolean dexCheck = TinkerDexLoader.checkComplete(patchVersionDirectory, securityCheck, oatDex, resultIntent);
             if (!dexCheck) {
                 //file not found, do not load patch
@@ -300,6 +324,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
 
         //now we can load patch jar
         if (!isArkHotRuning && isEnabledForDex) {
+            // 在收到补丁时已经完成了dex2oat的操作，这次直接load
             boolean loadTinkerJars = TinkerDexLoader.loadTinkerJars(app, patchVersionDirectory, oatDex, resultIntent, isSystemOTA, isProtectedApp);
 
             if (isSystemOTA) {

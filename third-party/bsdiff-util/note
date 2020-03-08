@@ -46,6 +46,8 @@
 2 每次启动都进行patch？
 
 3 加固模式的处理
+54125a7d725042e9a01c19c6c6b8274b5c788bee
+[tinker] Add feature: support protected app again.  V1.7.8
 
 4 tinker配置项的意义以及生效地方
 

@@ -192,10 +192,15 @@ public class DexDiffDecoder extends BaseDecoder {
             Logger.d("No dexes were changed, nothing needs to be done next.");
             return;
         }
-
+        // Whether tinker should treat the base apk as the one being protected by app
+        // protection tools.
+        // If this attribute is true, the generated patch package will contain a
+        // dex including all changed classes instead of any dexdiff patch-info files.
         if (config.mIsProtectedApp) {
+           //  加固模式使用smali生成dex文件？
             generateChangedClassesDexFile();
         } else {
+            // 加固模式如何处理，现在看只有非加固模式才用到了DexPatchApplier
             generatePatchInfoFile();
         }
 
@@ -256,6 +261,10 @@ public class DexDiffDecoder extends BaseDecoder {
             if (!isCurrentDexHasChangedClass) {
                 continue;
             }
+            // Q&A: 为什么使用smali ?
+            // smali/baksmali 是针对 dalvik 使用的 dex 格式的汇编/反汇编器。它的语法基于 Jasmin's/dedexer，
+            // 支持 dex 格式的所有功能（注释，调试信息，行信息等等）。因此我们可以认为 smali 和 Dalvik 字节码文件是等价的。
+
             DexBuilder dexBuilder = new DexBuilder(Opcodes.forApi(29));
             for (org.jf.dexlib2.iface.ClassDef classDef : dexFile.getClasses()) {
                 if (!descOfChangedClassesInCurrDex.contains(classDef.getType())) {
@@ -317,6 +326,7 @@ public class DexDiffDecoder extends BaseDecoder {
             final FileDataStore fileDataStore = new FileDataStore(dest);
             dexBuilder.writeTo(fileDataStore);
             final String md5 = MD5.getMD5(dest);
+            // name,path,destMd5InDvm,destMd5InArt,dexDiffMd5,oldDexCrc,newDexCrc,dexMode
             appendMetaLine(metaBuilder, changedDexName, "", md5, md5, 0, 0, 0, dexMode);
             ++changedDexId;
         }
@@ -508,11 +518,14 @@ public class DexDiffDecoder extends BaseDecoder {
         if (config.mDexRaw) {
             dexMode = "raw";
         }
-
+        // 在使用Class.getResourceAsStream 时，资源路径有两种方式，
+        // 一种以“/”开头，这样的路径是指绝对路径，如果不以“/”开头，则路径是相对于这个class所在的包的。
+        // getResourceAsStream:finds a resource with a given name
         final InputStream is = DexDiffDecoder.class.getResourceAsStream("/" + TEST_DEX_NAME);
         String md5 = MD5.getMD5(is, 1024);
         is.close();
 
+        // // name,path,destMd5InDvm,destMd5InArt,dexDiffMd5,oldDexCrc,newDexCrc,dexMode
         String meta = TEST_DEX_NAME + "," + "" + "," + md5 + "," + md5 + "," + 0 + "," + 0 + "," + 0 + "," + dexMode;
 
         File dest = new File(config.mTempResultDir + "/" + TEST_DEX_NAME);
@@ -705,10 +718,11 @@ public class DexDiffDecoder extends BaseDecoder {
                     );
                 }
             }
-
+            // name,path,destMd5InDvm,destMd5InArt,dexDiffMd5,oldDexCrc,newDexCrc,dexMode
             String meta = fileName + "," + parentRelative + "," + destMd5InDvm + ","
                 + destMd5InArt + "," + dexDiffMd5 + "," + oldCrc + "," + newOrFullPatchedCrc + "," + dexMode;
-
+            // note:此处将差分的dex写入dex_meta.txt中
+            // 但为何没有日志输出？
             Logger.d("DexDecoder:write meta file data: %s", meta);
             metaWriter.writeLineToInfoFile(meta);
         }

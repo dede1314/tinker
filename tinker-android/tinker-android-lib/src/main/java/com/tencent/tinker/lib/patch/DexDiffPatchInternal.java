@@ -425,6 +425,7 @@ public class DexDiffPatchInternal extends BasePatchInternal {
         return true;
     }
 
+    // Qzone是直接将patch.dex插到数组的前面；而tinker是将patch.dex与app中的classes.dex合并后的全量dex插在数组的前面。
     private static boolean extractDexDiffInternals(Context context, String dir, String meta, File patchFile, int type) {
         //parse
         patchList.clear();
@@ -503,7 +504,7 @@ public class DexDiffPatchInternal extends BasePatchInternal {
                 ZipEntry patchFileEntry = patch.getEntry(patchRealPath);
                 ZipEntry rawApkFileEntry = apk.getEntry(patchRealPath);
 
-                if (oldDexCrc.equals("0")) {
+                if (oldDexCrc.equals("0")) {// oldDexCrc什么情况下等于0？新增的dex.
                     if (patchFileEntry == null) {
                         TinkerLog.w(TAG, "patch entry is null. path:" + patchRealPath);
                         manager.getPatchReporter().onPatchTypeExtractFail(patchFile, extractedFile, info.rawName, type);
@@ -516,7 +517,7 @@ public class DexDiffPatchInternal extends BasePatchInternal {
                         manager.getPatchReporter().onPatchTypeExtractFail(patchFile, extractedFile, info.rawName, type);
                         return false;
                     }
-                } else if (dexDiffMd5.equals("0")) {
+                } else if (dexDiffMd5.equals("0")) {// dexDiffMd5什么情况下等于0，加固模式下等于0
                     // skip process old dex for real dalvik vm
                     if (!isVmArt) {
                         continue;
@@ -546,7 +547,7 @@ public class DexDiffPatchInternal extends BasePatchInternal {
                         SharePatchFileUtil.safeDeleteFile(extractedFile);
                         return false;
                     }
-                } else {
+                } else {//  需要进行dex的patch，此种情况下适合非加固模式
                     if (patchFileEntry == null) {
                         TinkerLog.w(TAG, "patch entry is null. path:" + patchRealPath);
                         manager.getPatchReporter().onPatchTypeExtractFail(patchFile, extractedFile, info.rawName, type);
@@ -572,6 +573,7 @@ public class DexDiffPatchInternal extends BasePatchInternal {
                         return false;
                     }
 
+                    // 真正开始进行dex的patch操作
                     patchDexFile(apk, patch, rawApkFileEntry, patchFileEntry, info, extractedFile);
 
                     if (!SharePatchFileUtil.verifyDexFileMd5(extractedFile, extractedFileMd5)) {
@@ -607,7 +609,7 @@ public class DexDiffPatchInternal extends BasePatchInternal {
      * @return boolean
      * @throws IOException
      */
-    private static boolean extractDexToJar(ZipFile zipFile, ZipEntry entryFile, File extractTo, String targetMd5) throws IOException {
+        private static boolean extractDexToJar(ZipFile zipFile, ZipEntry entryFile, File extractTo, String targetMd5) throws IOException {
         int numAttempts = 0;
         boolean isExtractionSuccessful = false;
         while (numAttempts < MAX_EXTRACT_ATTEMPTS && !isExtractionSuccessful) {

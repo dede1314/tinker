@@ -76,6 +76,7 @@ public class ShareDexDiffPatchInfo {
     // 内容如下所示：
     // changed_classes.dex,,5d4ce4b80d4d5168006a63a5a16d94b3,5d4ce4b80d4d5168006a63a5a16d94b3,0,0,0,jar
     // test.dex,,56900442eb5b7e1de45449d0685e6e00,56900442eb5b7e1de45449d0685e6e00,0,0,0,jar
+    // 打包patch时，在DexDiffDecoder的onAllPatchesEnd方法中生成
     public static void parseDexDiffPatchInfo(String meta, ArrayList<ShareDexDiffPatchInfo> dexList) {
         if (meta == null || meta.length() == 0) {
             return;
@@ -89,7 +90,7 @@ public class ShareDexDiffPatchInfo {
             if (kv == null || kv.length < 8) {
                 continue;
             }
-
+            // name,path,destMd5InDvm,destMd5InArt,dexDiffMd5,oldDexCrc,newDexCrc,dexMode
             // key
             final String name = kv[0].trim();
             final String path = kv[1].trim();

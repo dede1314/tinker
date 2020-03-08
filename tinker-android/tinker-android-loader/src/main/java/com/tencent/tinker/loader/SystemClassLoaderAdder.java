@@ -80,6 +80,8 @@ public class SystemClassLoaderAdder {
             sPatchDexCount = files.size();
             Log.i(TAG, "after loaded classloader: " + classLoader + ", dex size:" + sPatchDexCount);
 
+            // 对patch加载是否成功进行判断，怎么变成true的
+            // 如何查看特定文件是否打包进去apk
             if (!checkDexInstall(classLoader)) {
                 //reset patch dex
                 SystemClassLoaderAdder.uninstallPatchDex(classLoader);
