@@ -39,6 +39,17 @@ import java.lang.reflect.Field;
 /**
  * Created by liangwenxiang on 2016/4/14.
  */
+// 要做资源更新的需求,我们可以整理一下资源替换的步骤.
+//
+//反射拿到ActivityThread对象持有的LoadedApk容器
+//遍历容器中LoadedApk对象,反射替换mResDir属性为补丁物理路径.
+//创建新的AssetManager, 并根据补丁路径反射调用addAssetPath将补丁加载到新的AssetManager中.
+//反射获得ResourcesManager持有的Resources容器对象.
+//遍历出容器中的Resources对象, 替换对象的属性为新的AssetManager, 并且根据原属性重新更新Resources对象的配置.
+//————————————————
+//版权声明：本文为CSDN博主「Jesse-csdn」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+//原文链接：https://blog.csdn.net/l2show/article/details/53454933
+
 public class TinkerResourceLoader {
     protected static final String RESOURCE_META_FILE = ShareConstants.RES_META_FILE;
     protected static final String RESOURCE_FILE      = ShareConstants.RES_NAME;

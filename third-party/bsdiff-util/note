@@ -48,6 +48,7 @@
 3 加固模式的处理
 54125a7d725042e9a01c19c6c6b8274b5c788bee
 [tinker] Add feature: support protected app again.  V1.7.8
+由于Tinker的全量合成需要拿到原dex,而第三方的加固通常会将原dex隐藏起来做保护所以使用了第三方加固就只能用V1.7.5的Qzone模式.除非自己做dex保护或者不使用加固,
 
 4 tinker配置项的意义以及生效地方
 

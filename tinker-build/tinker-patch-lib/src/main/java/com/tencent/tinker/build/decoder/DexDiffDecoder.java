@@ -525,7 +525,7 @@ public class DexDiffDecoder extends BaseDecoder {
         String md5 = MD5.getMD5(is, 1024);
         is.close();
 
-        // // name,path,destMd5InDvm,destMd5InArt,dexDiffMd5,oldDexCrc,newDexCrc,dexMode
+        // name,path,destMd5InDvm,destMd5InArt,dexDiffMd5,oldDexCrc,newDexCrc,dexMode
         String meta = TEST_DEX_NAME + "," + "" + "," + md5 + "," + md5 + "," + 0 + "," + 0 + "," + 0 + "," + dexMode;
 
         File dest = new File(config.mTempResultDir + "/" + TEST_DEX_NAME);

@@ -74,7 +74,7 @@ final class NewClassLoaderInjector {
 
         final String combinedDexPath = dexPathBuilder.toString();
 
-
+        // //这部分就是 libs 加载路径了，默认有 /vendor/lib  system/lib  data/app-lib/packageName
         final Field nativeLibraryDirectoriesField = findField(oldPathList.getClass(), "nativeLibraryDirectories");
         List<File> oldNativeLibraryDirectories = null;
         if (nativeLibraryDirectoriesField.getType().isArray()) {
@@ -100,6 +100,13 @@ final class NewClassLoaderInjector {
 
         ClassLoader result = null;
         if (Build.VERSION.SDK_INT >= 28) {
+            // DelegateLastClassLoader继承自PathClassLoader是API27新增的类加载器，
+            // DelegateLastClassLoader实行最后的查找策略。使用DelegateLastClassLoader来加载每个类和资源，使用的是以下顺序：
+            //1   判断是否已经加载过该类
+            //2   判断此类是否被BootClassLoader加载过
+            //3.  搜索此类是否被当前类加载器是已经加载过
+            //4.  搜索与此类加载器相关联的dexPath文件列表，并委托给父加载器。
+
             result = new DelegateLastClassLoader(combinedDexPath, combinedLibraryPath, null);
         } else {
             result = new TinkerDelegateLastClassLoader(combinedDexPath, combinedLibraryPath, null);
@@ -111,6 +118,10 @@ final class NewClassLoaderInjector {
         return result;
     }
 
+    // 在全局Context中持有的LoadedApk的对象mPackageInfo的属性中,有一个ClassLoader类的对象mClassLoader.
+    // 层层反射将mClassLoader的引用替换为上面创建出来的AndroidNClassLoader对象.
+    // 同时将Thread中持有的ClassLoader也同步替换为AndroidNClassLoader.
+    // 至此PathClassLoader的修改和替换都已经完成了,接下来就可以正常得加载补丁dex了.
     private static void doInject(Application app, ClassLoader classLoader) throws Throwable {
         Thread.currentThread().setContextClassLoader(classLoader);
 

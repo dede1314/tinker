@@ -160,6 +160,8 @@ public class TinkerDexLoader {
             optimizeDir = new File(directory + "/" + INTERPRET_DEX_OPTIMIZE_PATH);
 
             // 对 dex 文件作 odex 处理
+            // 只要用户是ART环境并且做了OTA升级则在加载dex补丁的时候就会先把最近一次的补丁全部DexFile.loadDex一遍.
+            // 这么做的原因是有些场景做了OTA后,oat的规则可能发生变化,在这种情况下去加载上个系统版本oat过的dex就会出现问题.
             TinkerDexOptimizer.optimizeAll(
                 application, legalFiles, optimizeDir, true, targetISA,
                 new TinkerDexOptimizer.ResultCallback() {

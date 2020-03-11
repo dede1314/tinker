@@ -49,6 +49,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
     /**
      * only main process can handle patch version change or incomplete
      */
+    //tryLoad加载已经合成的dex
     @Override
     public Intent tryLoad(TinkerApplication app) {
         Log.d(TAG, "tryLoad test test");

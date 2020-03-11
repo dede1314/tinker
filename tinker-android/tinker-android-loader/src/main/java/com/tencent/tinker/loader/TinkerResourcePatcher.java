@@ -80,6 +80,10 @@ class TinkerResourcePatcher {
     // 在资源打补丁的时候，Resources 中原来的 mAssets 对象会被替换成新的 AssetManager 对象。
     // 这里就不详细讲了，总结起来就一句话：获取 Android 系统中与资源有关的一些属性和方法，为接下来的加载资源补丁做准备。
     // 如果在 isResourceCanPatch 方法中报出异常了，就认为当前环境不能加载资源补丁了。
+
+    // 做完上述的操作之后,如果在过程中没有主动或被动抛异常出来就说明当前的系统环境是可以做资源的更新,
+    // 并且将更新资源要用到的Field和Method保存起来方便加载补丁时的使用.
+    // https://blog.csdn.net/l2show/article/details/53454933
     public static void isResourceCanPatch(Context context) throws Throwable {
         //   - Replace mResDir to point to the external resource file instead of the .apk. This is
         //     used as the asset path for new Resources objects.
@@ -123,6 +127,10 @@ class TinkerResourcePatcher {
         // Iterate over all known Resources objects
         if (SDK_INT >= KITKAT) {
             //pre-N
+            // 在Android SDK >= 24时ResourcesManager持有的Resources容器属性名是mResourceReferences而Android SDK在(24, 19]之间时属性名是mActiveResources要再区分开两种实现.最终拿到所有Resources对象的引用.
+            //————————————————
+            //版权声明：本文为CSDN博主「Jesse-csdn」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+            //原文链接：https://blog.csdn.net/l2show/article/details/53454933
             // Find the singleton instance of ResourcesManager
             final Class<?> resourcesManagerClass = Class.forName("android.app.ResourcesManager");
             final Method mGetInstance = findMethod(resourcesManagerClass, "getInstance");
@@ -138,6 +146,8 @@ class TinkerResourcePatcher {
                 references = (Collection<WeakReference<Resources>>) mResourceReferences.get(resourcesManager);
             }
         } else {
+            // 该Android SDK区间内Resources对象集合的引用是在ActivityThread对象的mActiveResources对象持有的.
+            // 反射拿到之后也将所有的Resources引用保存起来.
             final Field fMActiveResources = findField(activityThread, "mActiveResources");
             final HashMap<?, WeakReference<Resources>> activeResources7 =
                     (HashMap<?, WeakReference<Resources>>) fMActiveResources.get(currentActivityThread);
@@ -222,6 +232,8 @@ class TinkerResourcePatcher {
         // Kitkat needs this method call, Lollipop doesn't. However, it doesn't seem to cause any harm
         // in L, so we do it unconditionally.
         // 创建出 AssetManager 后，调用 ensureStringBlocks 来确保资源的字符串索引创建出来
+        // 上面分析源码资源加载流程中在构造Resources的时候Resources会调用一次ensureStringBlocks确保资源的字符串索引创建出来.
+        // 所以我们在创建出新的AssetManager之后, 主动调用一次该方法.
         if (stringBlocksField != null && ensureStringBlocksMethod != null) {
             stringBlocksField.set(newAssetManager, null);
             ensureStringBlocksMethod.invoke(newAssetManager);
@@ -242,6 +254,7 @@ class TinkerResourcePatcher {
                 // N
                 // Android N 之后， mAssets 属性被放在了 ResourcesImpl 中
                 // 所以需要先获取 ResourcesImpl 对象再进行替换
+                // 从Android N开始 Resources和AssetManager之间变成了间接引用Resources -> ResourcesImpl -> AssetManager
                 final Object resourceImpl = resourcesImplFiled.get(resources);
                 // for Huawei HwResourcesImpl
                 final Field implAssets = findField(resourceImpl, "mAssets");

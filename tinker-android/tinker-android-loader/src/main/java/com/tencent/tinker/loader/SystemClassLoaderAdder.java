@@ -54,6 +54,12 @@ public class SystemClassLoaderAdder {
     private static int sPatchDexCount = 0;
 
     @SuppressLint("NewApi")
+    // 一个ClassLoader可以包含多个dex文件，每个dex文件是一个Element，多个dex文件排列成一个有序的数组dexElements，
+    // 当找类的时候，会按顺序遍历dex文件，然后从当前遍历的dex文件中找类，如果找类则返回，如果找不到从下一个dex文件继续查找。(来自：安卓App热补丁动态修复技术介绍)
+
+    // install的做法就是，先获取BaseDexClassLoader的dexPathList对象，然后通过dexPathList的makeDexElements函数将我们要安装的dex转化成Element[]对象，
+    // 最后将其和dexPathList的dexElements对象进行合并，就是新的Element[]对象，因为我们添加的dex都被放在dexElement数组的最前面，
+    // 所以当通过findClass来查找这个类时，就是使用的我们最新的dex里面的类。
     public static void installDexes(Application application, BaseDexClassLoader loader, File dexOptDir, List<File> files, boolean isProtectedApp)
         throws Throwable {
         Log.i(TAG, "installDexes dexOptDir: " + dexOptDir.getAbsolutePath() + ", dex size:" + files.size());
@@ -285,7 +291,8 @@ public class SystemClassLoaderAdder {
     // 首先反射拿到反射得到 PathClassLoader 中的 pathList 对象,再将补丁文件通过反射调用makeDexElements 得到补丁文件的 Element[] ,
     // 再将补丁包的 Element[] 数组插入到 dexElements 中
     private static final class V19 {
-
+        // 在该版本系统区间中,加载补丁涉及到的修改只是增加了一个exElementsSuppressedExceptions异常数组的维护.
+        // 所以在加载补丁的时候就跟V14差不多了.既然只是多了一个异常的管理,
         private static void install(ClassLoader loader, List<File> additionalClassPathEntries,
                                     File optimizedDirectory)
             throws IllegalArgumentException, IllegalAccessException,
@@ -340,7 +347,14 @@ public class SystemClassLoaderAdder {
     /**
      * Installer for platform versions 14, 15, 16, 17 and 18.
      */
+    // 在这个Android版本的区间内不再像老版本的那样要维护四个数组,源码从中抽离出了一个类DexPathList.java,
+    // 加载dex的关键数组也变成了dexElements,并且dexElements是根据makeDexElements方法生成的.
+    // 对比过源码其实就可以发现dexElements其实就是老版本中mFiles, mZips和mDexs的封装,
+    // makeDexElements方法就是老版本DexClassLoader.java构造方法中对数组初始化的动作.
     private static final class V14 {
+
+        // 系统既然自己做了封装,那么我们反射调用起来也会更方便.首先反射拿到反射得到PathClassLoader中的pathList对象,
+        // 再将补丁文件通过反射调用makeDexElements得到补丁文件的Element[],再将补丁包的Element数组插入到dexElements中,方法如V4.完成补丁加载.
 
         private static void install(ClassLoader loader, List<File> additionalClassPathEntries,
                                     File optimizedDirectory)
@@ -353,6 +367,7 @@ public class SystemClassLoaderAdder {
              */
             Field pathListField = ShareReflectUtil.findField(loader, "pathList");
             Object dexPathList = pathListField.get(loader);
+            //通过反射调用makeDexElements方法生成补丁包的dex数组,再将其插入到dexElements的头部
             ShareReflectUtil.expandFieldArray(dexPathList, "dexElements", makeDexElements(dexPathList,
                 new ArrayList<File>(additionalClassPathEntries), optimizedDirectory));
         }
@@ -368,6 +383,7 @@ public class SystemClassLoaderAdder {
             Method makeDexElements =
                 ShareReflectUtil.findMethod(dexPathList, "makeDexElements", ArrayList.class, File.class);
 
+            // 反射调用makeDexElements方法根据files得到新dexElements数组
             return (Object[]) makeDexElements.invoke(dexPathList, files, optimizedDirectory);
         }
     }
@@ -375,6 +391,9 @@ public class SystemClassLoaderAdder {
     /**
      * Installer for platform versions 4 to 13.
      */
+    // 在Android SDK4到14之间PathClassLoader.java的实现是直接继承自ClassLoader,
+    // findClass时是根据mFiles数组来遍历mDexs数组(类似于dexElements).从mDexs数组中的dex根据类名来加载Class,
+    // 规则也是按照遍历的顺序加载,只要有加载出来的Class就直接return掉.
     private static final class V4 {
         private static void install(ClassLoader loader, List<File> additionalClassPathEntries, File optimizedDirectory)
             throws IllegalArgumentException, IllegalAccessException,
