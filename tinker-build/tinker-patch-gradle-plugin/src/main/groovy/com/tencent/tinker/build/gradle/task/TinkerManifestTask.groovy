@@ -29,6 +29,7 @@ import org.gradle.api.tasks.TaskAction
  *
  * @author zhangshaowen
  */
+// 建立Tinker的manifest任务,在manifestTask任务生成之后执行,并向android manifest文件的application层级中插入Tinker_ID,供app运行时使用
 public class TinkerManifestTask extends DefaultTask {
     static final String TINKER_ID = "TINKER_ID"
     static final String TINKER_ID_PREFIX = "tinker_id_"

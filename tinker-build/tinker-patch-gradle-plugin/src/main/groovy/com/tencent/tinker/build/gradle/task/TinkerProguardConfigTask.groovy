@@ -26,6 +26,10 @@ import org.gradle.api.tasks.TaskAction
  *
  * @author zhangshaowen
  */
+// 如果开启了混淆,就会在gradle插件中构建出该任务,主要的作用是将tinker中默认的混淆信息和基准包的mapping信息加入混淆列表,这样就可以通过gradle配置自动帮开发者做一些类的混淆设置,并且可以通过applymapping的基准包的mapping文件达到在混淆上补丁包和基准包一致的目的.首先打开在编译路径下的混淆文件,为后面写入默认的keep规则做准备
+//————————————————
+//版权声明：本文为CSDN博主「Jesse-csdn」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+//原文链接：https://blog.csdn.net/l2show/article/details/53925543
 public class TinkerProguardConfigTask extends DefaultTask {
     static final String PROGUARD_CONFIG_PATH =  TinkerPatchPlugin.TINKER_INTERMEDIATES + "tinker_proguard.pro"
     static final String PROGUARD_CONFIG_SETTINGS =

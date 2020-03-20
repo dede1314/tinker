@@ -39,6 +39,8 @@ import java.util.regex.Pattern
  *
  * @author zhangshaowen
  */
+// 该任务获取到buildConfig.applyResourceMapping配置的R文件中的映射, 并将它keep到补丁包生成的过程中.这个Task会跟TinkerPatchSchemaTask一起展开讲.
+// https://blog.csdn.net/l2show/article/details/53925543
 public class TinkerResourceIdTask extends DefaultTask {
     static final String RESOURCE_PUBLIC_XML = TinkerPatchPlugin.TINKER_INTERMEDIATES + "public.xml"
     static final String RESOURCE_IDX_XML = TinkerPatchPlugin.TINKER_INTERMEDIATES + "idx.xml"

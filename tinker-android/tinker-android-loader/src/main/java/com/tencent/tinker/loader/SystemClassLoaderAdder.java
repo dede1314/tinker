@@ -86,7 +86,10 @@ public class SystemClassLoaderAdder {
             sPatchDexCount = files.size();
             Log.i(TAG, "after loaded classloader: " + classLoader + ", dex size:" + sPatchDexCount);
 
-            // Q&A ：对patch加载是否成功进行判断，怎么变成true的
+            // Q&A ：对patch加载是否成功进行判断，怎么变成true的，
+            // 补丁中的test.dex文件中只包含了TinkerTestDexLoad 这个类，而且属性值是true,这个dex不是编译生成的，而是作为文件直接拷贝到patch中的。
+            // 如果没有加载补丁，就直接读取TinkerTestDexLoad中的isPatch属性，如果加载成功，就会优先加载patch中的dex,所以TinkerTestDexLoad这个类
+            // 就是从patch中的test.dex中加载而来。此时isPath属性为true.所以去读取TinkerTestDexLoad的isPatch属性是合理且可行的。
             // 如何查看特定文件是否打包进去apk
             // 在没有补丁加载的情况下都是返回 false 的, 在补丁中修改 isPatch 属性为 true 。
             // 所以只要反射拿到isPatch 的属性为 true 就说明补丁已经成功加载进来了。否则就调用 SystemClassLoaderAdder.uninstallPatchDex 执行卸载

@@ -37,6 +37,7 @@ import java.lang.reflect.Modifier
  *
  * @author zhangshaowen
  */
+// https://blog.csdn.net/l2show/article/details/53925543
 // tinker的插件
 class TinkerPatchPlugin implements Plugin<Project> {
     public static final String TINKER_INTERMEDIATES = "build/intermediates/tinker_intermediates/"
