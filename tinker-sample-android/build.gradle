@@ -4,6 +4,11 @@ buildscript {
         mavenLocal()
         jcenter()
         google()
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven {
+            url uri('repo')
+        }
     }
     dependencies {
         if (project.hasProperty('GRADLE_3') && GRADLE_3.equalsIgnoreCase('TRUE')) {
@@ -15,6 +20,7 @@ buildscript {
             changing = TINKER_VERSION?.endsWith("-SNAPSHOT")
             exclude group: 'com.android.tools.build', module: 'gradle'
         }
+        classpath 'com.sensorsdata:autotrack.android:1.0.0'// 需要先执行plugin的build.gradle中的uploadArchives
     }
     configurations.all {
         it.resolutionStrategy.cacheDynamicVersionsFor(5, 'minutes')

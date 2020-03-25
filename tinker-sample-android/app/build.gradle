@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.sensorsdata.android'
+
 
 dependencies {
     if (is_gradle_3()) {
@@ -45,6 +47,10 @@ def gitSha() {
 }
 
 def javaVersion = JavaVersion.VERSION_1_7
+
+sensorsAnalytics {
+    disableAppClick = false
+}
 
 android {
     compileSdkVersion 28
