@@ -59,6 +59,7 @@ public final class ComponentHotplug {
         }
     }
 
+    // TODO 为什么没有调用这个函数
     public synchronized static void ensureComponentHotplugInstalled(TinkerApplication app) throws UnsupportedEnvironmentException {
         // Some environments may reset AMS, PMS and mH，which cause component hotplug feature
         // being unavailable. So we reinstall them here.

@@ -59,6 +59,7 @@ public class TinkerInstaller {
      * @param upgradePatchProcessor
      */
     // install tinker
+    // TODO 调用时机 applicationlike 中,比如SampleApplicationLike，实际上是在tinkerApplication中的onBaseContextAttached方法中执行
     public static Tinker install(ApplicationLike applicationLike, LoadReporter loadReporter, PatchReporter patchReporter,
                                  PatchListener listener, Class<? extends AbstractResultService> resultServiceClass,
                                  AbstractPatch upgradePatchProcessor) {

@@ -198,7 +198,7 @@ public class ApkDecoder extends BaseDecoder {
             }
             String patternKey = relativePath.toString().replace("\\", "/");
 
-            if (Utils.checkFileInPattern(config.mDexFilePattern, patternKey)) {
+            if (Utils.checkFileInPattern(config.mDexFilePattern, patternKey)) {// 针对解压后的dex文件
                 //also treat duplicate file as unchanged
                 if (Utils.checkFileInPattern(config.mResFilePattern, patternKey) && oldFile != null) {
                     resDuplicateFiles.add(oldFile);

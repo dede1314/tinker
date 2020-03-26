@@ -52,6 +52,7 @@ public class TinkerManifestTask extends DefaultTask {
 
         def agpIntermediatesDir = new File(project.buildDir, 'intermediates')
         for (String manifestPath : manifestPaths) {
+            // 将tinkerId 数据保存到manifest中
             project.logger.error("tinker add ${tinkerValue} to your AndroidManifest.xml ${manifestPath}")
 
             writeManifestMeta(manifestPath, TINKER_ID, tinkerValue)

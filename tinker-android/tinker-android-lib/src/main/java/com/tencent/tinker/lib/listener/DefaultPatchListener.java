@@ -60,6 +60,7 @@ public class DefaultPatchListener implements PatchListener {
     public int onPatchReceived(String path) {
         final File patchFile = new File(path);
         final String patchMD5 = SharePatchFileUtil.getMD5(patchFile);
+        // TODO  patchCheck中的结果是从runPatchService后获取的？到底哪个在前？
         final int returnCode = patchCheck(path, patchMD5);
         if (returnCode == ShareConstants.ERROR_PATCH_OK) {
             runForgService();
@@ -128,12 +129,16 @@ public class DefaultPatchListener implements PatchListener {
             return ShareConstants.ERROR_PATCH_JIT;
         }
 
+        // 在tinker的install方法中调用TinkerPatchService.setPatchProcessor 加载完补丁
         final TinkerLoadResult loadResult = manager.getTinkerLoadResultIfPresent();
         // only call repair on main process
+        //TODO useInterpretMode这个是干嘛的？
         final boolean repairOptNeeded = manager.isMainProcess()
                 && loadResult != null && loadResult.useInterpretMode;
 
         if (!repairOptNeeded) {
+            // 在tinker的install方法中调用TinkerPatchService.setPatchProcessor 加载完补丁。
+            // 随后获取加载结果。
             if (manager.isTinkerLoaded() && loadResult != null) {
                 String currentVersion = loadResult.currentVersion;
                 if (patchMd5.equals(currentVersion)) {

@@ -81,6 +81,7 @@ public class TinkerProguardConfigTask extends DefaultTask {
         String applyMappingFile = project.extensions.tinkerPatch.buildConfig.applyMapping
 
         //write applymapping
+        // TODO 如何处理混淆
         if (shouldApplyMapping && FileOperation.isLegalFile(applyMappingFile)) {
             project.logger.error("try add applymapping ${applyMappingFile} to build the package")
             fr.write("-applymapping " + applyMappingFile)

@@ -70,6 +70,7 @@ public class SharePatchInfo {
         SharePatchInfo patchInfo;
         ShareFileLockHelper fileLock = null;
         try {
+            //TODO  看不懂
             fileLock = ShareFileLockHelper.getFileLock(lockFile);
             patchInfo = readAndCheckProperty(pathInfoFile);
         } catch (Exception e) {
@@ -87,6 +88,7 @@ public class SharePatchInfo {
         return patchInfo;
     }
 
+    // TODO 此处是如何作为加载补丁的判断的？
     public static boolean rewritePatchInfoFileWithLock(File pathInfoFile, SharePatchInfo info, File lockFile) {
         if (pathInfoFile == null || info == null || lockFile == null) {
             return false;

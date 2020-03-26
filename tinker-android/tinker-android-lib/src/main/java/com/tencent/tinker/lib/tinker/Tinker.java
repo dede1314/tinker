@@ -151,6 +151,8 @@ public class Tinker {
         if (intentResult == null) {
             throw new TinkerRuntimeException("intentResult must not be null.");
         }
+        //TODO  intentResult这个值从哪里来
+        // 在TinkerApplication中会调用TinkerLoader的tryLoad方法，intentResult是在这个方法中赋值
         tinkerLoadResult = new TinkerLoadResult();
         tinkerLoadResult.parseTinkerResult(getContext(), intentResult);
         //after load code set

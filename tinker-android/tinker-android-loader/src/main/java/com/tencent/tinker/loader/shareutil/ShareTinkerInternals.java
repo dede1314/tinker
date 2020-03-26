@@ -270,6 +270,8 @@ public class ShareTinkerInternals {
         }
     }
 
+    // TODO tinkerID是如何放进GET_META_DATA中的？
+    // 在编译时将tinkerId这个数据保存到了manifest中，参见TinkerManifestTask
     public static String getManifestTinkerID(Context context) {
         if (tinkerID != null) {
             return tinkerID;

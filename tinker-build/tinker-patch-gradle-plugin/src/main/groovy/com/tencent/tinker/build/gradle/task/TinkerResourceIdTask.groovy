@@ -149,6 +149,7 @@ public class TinkerResourceIdTask extends DefaultTask {
         replaceFinalField(aaptOptions.getClass().getName(), "additionalParameters", aaptOptions, additionalParameters)
         additionalParameters.add("--stable-ids")
         additionalParameters.add(project.file(RESOURCE_PUBLIC_TXT).getAbsolutePath())
+        // 如何保持资源文件的id 不变
         project.logger.error("tinker add additionalParameters --stable-ids ${project.file(RESOURCE_PUBLIC_TXT).getAbsolutePath()}")
         return additionalParameters
     }
