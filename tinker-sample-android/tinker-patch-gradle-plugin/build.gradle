@@ -1,0 +1,52 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+version rootProject.ext.VERSION_NAME
+group rootProject.ext.GROUP
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+//    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':tinker-patch-lib')
+    implementation 'com.google.gradle:osdetector-gradle-plugin:1.6.0'
+    compileOnly 'com.android.tools.build:gradle:3.1.4'
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+sourceSets {
+    main {
+        groovy {
+            srcDir 'src/main/groovy'
+        }
+
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
+
+//apply from: rootProject.file('gradle/java-artifacts.gradle')
+//apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+
+
+uploadArchives {
+    println("start upload tinker plugin ")
+    repositories.mavenDeployer {
+        //本地仓库路径，以放到项目根目录下的 repo 的文件夹为例
+        repository(url: uri('../../repo'))
+
+        //groupId ，自行定义
+        pom.groupId = 'com.tencent'
+
+        //artifactId
+        pom.artifactId = 'tinker.patch'
+
+        //插件版本号
+        pom.version = '1.0.0'
+    }
+}
