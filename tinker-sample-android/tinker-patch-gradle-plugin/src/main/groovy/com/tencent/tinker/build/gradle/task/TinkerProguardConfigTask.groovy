@@ -69,6 +69,7 @@ public class TinkerProguardConfigTask extends DefaultTask {
 
     @TaskAction
     def updateTinkerProguardConfig() {
+        println("here is TinkerProguardConfigTask updateTinkerProguardConfig")
         def file = project.file(PROGUARD_CONFIG_PATH)
         project.logger.error("try update tinker proguard file with ${file}")
 

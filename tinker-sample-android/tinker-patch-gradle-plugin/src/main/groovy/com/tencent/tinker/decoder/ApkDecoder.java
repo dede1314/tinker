@@ -186,6 +186,7 @@ public class ApkDecoder extends BaseDecoder {
         // visitFile 正在访问一个文件时要干啥
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            System.out.println("here is ApkFilesVisitor visitFile");
             //Constructs a relative path between this path and a given path.
             Path relativePath = newApkPath.relativize(file);
 
@@ -198,7 +199,7 @@ public class ApkDecoder extends BaseDecoder {
                 oldFile = oldPath.toFile();
             }
             String patternKey = relativePath.toString().replace("\\", "/");
-
+            System.out.println("here is visitFile patternKey "+patternKey);
             if (Utils.checkFileInPattern(config.mDexFilePattern, patternKey)) {// 针对解压后的dex文件
                 //also treat duplicate file as unchanged
                 if (Utils.checkFileInPattern(config.mResFilePattern, patternKey) && oldFile != null) {

@@ -104,7 +104,7 @@ class SensorsAnalyticsTransform extends Transform {
 
 
     private static void transformJar(File input, File dest) {
-        println("=== transformJar ===")
+//        println("=== transformJar ===")
         FileUtils.copyFile(input, dest)
     }
 
@@ -115,7 +115,7 @@ class SensorsAnalyticsTransform extends Transform {
         FileUtils.forceMkdir(dest)
         String srcDirPath = input.getAbsolutePath()
         String destDirPath = dest.getAbsolutePath()
-        println("=== transform dir = " + srcDirPath + ", " + destDirPath)
+//        println("=== transform dir = " + srcDirPath + ", " + destDirPath)
         for (File file : input.listFiles()) {
             String destFilePath = file.absolutePath.replace(srcDirPath, destDirPath)
             File destFile = new File(destFilePath)
@@ -129,12 +129,12 @@ class SensorsAnalyticsTransform extends Transform {
     }
 
     private static void transformSingleFile(File input, File dest) {
-        println("=== transformSingleFile ===")
+//        println("=== transformSingleFile ===")
         weave(input.getAbsolutePath(), dest.getAbsolutePath())
     }
 
     private static void weave(String inputPath, String outputPath) {
-        print("start weave")
+//        print("start weave")
         try {
             FileInputStream is = new FileInputStream(inputPath)
             ClassReader cr = new ClassReader(is)

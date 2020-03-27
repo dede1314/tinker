@@ -346,6 +346,7 @@ public class TinkerResourceIdTask extends DefaultTask {
 
     @TaskAction
     def applyResourceId() {
+        println(" here is TinkerResourceIdTask applyResourceId")
         String resourceMappingFile = project.extensions.tinkerPatch.buildConfig.applyResourceMapping
 
         // Parse the public.xml and ids.xml

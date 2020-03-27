@@ -66,6 +66,7 @@ public class TinkerMultidexConfigTask extends DefaultTask {
 
     @TaskAction
     def updateTinkerProguardConfig() {
+        println("here is TinkerMultidexConfigTask updateTinkerProguardConfig ")
         File file = project.file(MULTIDEX_CONFIG_PATH)
         project.logger.error("try update tinker multidex keep proguard file with ${file}")
 

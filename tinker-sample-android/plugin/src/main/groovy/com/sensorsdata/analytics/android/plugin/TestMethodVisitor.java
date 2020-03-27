@@ -14,7 +14,7 @@ public class TestMethodVisitor extends MethodVisitor {
 
     @Override
     public void visitMethodInsn(int opcode, String owner, String name, String descriptor, boolean isInterface) {
-        System.out.println("== TestMethodVisitor, owner = " + owner + ", name = " + name);
+//        System.out.println("== TestMethodVisitor, owner = " + owner + ", name = " + name);
         //方法执行之前打印
         mv.visitLdcInsn(" before method exec");
         mv.visitLdcInsn(" [ASM 测试] method in " + owner + " ,name=" + name);
