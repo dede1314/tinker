@@ -69,6 +69,7 @@ public class ManifestDecoder extends BaseDecoder {
 
     @Override
     public boolean patch(File oldFile, File newFile) throws IOException, TinkerPatchException {
+        System.out.println( "patch() called with: oldFile = [" + oldFile + "], newFile = [" + newFile + "]");
         try {
             AndroidParser oldAndroidManifest = AndroidParser.getAndroidManifest(oldFile);
             AndroidParser newAndroidManifest = AndroidParser.getAndroidManifest(newFile);

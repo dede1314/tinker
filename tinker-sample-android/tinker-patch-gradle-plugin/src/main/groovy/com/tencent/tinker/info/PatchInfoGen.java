@@ -65,6 +65,7 @@ public class PatchInfoGen {
     }
 
     private void addProtectedAppFlag() {
+        System.out.println("addProtectedAppFlag");
         // If user happens to specify a value with this key, just override it for logic correctness.
         config.mPackageFields.put(TypedValue.PKGMETA_KEY_IS_PROTECTED_APP, config.mIsProtectedApp ? "1" : "0");
     }

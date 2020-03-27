@@ -69,6 +69,7 @@ public class InfoWriter {
     }
 
     public void writeLineToInfoFile(String line) {
+        System.out.println("writeLineToInfoFile() called with: line = [" + line + "]");
         if (infoPath == null || line == null || line.length() == 0) {
             return;
         }

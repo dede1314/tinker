@@ -163,6 +163,7 @@ public class ResDiffDecoder extends BaseDecoder {
 
     @Override
     public boolean patch(File oldFile, File newFile) throws IOException, TinkerPatchException {
+        System.out.println("ResDiffDecoder patch");
         String name = getRelativePathStringToNewFile(newFile);
 
         //actually, it won't go below
@@ -220,6 +221,7 @@ public class ResDiffDecoder extends BaseDecoder {
     }
 
     private boolean dealWithModifyFile(String name, String newMd5, File oldFile, File newFile, File outputFile) throws IOException {
+        System.out.println( "dealWithModifyFile() called with: name = [" + name + "], newMd5 = [" + newMd5 + "], oldFile = [" + oldFile + "], newFile = [" + newFile + "], outputFile = [" + outputFile + "]");
         // 大文件采用bsdiff算法,BsDiff属于二进制比较
         if (checkLargeModFile(newFile)) {
             if (!outputFile.getParentFile().exists()) {

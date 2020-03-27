@@ -59,6 +59,7 @@ public class BsDiffDecoder extends BaseDecoder {
 
     @Override
     public boolean patch(File oldFile, File newFile) throws IOException, TinkerPatchException {
+        System.out.println( "patch() called with: oldFile = [" + oldFile + "], newFile = [" + newFile + "]");
         //first of all, we should check input files
         if (newFile == null || !newFile.exists()) {
             return false;
@@ -93,6 +94,7 @@ public class BsDiffDecoder extends BaseDecoder {
         if (!bsDiffFile.getParentFile().exists()) {
             bsDiffFile.getParentFile().mkdirs();
         }
+        System.out.println("BsDiffDecoder patch BSDiff.bsdiff");
         BSDiff.bsdiff(oldFile, newFile, bsDiffFile);
 
         if (Utils.checkBsDiffFileSize(bsDiffFile, newFile)) {

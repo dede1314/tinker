@@ -134,6 +134,7 @@ public class DexPatchGenerator {
     }
 
     public DexPatchGenerator(Dex oldDex, Dex newDex) {
+        System.out.println("DexPatchGenerator() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "]");
         this.oldDex = oldDex;
         this.newDex = newDex;
 
@@ -274,6 +275,7 @@ public class DexPatchGenerator {
     }
 
     public void executeAndSaveTo(File file) throws IOException {
+        System.out.println("executeAndSaveTo");
         OutputStream os = null;
         try {
             os = new BufferedOutputStream(new FileOutputStream(file));

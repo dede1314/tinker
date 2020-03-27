@@ -52,6 +52,7 @@ public class PatchBuilder {
     }
 
     public void buildPatch() throws Exception {
+        System.out.println("buildPatch() called");
         final File resultDir = config.mTempResultDir;
         if (!resultDir.exists()) {
             throw new IOException(String.format(
