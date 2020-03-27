@@ -1,6 +1,7 @@
 package com.tencent.tinker.loader;
 
 import android.support.annotation.Keep;
+import android.util.Log;
 
 import java.io.IOException;
 import java.net.URL;
@@ -14,14 +15,17 @@ import dalvik.system.PathClassLoader;
  */
 @Keep
 public class TinkerDelegateLastClassLoader extends PathClassLoader {
+    private static final String TAG = "TinkerDelegateLastClass";
     public TinkerDelegateLastClassLoader(String dexPath, String librarySearchPath, ClassLoader parent) {
         super(dexPath, librarySearchPath, parent);
+        Log.d(TAG, "TinkerDelegateLastClassLoader() called with: dexPath = [" + dexPath + "], librarySearchPath = [" + librarySearchPath + "], parent = [" + parent + "]");
     }
 
     @Override
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
         // First, check whether the class has already been loaded. Return it if that's the
         // case.
+        Log.d(TAG, "loadClass() called with: name = [" + name + "], resolve = [" + resolve + "]");
         Class<?> cl = findLoadedClass(name);
         if (cl != null) {
             return cl;
@@ -57,6 +61,7 @@ public class TinkerDelegateLastClassLoader extends PathClassLoader {
 
     @Override
     public URL getResource(String name) {
+        Log.d(TAG, "getResource() called with: name = [" + name + "]");
         // The lookup order we use here is the same as for classes.
         URL resource = Object.class.getClassLoader().getResource(name);
         if (resource != null) {

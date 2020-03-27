@@ -19,6 +19,7 @@ package com.tencent.tinker.lib.tinker;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 import com.tencent.tinker.lib.util.TinkerLog;
 import com.tencent.tinker.loader.TinkerRuntimeException;
@@ -73,6 +74,7 @@ public class TinkerLoadResult {
     public long costTime;
 
     public boolean parseTinkerResult(Context context, Intent intentResult) {
+        Log.d(TAG, "parseTinkerResult() called with: context = [" + context + "], intentResult = [" + intentResult + "]");
         Tinker tinker = Tinker.with(context);
         loadCode = ShareIntentUtil.getIntentReturnCode(intentResult);
 
@@ -80,6 +82,7 @@ public class TinkerLoadResult {
         systemOTA = ShareIntentUtil.getBooleanExtra(intentResult, ShareIntentUtil.INTENT_PATCH_SYSTEM_OTA, false);
         oatDir = ShareIntentUtil.getStringExtra(intentResult, ShareIntentUtil.INTENT_PATCH_OAT_DIR);
         useInterpretMode = ShareConstants.INTERPRET_DEX_OPTIMIZE_PATH.equals(oatDir);
+        Log.e(TAG, "parseTinkerResult: useInterpretMode+"+useInterpretMode );
 
         final boolean isMainProcess = tinker.isMainProcess();
 

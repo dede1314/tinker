@@ -59,6 +59,7 @@ public class SharePatchInfo {
     }
 
     public static SharePatchInfo readAndCheckPropertyWithLock(File pathInfoFile, File lockFile) {
+        Log.d(TAG, "readAndCheckPropertyWithLock() called with: pathInfoFile = [" + pathInfoFile + "], lockFile = [" + lockFile + "]");
         if (pathInfoFile == null || lockFile == null) {
             return null;
         }
@@ -90,6 +91,7 @@ public class SharePatchInfo {
 
     // TODO 此处是如何作为加载补丁的判断的？
     public static boolean rewritePatchInfoFileWithLock(File pathInfoFile, SharePatchInfo info, File lockFile) {
+        Log.d(TAG, "rewritePatchInfoFileWithLock() called with: pathInfoFile = [" + pathInfoFile + "], info = [" + info + "], lockFile = [" + lockFile + "]");
         if (pathInfoFile == null || info == null || lockFile == null) {
             return false;
         }
@@ -141,6 +143,7 @@ public class SharePatchInfo {
                 final String isRemoveNewVersionStr = properties.getProperty(IS_REMOVE_NEW_VERSION);
                 isRemoveNewVersion = (isRemoveNewVersionStr != null && !isRemoveNewVersionStr.isEmpty() && !"0".equals(isRemoveNewVersionStr));
                 lastFingerPrint = properties.getProperty(FINGER_PRINT);
+                Log.e(TAG, "readAndCheckProperty: lastFingerPrint"+lastFingerPrint);
                 oatDir = properties.getProperty(OAT_DIR);
             } catch (IOException e) {
                 Log.w(TAG, "read property failed, e:" + e);
@@ -169,11 +172,13 @@ public class SharePatchInfo {
     }
 
     private static boolean rewritePatchInfoFile(File pathInfoFile, SharePatchInfo info) {
+        Log.d(TAG, "rewritePatchInfoFile() called with: pathInfoFile = [" + pathInfoFile + "], info = [" + info + "]");
         if (pathInfoFile == null || info == null) {
             return false;
         }
         // write fingerprint if it is null or nil
         if (ShareTinkerInternals.isNullOrNil(info.fingerPrint)) {
+            Log.e(TAG, "rewritePatchInfoFile: Build.FINGERPRINT:"+Build.FINGERPRINT);
             info.fingerPrint = Build.FINGERPRINT;
         }
         if (ShareTinkerInternals.isNullOrNil(info.oatDir)) {

@@ -25,6 +25,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.tencent.tinker.lib.patch.AbstractPatch;
 import com.tencent.tinker.lib.tinker.Tinker;
@@ -40,7 +41,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Created by zhangshaowen on 16/3/14.
  */
 public class TinkerPatchService extends IntentService {
-    private static final String TAG = "Tinker.TinkerPatchService";
+    private static final String TAG = "Tinker.TinkerPatchServ";
 
     private static final String PATCH_PATH_EXTRA = "patch_path_extra";
     private static final String RESULT_CLASS_EXTRA = "patch_result_class";
@@ -69,6 +70,7 @@ public class TinkerPatchService extends IntentService {
     }
 
     public static void setPatchProcessor(AbstractPatch upgradePatch, Class<? extends AbstractResultService> serviceClass) {
+        Log.d(TAG, "setPatchProcessor() called with: upgradePatch = [" + upgradePatch + "], serviceClass = [" + serviceClass + "]");
         upgradePatchProcessor = upgradePatch;
         resultServiceClass = serviceClass;
         //try to load
@@ -104,6 +106,7 @@ public class TinkerPatchService extends IntentService {
 
     /**
      * set the tinker notification id you want
+     *
      * @param id
      */
     public static void setTinkerNotificationId(int id) {
@@ -113,6 +116,7 @@ public class TinkerPatchService extends IntentService {
     private static AtomicBoolean sIsPatchApplying = new AtomicBoolean(false);
 
     private static void doApplyPatch(Context context, Intent intent) {
+        Log.d(TAG, "doApplyPatch() called with: context = [" + context + "], intent = [" + intent + "]");
         // Since we may retry with IntentService, we should prevent
         // racing here again.
         if (!sIsPatchApplying.compareAndSet(false, true)) {
@@ -128,6 +132,7 @@ public class TinkerPatchService extends IntentService {
             return;
         }
         String path = getPatchPathExtra(intent);
+        Log.e(TAG, "doApplyPatch: path:" + path);
         if (path == null) {
             TinkerLog.e(TAG, "TinkerPatchService can't get the path extra, ignoring.");
             return;

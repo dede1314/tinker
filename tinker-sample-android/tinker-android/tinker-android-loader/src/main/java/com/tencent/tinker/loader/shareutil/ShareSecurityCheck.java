@@ -86,6 +86,7 @@ public class ShareSecurityCheck {
 
         String[] lines = property.split("\n");
         for (final String line : lines) {
+            Log.e(TAG, "getPackagePropertiesIfPresent: line:"+line );
             if (line == null || line.length() <= 0) {
                 continue;
             }

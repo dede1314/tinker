@@ -17,6 +17,7 @@
 package com.tencent.tinker.lib.tinker;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.tencent.tinker.entry.ApplicationLike;
 import com.tencent.tinker.lib.listener.PatchListener;
@@ -63,6 +64,7 @@ public class TinkerInstaller {
     public static Tinker install(ApplicationLike applicationLike, LoadReporter loadReporter, PatchReporter patchReporter,
                                  PatchListener listener, Class<? extends AbstractResultService> resultServiceClass,
                                  AbstractPatch upgradePatchProcessor) {
+        Log.d(TAG, "install() called with: applicationLike = [" + applicationLike + "], loadReporter = [" + loadReporter + "], patchReporter = [" + patchReporter + "], listener = [" + listener + "], resultServiceClass = [" + resultServiceClass + "], upgradePatchProcessor = [" + upgradePatchProcessor + "]");
         // 构造者模式
         Tinker tinker = new Tinker.Builder(applicationLike.getApplication())
             .tinkerFlags(applicationLike.getTinkerFlags())
@@ -93,6 +95,7 @@ public class TinkerInstaller {
      */
     // install 补丁
     public static void onReceiveUpgradePatch(Context context, String patchLocation) {
+        Log.d(TAG, "onReceiveUpgradePatch() called with: context = [" + context + "], patchLocation = [" + patchLocation + "]");
         Tinker.with(context).getPatchListener().onPatchReceived(patchLocation);
     }
 

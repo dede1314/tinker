@@ -25,6 +25,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.tencent.tinker.loader.TinkerLoader;
 import com.tencent.tinker.loader.TinkerRuntimeException;
@@ -90,6 +91,7 @@ public abstract class TinkerApplication extends Application {
 
     private void loadTinker() {
         try {
+            Log.e("tinker test ", "loadTinker: " );
             //reflect tinker loader, because loaderClass may be define by user!
             Class<?> tinkerLoadClass = Class.forName(loaderClassName, false, TinkerApplication.class.getClassLoader());
             Method loadMethod = tinkerLoadClass.getMethod(TINKER_LOADER_METHOD, TinkerApplication.class);
@@ -135,6 +137,7 @@ public abstract class TinkerApplication extends Application {
     }
 
     private void onBaseContextAttached(Context base) {
+        Log.d("tinker test", "onBaseContextAttached() called with: base = [" + base + "]");
         try {
             final long applicationStartElapsedTime = SystemClock.elapsedRealtime();
             final long applicationStartMillisTime = System.currentTimeMillis();
@@ -159,6 +162,7 @@ public abstract class TinkerApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
+        Log.d("tinker test", "attachBaseContext() called with: base = [" + base + "]");
         Thread.setDefaultUncaughtExceptionHandler(new TinkerUncaughtHandler(this));
         onBaseContextAttached(base);
     }

@@ -62,6 +62,7 @@ public class SystemClassLoaderAdder {
     // 所以当通过findClass来查找这个类时，就是使用的我们最新的dex里面的类。
     public static void installDexes(Application application, BaseDexClassLoader loader, File dexOptDir, List<File> files, boolean isProtectedApp)
         throws Throwable {
+        Log.d(TAG, "installDexes() called with: application = [" + application + "], loader = [" + loader + "], dexOptDir = [" + dexOptDir + "], files = [" + files + "], isProtectedApp = [" + isProtectedApp + "]");
         Log.i(TAG, "installDexes dexOptDir: " + dexOptDir.getAbsolutePath() + ", dex size:" + files.size());
 
         if (!files.isEmpty()) {
@@ -141,6 +142,7 @@ public class SystemClassLoaderAdder {
     }
 
     private static boolean checkDexInstall(ClassLoader classLoader) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+        Log.d(TAG, "checkDexInstall() called with: classLoader = [" + classLoader + "]");
         Class<?> clazz = Class.forName(CHECK_DEX_CLASS, true, classLoader);
         Field filed = ShareReflectUtil.findField(clazz, CHECK_DEX_FIELD);
         boolean isPatch = (boolean) filed.get(null);
@@ -149,6 +151,7 @@ public class SystemClassLoaderAdder {
     }
 
     private static List<File> createSortedAdditionalPathEntries(List<File> additionalPathEntries) {
+        Log.d(TAG, "createSortedAdditionalPathEntries() called with: additionalPathEntries = [" + additionalPathEntries + "]");
         final List<File> result = new ArrayList<>(additionalPathEntries);
 
         final Map<String, Boolean> matchesClassNPatternMemo = new HashMap<>();
@@ -202,6 +205,7 @@ public class SystemClassLoaderAdder {
             }
         });
 
+        Log.d(TAG, "createSortedAdditionalPathEntries() returned: " + result);
         return result;
     }
 

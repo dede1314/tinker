@@ -18,6 +18,7 @@ package com.tencent.tinker.lib.patch;
 
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 
 import com.tencent.tinker.lib.service.PatchResult;
 import com.tencent.tinker.lib.tinker.Tinker;
@@ -43,6 +44,7 @@ public class UpgradePatch extends AbstractPatch {
 
     @Override
     public boolean tryPatch(Context context, String tempPatchPath, PatchResult patchResult) {
+        Log.d(TAG, "tryPatch() called with: context = [" + context + "], tempPatchPath = [" + tempPatchPath + "], patchResult = [" + patchResult + "]");
         Tinker manager = Tinker.with(context);
 
         final File patchFile = new File(tempPatchPath);
@@ -89,10 +91,12 @@ public class UpgradePatch extends AbstractPatch {
         }
 
         final String isProtectedAppStr = pkgProps.get(ShareConstants.PKGMETA_KEY_IS_PROTECTED_APP);
+        Log.e(TAG, "tryPatch: isProtectedAppStr:" + isProtectedAppStr);
         final boolean isProtectedApp = (isProtectedAppStr != null && !isProtectedAppStr.isEmpty() && !"0".equals(isProtectedAppStr));
 
         SharePatchInfo oldInfo = SharePatchInfo.readAndCheckPropertyWithLock(patchInfoFile, patchInfoLockFile);
 
+        Log.e(TAG, "tryPatch: oldInfo:" + oldInfo);
         //it is a new patch, so we should not find a exist
         SharePatchInfo newInfo;
 
@@ -129,6 +133,7 @@ public class UpgradePatch extends AbstractPatch {
             // 构造新的 patch.info
             newInfo = new SharePatchInfo("", patchMd5, isProtectedApp, false, Build.FINGERPRINT, ShareConstants.DEFAULT_DEX_OPTIMIZE_PATH);
         }
+        Log.e(TAG, "tryPatch: newInfo:" + newInfo);
 
         // it is a new patch, we first delete if there is any files
         // don't delete dir for faster retry
@@ -148,7 +153,7 @@ public class UpgradePatch extends AbstractPatch {
                 // 复制补丁包到 /data/data/ 中
                 SharePatchFileUtil.copyFileUsingStream(patchFile, destPatchFile);
                 TinkerLog.w(TAG, "UpgradePatch copy patch file, src file: %s size: %d, dest file: %s size:%d", patchFile.getAbsolutePath(), patchFile.length(),
-                    destPatchFile.getAbsolutePath(), destPatchFile.length());
+                        destPatchFile.getAbsolutePath(), destPatchFile.length());
             }
         } catch (IOException e) {
             TinkerLog.e(TAG, "UpgradePatch tryPatch:copy patch file fail from %s to %s", patchFile.getPath(), destPatchFile.getPath());

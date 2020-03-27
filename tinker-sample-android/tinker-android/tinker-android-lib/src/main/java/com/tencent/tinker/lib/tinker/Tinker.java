@@ -18,6 +18,7 @@ package com.tencent.tinker.lib.tinker;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.tencent.tinker.lib.listener.DefaultPatchListener;
 import com.tencent.tinker.lib.listener.PatchListener;
@@ -139,6 +140,7 @@ public class Tinker {
      */
     public void install(Intent intentResult, Class<? extends AbstractResultService> serviceClass,
                         AbstractPatch upgradePatch) {
+        Log.d(TAG, "install() called with: intentResult = [" + intentResult + "], serviceClass = [" + serviceClass + "], upgradePatch = [" + upgradePatch + "]");
         sInstalled = true;
         TinkerPatchService.setPatchProcessor(upgradePatch, serviceClass);
 

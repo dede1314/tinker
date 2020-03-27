@@ -16,6 +16,8 @@
 
 package com.tencent.tinker.lib.patch;
 
+import android.util.Log;
+
 import com.tencent.tinker.commons.util.IOHelper;
 import com.tencent.tinker.lib.util.TinkerLog;
 import com.tencent.tinker.loader.shareutil.ShareConstants;
@@ -35,7 +37,7 @@ import java.util.zip.ZipFile;
  * Created by zhangshaowen on 16/4/12.
  */
 public class BasePatchInternal {
-    protected static final String TAG = "Tinker.BasePatchInternal";
+    protected static final String TAG = "Tinker.BasePatchInt";
 
     protected static final String DEX_PATH             = ShareConstants.DEX_PATH;
     protected static final String SO_PATH              = ShareConstants.SO_PATH;
@@ -54,6 +56,7 @@ public class BasePatchInternal {
 
 
     public static boolean extract(ZipFile zipFile, ZipEntry entryFile, File extractTo, String targetMd5, boolean isDex) throws IOException {
+        Log.d(TAG, "extract() called with: zipFile = [" + zipFile + "], entryFile = [" + entryFile + "], extractTo = [" + extractTo + "], targetMd5 = [" + targetMd5 + "], isDex = [" + isDex + "]");
         int numAttempts = 0;
         boolean isExtractionSuccessful = false;
         while (numAttempts < MAX_EXTRACT_ATTEMPTS && !isExtractionSuccessful) {
@@ -99,6 +102,7 @@ public class BasePatchInternal {
     }
 
     public static int getMetaCorruptedCode(int type) {
+        Log.d(TAG, "getMetaCorruptedCode() called with: type = [" + type + "]");
         if (type == TYPE_DEX) {
             return ShareConstants.ERROR_PACKAGE_CHECK_DEX_META_CORRUPTED;
         } else if (type == TYPE_LIBRARY) {

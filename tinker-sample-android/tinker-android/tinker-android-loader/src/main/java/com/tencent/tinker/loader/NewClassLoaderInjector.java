@@ -20,6 +20,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
+import android.util.Log;
 
 import com.tencent.tinker.loader.app.TinkerApplication;
 
@@ -34,6 +35,7 @@ import dalvik.system.DelegateLastClassLoader;
  * Created by tangyinsheng on 2019-10-31.
  */
 final class NewClassLoaderInjector {
+    private static final String TAG = "tinker.NewClassLoaderI";
     public static ClassLoader inject(Application app, ClassLoader oldClassLoader, List<File> patchedDexes) throws Throwable {
         final String[] patchedDexPaths = new String[patchedDexes.size()];
         for (int i = 0; i < patchedDexPaths.length; ++i) {
@@ -46,6 +48,7 @@ final class NewClassLoaderInjector {
 
     // Q&A  为什么是trigger？ 如果dex文件没有优化安装，makePathElements会触发dex2oat.
     public static void triggerDex2Oat(Context context, String... dexPaths) throws Throwable {
+        Log.d(TAG, "triggerDex2Oat() called with: context = [" + context + "], dexPaths = [" + dexPaths + "]");
         // Suggestion from Huawei: Only PathClassLoader (Perhaps other ClassLoaders known by system
         // like DexClassLoader also works ?) can be used here to trigger dex2oat so that JIT
         // mechanism can participate in runtime Dex optimization.
@@ -56,6 +59,7 @@ final class NewClassLoaderInjector {
     @SuppressWarnings("unchecked")
     private static ClassLoader createNewClassLoader(Context context, ClassLoader oldClassLoader,
                                                     String... patchDexPaths) throws Throwable {
+        Log.d(TAG, "createNewClassLoader() called with: context = [" + context + "], oldClassLoader = [" + oldClassLoader + "], patchDexPaths = [" + patchDexPaths + "]");
         final Field pathListField = findField(
                 Class.forName("dalvik.system.BaseDexClassLoader", false, oldClassLoader),
                 "pathList");
@@ -85,6 +89,7 @@ final class NewClassLoaderInjector {
         final StringBuilder libraryPathBuilder = new StringBuilder();
         boolean isFirstItem = true;
         for (File libDir : oldNativeLibraryDirectories) {
+            Log.e(TAG, "createNewClassLoader: libDir:"+libDir);
             if (libDir == null) {
                 continue;
             }
@@ -97,6 +102,7 @@ final class NewClassLoaderInjector {
         }
 
         final String combinedLibraryPath = libraryPathBuilder.toString();
+        Log.e(TAG, "createNewClassLoader: combinedLibraryPath:"+combinedLibraryPath);
 
         ClassLoader result = null;
         if (Build.VERSION.SDK_INT >= 28) {
@@ -123,6 +129,7 @@ final class NewClassLoaderInjector {
     // 同时将Thread中持有的ClassLoader也同步替换为AndroidNClassLoader.
     // 至此PathClassLoader的修改和替换都已经完成了,接下来就可以正常得加载补丁dex了.
     private static void doInject(Application app, ClassLoader classLoader) throws Throwable {
+        Log.d(TAG, "doInject() called with: app = [" + app + "], classLoader = [" + classLoader + "]");
         Thread.currentThread().setContextClassLoader(classLoader);
 
         final Context baseContext = (Context) findField(app.getClass(), "mBase").get(app);

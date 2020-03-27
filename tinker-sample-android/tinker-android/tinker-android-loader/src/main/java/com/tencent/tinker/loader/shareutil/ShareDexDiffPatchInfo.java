@@ -16,6 +16,8 @@
 
 package com.tencent.tinker.loader.shareutil;
 
+import android.util.Log;
+
 import com.tencent.tinker.loader.TinkerRuntimeException;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
  * Created by zhangshaowen on 16/4/11.
  */
 public class ShareDexDiffPatchInfo {
+    private static final String TAG = "tinker.ShareDexDiffPat";
     public final String rawName;
     public final String destMd5InDvm;
     public final String destMd5InArt;
@@ -47,6 +50,7 @@ public class ShareDexDiffPatchInfo {
     public ShareDexDiffPatchInfo(String name, String path, String destMd5InDvm, String destMd5InArt,
                                  String dexDiffMd5, String oldDexCrc, String newOrPatchedDexCrC, String dexMode) {
         // TODO Auto-generated constructor stub
+        Log.d(TAG, "ShareDexDiffPatchInfo() called with: name = [" + name + "], path = [" + path + "], destMd5InDvm = [" + destMd5InDvm + "], destMd5InArt = [" + destMd5InArt + "], dexDiffMd5 = [" + dexDiffMd5 + "], oldDexCrc = [" + oldDexCrc + "], newOrPatchedDexCrC = [" + newOrPatchedDexCrC + "], dexMode = [" + dexMode + "]");
         this.rawName = name;
         this.path = path;
         this.destMd5InDvm = destMd5InDvm;
@@ -89,11 +93,13 @@ public class ShareDexDiffPatchInfo {
     //newDexCrc ：合成新 dex 的 crc 值
     //dexMode ：dex 类型，为 jar 类型
     public static void parseDexDiffPatchInfo(String meta, ArrayList<ShareDexDiffPatchInfo> dexList) {
+        Log.d(TAG, "parseDexDiffPatchInfo() called with: meta = [" + meta + "], dexList = [" + dexList + "]");
         if (meta == null || meta.length() == 0) {
             return;
         }
         String[] lines = meta.split("\n");
         for (final String line : lines) {
+            Log.e(TAG, "parseDexDiffPatchInfo: line:"+line);
             if (line == null || line.length() <= 0) {
                 continue;
             }

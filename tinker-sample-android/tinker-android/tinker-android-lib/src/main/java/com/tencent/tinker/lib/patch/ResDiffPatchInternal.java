@@ -19,6 +19,7 @@ package com.tencent.tinker.lib.patch;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.tencent.tinker.bsdiff.BSPatch;
 import com.tencent.tinker.commons.util.IOHelper;
@@ -48,11 +49,11 @@ import java.util.zip.ZipFile;
  */
 public class ResDiffPatchInternal extends BasePatchInternal {
 
-    protected static final String TAG = "Tinker.ResDiffPatchInternal";
+    protected static final String TAG = "Tinker.ResDiffPatchIn";
 
     protected static boolean tryRecoverResourceFiles(Tinker manager, ShareSecurityCheck checker, Context context,
                                                 String patchVersionDirectory, File patchFile) {
-
+        Log.d(TAG, "tryRecoverResourceFiles() called with: manager = [" + manager + "], checker = [" + checker + "], context = [" + context + "], patchVersionDirectory = [" + patchVersionDirectory + "], patchFile = [" + patchFile + "]");
         if (!manager.isEnabledForResource()) {
             TinkerLog.w(TAG, "patch recover, resource is not enabled");
             return true;
@@ -73,6 +74,7 @@ public class ResDiffPatchInternal extends BasePatchInternal {
 
     private static boolean patchResourceExtractViaResourceDiff(Context context, String patchVersionDirectory,
                                                                String meta, File patchFile) {
+        Log.d(TAG, "patchResourceExtractViaResourceDiff() called with: context = [" + context + "], patchVersionDirectory = [" + patchVersionDirectory + "], meta = [" + meta + "], patchFile = [" + patchFile + "]");
         String dir = patchVersionDirectory + "/" + ShareConstants.RES_PATH + "/";
 
         if (!extractResourceDiffInternals(context, dir, meta, patchFile, TYPE_RESOURCE)) {
@@ -84,6 +86,7 @@ public class ResDiffPatchInternal extends BasePatchInternal {
 
     // 补丁下发成功后资源补丁的合成
     private static boolean extractResourceDiffInternals(Context context, String dir, String meta, File patchFile, int type) {
+        Log.d(TAG, "extractResourceDiffInternals() called with: context = [" + context + "], dir = [" + dir + "], meta = [" + meta + "], patchFile = [" + patchFile + "], type = [" + type + "]");
         ShareResPatchInfo resPatchInfo = new ShareResPatchInfo();
         // 首先读取res_meta.txt的数据
         ShareResPatchInfo.parseAllResPatchInfo(meta, resPatchInfo);
@@ -245,6 +248,7 @@ public class ResDiffPatchInternal extends BasePatchInternal {
 
     private static boolean checkAndExtractResourceLargeFile(Context context, String apkPath, File directory, File tempFileDirtory,
                                                             File patchFile, ShareResPatchInfo resPatchInfo, int type) {
+        Log.d(TAG, "checkAndExtractResourceLargeFile() called with: context = [" + context + "], apkPath = [" + apkPath + "], directory = [" + directory + "], tempFileDirtory = [" + tempFileDirtory + "], patchFile = [" + patchFile + "], resPatchInfo = [" + resPatchInfo + "], type = [" + type + "]");
         long start = System.currentTimeMillis();
         Tinker manager = Tinker.with(context);
         ZipFile apkFile = null;
@@ -333,6 +337,7 @@ public class ResDiffPatchInternal extends BasePatchInternal {
                 try {
                     oldStream = apkFile.getInputStream(baseEntry);
                     newStream = patchZipFile.getInputStream(patchEntry);
+                    Log.d(TAG, "checkAndExtractResourceLargeFile: patchFast ");
                     BSPatch.patchFast(oldStream, newStream, largeModeInfo.file);
                 } finally {
                     IOHelper.closeQuietly(oldStream);

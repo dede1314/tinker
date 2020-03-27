@@ -61,8 +61,8 @@ public final class DexClassesComparator {
     public static final int COMPARE_MODE_REFERRER_AFFECTED_CHANGE_ONLY = 1;
 
     private static final int DBG_FIRST_SPECIAL = 0x0A;  // the smallest special opcode
-    private static final int DBG_LINE_BASE   = -4;      // the smallest line number increment
-    private static final int DBG_LINE_RANGE  = 15;      // the number of line increments represented
+    private static final int DBG_LINE_BASE = -4;      // the smallest line number increment
+    private static final int DBG_LINE_RANGE = 15;      // the number of line increments represented
 
     private int compareMode = COMPARE_MODE_NORMAL;
     private final List<DexClassInfo> addedClassInfoList = new ArrayList<>();
@@ -180,6 +180,7 @@ public final class DexClassesComparator {
             int classDefIndex = 0;
             for (ClassDef oldClassDef : oldDex.classDefs()) {
                 String desc = oldDex.typeNames().get(oldClassDef.typeIndex);
+                System.out.println("startCheck oldDexGroup desc:" + desc);
                 if (Utils.isStringMatchesPatterns(desc, patternsOfClassDescToCheck)) {
                     if (!oldDescriptorOfClassesToCheck.add(desc)) {
                         throw new IllegalStateException(
@@ -202,6 +203,7 @@ public final class DexClassesComparator {
             int classDefIndex = 0;
             for (ClassDef newClassDef : newDex.classDefs()) {
                 String desc = newDex.typeNames().get(newClassDef.typeIndex);
+                System.out.println("startCheck newDexGroup desc:" + desc);
                 if (Utils.isStringMatchesPatterns(desc, patternsOfClassDescToCheck)) {
                     if (!newDescriptorOfClassesToCheck.add(desc)) {
                         throw new IllegalStateException(
@@ -222,6 +224,7 @@ public final class DexClassesComparator {
         deletedClassDescs.removeAll(newDescriptorOfClassesToCheck);
 
         for (String desc : deletedClassDescs) {
+            System.out.println("startCheck deletedClassDescs desc:" + desc);
             // These classes are deleted as we expect to, so we remove them
             // from result.
             if (Utils.isStringMatchesPatterns(desc, patternsOfIgnoredRemovedClassDesc)) {
@@ -236,6 +239,7 @@ public final class DexClassesComparator {
         addedClassDescs.removeAll(oldDescriptorOfClassesToCheck);
 
         for (String desc : addedClassDescs) {
+            System.out.println("startCheck addedClassDescs desc:" + desc);
             if (Utils.isStringMatchesPatterns(desc, patternsOfIgnoredRemovedClassDesc)) {
                 logger.i(TAG, "Ignored added class: %s", desc);
             } else {
@@ -248,6 +252,7 @@ public final class DexClassesComparator {
         mayBeChangedClassDescs.retainAll(newDescriptorOfClassesToCheck);
 
         for (String desc : mayBeChangedClassDescs) {
+            System.out.println("startCheck mayBeChangedClassDescs desc:" + desc);
             DexClassInfo oldClassInfo = oldClassDescriptorToClassInfoMap.get(desc);
             DexClassInfo newClassInfo = newClassDescriptorToClassInfoMap.get(desc);
             switch (compareMode) {
@@ -301,7 +306,7 @@ public final class DexClassesComparator {
             ClassDef newClassDef
     ) {
         boolean result = false;
-
+        System.out.println("isClassChangeAffectedToReferrer() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldClassDef = [" + oldClassDef + "], newClassDef = [" + newClassDef + "]");
         String classDesc = oldDex.typeNames().get(oldClassDef.typeIndex);
 
         do {
@@ -366,8 +371,7 @@ public final class DexClassesComparator {
             ClassDef newClassDef = (newClassInfo != null ? newClassInfo.classDef : null);
             if (oldClassDef != null && newClassDef != null) {
                 return isClassChangeAffectedToReferrer(oldClassInfo.owner, newClassInfo.owner, oldClassDef, newClassDef);
-            } else
-            if (oldClassDef == null && newClassDef == null) {
+            } else if (oldClassDef == null && newClassDef == null) {
                 return false;
             } else {
                 // If current comparing class is ignored, since it must be removed
@@ -455,6 +459,7 @@ public final class DexClassesComparator {
             ClassData.Field[] oldFields,
             ClassData.Field[] newFields
     ) {
+        System.out.println("isFieldsChangeAffectedToReferrer() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldFields = [" + oldFields + "], newFields = [" + newFields + "]");
         if (oldFields.length != newFields.length) {
             return true;
         }
@@ -493,6 +498,7 @@ public final class DexClassesComparator {
             ClassData.Method[] oldMethods,
             ClassData.Method[] newMethods
     ) {
+        System.out.println("isMethodsChangeAffectedToReferrer() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldMethods = [" + oldMethods + "], newMethods = [" + newMethods + "]");
         if (oldMethods.length != newMethods.length) {
             return true;
         }
@@ -547,6 +553,7 @@ public final class DexClassesComparator {
             ClassDef oldClassDef,
             ClassDef newClassDef
     ) {
+        System.out.println( "isSameClass() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldClassDef = [" + oldClassDef + "], newClassDef = [" + newClassDef + "]");
         if (oldClassDef.accessFlags != newClassDef.accessFlags) {
             return false;
         }
@@ -605,6 +612,7 @@ public final class DexClassesComparator {
             int oldStaticValueOffset,
             int newStaticValueOffset
     ) {
+        System.out.println("isSameStaticValue() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldStaticValueOffset = [" + oldStaticValueOffset + "], newStaticValueOffset = [" + newStaticValueOffset + "]");
         if (oldStaticValueOffset == 0 && newStaticValueOffset == 0) {
             return true;
         }
@@ -650,6 +658,7 @@ public final class DexClassesComparator {
             int oldAnnotationDirectoryOffset,
             int newAnnotationDirectoryOffset
     ) {
+        System.out.println("isSameAnnotationDirectory() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldAnnotationDirectoryOffset = [" + oldAnnotationDirectoryOffset + "], newAnnotationDirectoryOffset = [" + newAnnotationDirectoryOffset + "]");
         if (oldAnnotationDirectoryOffset == 0 && newAnnotationDirectoryOffset == 0) {
             return true;
         }
@@ -730,6 +739,7 @@ public final class DexClassesComparator {
     }
 
     private boolean isSameFieldId(Dex oldDex, Dex newDex, int oldFieldIdIdx, int newFieldIdIdx) {
+        System.out.println("isSameFieldId() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldFieldIdIdx = [" + oldFieldIdIdx + "], newFieldIdIdx = [" + newFieldIdIdx + "]");
         FieldId oldFieldId = oldDex.fieldIds().get(oldFieldIdIdx);
         FieldId newFieldId = newDex.fieldIds().get(newFieldIdIdx);
 
@@ -751,6 +761,7 @@ public final class DexClassesComparator {
     }
 
     private boolean isSameMethodId(Dex oldDex, Dex newDex, int oldMethodIdIdx, int newMethodIdIdx) {
+        System.out.println("isSameMethodId() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldMethodIdIdx = [" + oldMethodIdIdx + "], newMethodIdIdx = [" + newMethodIdIdx + "]");
         MethodId oldMethodId = oldDex.methodIds().get(oldMethodIdIdx);
         MethodId newMethodId = newDex.methodIds().get(newMethodIdIdx);
 
@@ -770,6 +781,7 @@ public final class DexClassesComparator {
     }
 
     private boolean isSameProtoId(Dex oldDex, Dex newDex, int oldProtoIdIdx, int newProtoIdIdx) {
+        System.out.println( "isSameProtoId() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldProtoIdIdx = [" + oldProtoIdIdx + "], newProtoIdIdx = [" + newProtoIdIdx + "]");
         ProtoId oldProtoId = oldDex.protoIds().get(oldProtoIdIdx);
         ProtoId newProtoId = newDex.protoIds().get(newProtoIdIdx);
 
@@ -794,6 +806,7 @@ public final class DexClassesComparator {
     private boolean isSameParameters(
             Dex oldDex, Dex newDex, int oldParametersOffset, int newParametersOffset
     ) {
+        System.out.println("isSameParameters() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldParametersOffset = [" + oldParametersOffset + "], newParametersOffset = [" + newParametersOffset + "]");
         if (oldParametersOffset == 0 && newParametersOffset == 0) {
             return true;
         }
@@ -826,6 +839,7 @@ public final class DexClassesComparator {
             int oldAnnotationSetRefListOffset,
             int newAnnotationSetRefListOffset
     ) {
+        System.out.println("isSameAnnotationSetRefList() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldAnnotationSetRefListOffset = [" + oldAnnotationSetRefListOffset + "], newAnnotationSetRefListOffset = [" + newAnnotationSetRefListOffset + "]");
         if (oldAnnotationSetRefListOffset == 0 && newAnnotationSetRefListOffset == 0) {
             return true;
         }
@@ -865,6 +879,7 @@ public final class DexClassesComparator {
     private boolean isSameAnnotationSet(
             Dex oldDex, Dex newDex, int oldAnnotationSetOffset, int newAnnotationSetOffset
     ) {
+        System.out.println( "isSameAnnotationSet() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldAnnotationSetOffset = [" + oldAnnotationSetOffset + "], newAnnotationSetOffset = [" + newAnnotationSetOffset + "]");
         if (oldAnnotationSetOffset == 0 && newAnnotationSetOffset == 0) {
             return true;
         }
@@ -901,6 +916,7 @@ public final class DexClassesComparator {
     private boolean isSameAnnotation(
             Dex oldDex, Dex newDex, int oldAnnotationOffset, int newAnnotationOffset
     ) {
+        System.out.println("isSameAnnotation() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldAnnotationOffset = [" + oldAnnotationOffset + "], newAnnotationOffset = [" + newAnnotationOffset + "]");
         Annotation oldAnnotation = oldDex.openSection(oldAnnotationOffset).readAnnotation();
         Annotation newAnnotation = newDex.openSection(newAnnotationOffset).readAnnotation();
 
@@ -920,6 +936,7 @@ public final class DexClassesComparator {
             EncodedValueReader oldAnnoReader,
             EncodedValueReader newAnnoReader
     ) {
+        System.out.println( "isSameAnnotationByReader() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldAnnoReader = [" + oldAnnoReader + "], newAnnoReader = [" + newAnnoReader + "]");
         int oldFieldCount = oldAnnoReader.readAnnotation();
         int newFieldCount = newAnnoReader.readAnnotation();
         if (oldFieldCount != newFieldCount) {
@@ -952,6 +969,7 @@ public final class DexClassesComparator {
             EncodedValueReader oldAnnoReader,
             EncodedValueReader newAnnoReader
     ) {
+        System.out.println("isSameEncodedValue() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldAnnoReader = [" + oldAnnoReader + "], newAnnoReader = [" + newAnnoReader + "]");
         int oldAnnoItemType = oldAnnoReader.peek();
         int newAnnoItemType = newAnnoReader.peek();
 
@@ -1057,6 +1075,7 @@ public final class DexClassesComparator {
     private boolean isSameClassData(
             Dex oldDex, Dex newDex, int oldClassDataOffset, int newClassDataOffset
     ) {
+        System.out.println( "isSameClassData() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldClassDataOffset = [" + oldClassDataOffset + "], newClassDataOffset = [" + newClassDataOffset + "]");
         if (oldClassDataOffset == 0 && newClassDataOffset == 0) {
             return true;
         }
@@ -1141,6 +1160,7 @@ public final class DexClassesComparator {
     private boolean isSameCode(
             final Dex oldDex, final Dex newDex, int oldCodeOffset, int newCodeOffset
     ) {
+        System.out.println( "isSameCode() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldCodeOffset = [" + oldCodeOffset + "], newCodeOffset = [" + newCodeOffset + "]");
         if (oldCodeOffset == 0 && newCodeOffset == 0) {
             return true;
         }
@@ -1211,6 +1231,7 @@ public final class DexClassesComparator {
             int newDebugInfoOffset,
             InstructionComparator insnComparator
     ) {
+        System.out.println( "isSameDebugInfo() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldDebugInfoOffset = [" + oldDebugInfoOffset + "], newDebugInfoOffset = [" + newDebugInfoOffset + "], insnComparator = [" + insnComparator + "]");
         if (oldDebugInfoOffset == 0 && newDebugInfoOffset == 0) {
             return true;
         }
@@ -1373,6 +1394,7 @@ public final class DexClassesComparator {
             Code.Try[] newTries,
             InstructionComparator insnComparator
     ) {
+        System.out.println( "isSameTries() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldTries = [" + oldTries + "], newTries = [" + newTries + "], insnComparator = [" + insnComparator + "]");
         if (oldTries.length != newTries.length) {
             return false;
         }
@@ -1401,6 +1423,7 @@ public final class DexClassesComparator {
             Code.CatchHandler[] newCatchHandlers,
             InstructionComparator insnComparator
     ) {
+        System.out.println( "isSameCatchHandlers() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldCatchHandlers = [" + oldCatchHandlers + "], newCatchHandlers = [" + newCatchHandlers + "], insnComparator = [" + insnComparator + "]");
         if (oldCatchHandlers.length != newCatchHandlers.length) {
             return false;
         }

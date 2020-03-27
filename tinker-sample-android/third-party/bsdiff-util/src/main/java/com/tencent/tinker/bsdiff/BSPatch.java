@@ -250,6 +250,7 @@ public class BSPatch {
      *
      */
     public static int patchFast(InputStream oldInputStream, InputStream diffInputStream, File newFile) throws IOException {
+        System.out.println("patchFast() called with: oldInputStream = [" + oldInputStream + "], diffInputStream = [" + diffInputStream + "], newFile = [" + newFile + "]");
         if (oldInputStream == null) {
             return RETURN_OLD_FILE_ERR;
         }

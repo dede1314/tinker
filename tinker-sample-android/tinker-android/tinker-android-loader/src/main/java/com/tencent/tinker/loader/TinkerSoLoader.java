@@ -17,6 +17,7 @@
 package com.tencent.tinker.loader;
 
 import android.content.Intent;
+import android.util.Log;
 
 import com.tencent.tinker.loader.shareutil.ShareBsDiffPatchInfo;
 import com.tencent.tinker.loader.shareutil.ShareConstants;
@@ -52,6 +53,7 @@ public class TinkerSoLoader {
      */
     // 从 assets/so_meta.txt 中读取 so 补丁信息，每一条 so 补丁信息都会被封装成一个 ShareBsDiffPatchInfo 对象，然后放入 libraryList 中。
     public static boolean checkComplete(String directory, ShareSecurityCheck securityCheck, Intent intentResult) {
+        Log.d(TAG, "checkComplete() called with: directory = [" + directory + "], securityCheck = [" + securityCheck + "], intentResult = [" + intentResult + "]");
         String meta = securityCheck.getMetaContentMap().get(SO_MEAT_FILE);
         //not found lib
         if (meta == null) {
@@ -71,6 +73,7 @@ public class TinkerSoLoader {
 
         // 然后遍历 libraryList ，去校验里面的 ShareBsDiffPatchInfo 对象中 md5 和 name 值是否合法。合法的 ShareBsDiffPatchInfo 对象再放入 libs 中。
         for (ShareBsDiffPatchInfo info : libraryList) {
+            Log.e(TAG, "checkComplete: info"+info);
             if (!ShareBsDiffPatchInfo.checkDiffPatchInfo(info)) {
                 intentResult.putExtra(ShareIntentUtil.INTENT_PATCH_PACKAGE_PATCH_CHECK, ShareConstants.ERROR_PACKAGE_CHECK_LIB_META_CORRUPTED);
                 ShareIntentUtil.setIntentReturnCode(intentResult, ShareConstants.ERROR_LOAD_PATCH_PACKAGE_CHECK_FAIL);
@@ -92,6 +95,7 @@ public class TinkerSoLoader {
         //fast check whether there is any dex files missing
         // 再校验上面的从 so_meta.txt 中获取到的 so 补丁文件路径是否真的存在并且 so 文件是可读的
         for (String relative : libs.keySet()) {
+            Log.e(TAG, "checkComplete: relative"+relative );
             File libFile = new File(libraryPath + relative);
             if (!SharePatchFileUtil.isLegalFile(libFile)) {
                 ShareIntentUtil.setIntentReturnCode(intentResult, ShareConstants.ERROR_LOAD_PATCH_VERSION_LIB_FILE_NOT_EXIST);

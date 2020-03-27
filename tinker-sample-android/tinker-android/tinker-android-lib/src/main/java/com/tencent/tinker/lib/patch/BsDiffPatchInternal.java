@@ -19,6 +19,7 @@ package com.tencent.tinker.lib.patch;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.tencent.tinker.bsdiff.BSPatch;
 import com.tencent.tinker.commons.util.IOHelper;
@@ -40,11 +41,11 @@ import java.util.zip.ZipFile;
  * Created by zhangshaowen on 16/3/21.
  */
 public class BsDiffPatchInternal extends BasePatchInternal {
-    private static final String TAG = "Tinker.BsDiffPatchInternal";
+    private static final String TAG = "Tinker.BsDiffPatchIn";
 
     protected static boolean tryRecoverLibraryFiles(Tinker manager, ShareSecurityCheck checker, Context context,
                                                     String patchVersionDirectory, File patchFile) {
-
+        Log.d(TAG, "tryRecoverLibraryFiles() called with: manager = [" + manager + "], checker = [" + checker + "], context = [" + context + "], patchVersionDirectory = [" + patchVersionDirectory + "], patchFile = [" + patchFile + "]");
         if (!manager.isEnabledForNativeLib()) {
             TinkerLog.w(TAG, "patch recover, library is not enabled");
             return true;
@@ -69,6 +70,7 @@ public class BsDiffPatchInternal extends BasePatchInternal {
     }
 
     private static boolean extractBsDiffInternals(Context context, String dir, String meta, File patchFile, int type) {
+        Log.d(TAG, "extractBsDiffInternals() called with: context = [" + context + "], dir = [" + dir + "], meta = [" + meta + "], patchFile = [" + patchFile + "], type = [" + type + "]");
         //parse
         ArrayList<ShareBsDiffPatchInfo> patchList = new ArrayList<>();
 
@@ -99,6 +101,7 @@ public class BsDiffPatchInternal extends BasePatchInternal {
             patch = new ZipFile(patchFile);
 
             for (ShareBsDiffPatchInfo info : patchList) {
+                Log.e(TAG, "extractBsDiffInternals: info:"+info);
                 long start = System.currentTimeMillis();
 
                 final String infoPath = info.path;
@@ -144,7 +147,7 @@ public class BsDiffPatchInternal extends BasePatchInternal {
                     manager.getPatchReporter().onPatchTypeExtractFail(patchFile, extractedFile, info.name, type);
                     return false;
                 }
-
+                Log.e(TAG, "extractBsDiffInternals: patchFileMd5:"+patchFileMd5);
                 if (patchFileMd5.equals("0")) {
                     if (!extract(patch, patchFileEntry, extractedFile, fileMd5, false)) {
                         TinkerLog.w(TAG, "Failed to extract file " + extractedFile.getPath());

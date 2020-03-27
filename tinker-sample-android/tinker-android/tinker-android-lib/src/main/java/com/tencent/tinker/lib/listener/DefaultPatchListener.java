@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.tencent.tinker.lib.service.TinkerPatchForeService;
 import com.tencent.tinker.lib.service.TinkerPatchService;
@@ -42,6 +43,7 @@ import static android.content.Context.BIND_AUTO_CREATE;
  * Created by zhangshaowen on 16/3/14.
  */
 public class DefaultPatchListener implements PatchListener {
+    private static final String TAG = "DefaultPatchListener";
     protected final Context context;
     private ServiceConnection connection;
 
@@ -58,10 +60,12 @@ public class DefaultPatchListener implements PatchListener {
      */
     @Override
     public int onPatchReceived(String path) {
+        Log.d(TAG, "onPatchReceived() called with: path = [" + path + "]");
         final File patchFile = new File(path);
         final String patchMD5 = SharePatchFileUtil.getMD5(patchFile);
         // TODO  patchCheck中的结果是从runPatchService后获取的？到底哪个在前？
         final int returnCode = patchCheck(path, patchMD5);
+        Log.e(TAG, "onPatchReceived: returnCode:"+returnCode );
         if (returnCode == ShareConstants.ERROR_PATCH_OK) {
             runForgService();
             TinkerPatchService.runPatchService(context, path);

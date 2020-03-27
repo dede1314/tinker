@@ -78,6 +78,7 @@ public final class TinkerDexOptimizer {
             }
         });
         for (File dexFile : sortList) {
+            Log.e(TAG, "optimizeAll: dexFile:"+dexFile);
             OptimizeWorker worker = new OptimizeWorker(context, dexFile, optimizedDir, useInterpretMode, targetISA, cb);
             if (!worker.run()) {
                 return false;
@@ -126,11 +127,14 @@ public final class TinkerDexOptimizer {
                 String optimizedPath = SharePatchFileUtil.optimizedPathFor(this.dexFile, this.optimizedDir);
                 if (!ShareTinkerInternals.isArkHotRuning()) {
                     if (useInterpretMode) {
+                        Log.e(TAG, "run: 1");
                         interpretDex2Oat(dexFile.getAbsolutePath(), optimizedPath);
                     } else if (Build.VERSION.SDK_INT >= 28
                             || (Build.VERSION.SDK_INT >= 27 && Build.VERSION.PREVIEW_SDK_INT != 0)) {
+                        Log.e(TAG, "run: 2:");
                         NewClassLoaderInjector.triggerDex2Oat(context, dexFile.getAbsolutePath());
                     } else {
+                        Log.e(TAG, "run: 3:");
                         DexFile.loadDex(dexFile.getAbsolutePath(), optimizedPath, 0);
                     }
                 }
@@ -148,6 +152,7 @@ public final class TinkerDexOptimizer {
         }
 
         private void interpretDex2Oat(String dexFilePath, String oatFilePath) throws IOException {
+            Log.d(TAG, "interpretDex2Oat() called with: dexFilePath = [" + dexFilePath + "], oatFilePath = [" + oatFilePath + "]");
             // add process lock for interpret mode
             final File oatFile = new File(oatFilePath);
             if (!oatFile.exists()) {

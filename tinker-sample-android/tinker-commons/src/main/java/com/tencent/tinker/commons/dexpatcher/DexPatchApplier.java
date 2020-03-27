@@ -95,6 +95,7 @@ public class DexPatchApplier {
 
     public DexPatchApplier(InputStream oldDexIn, InputStream patchFileIn) throws IOException {
         this(new Dex(oldDexIn), new DexPatchFile(patchFileIn));
+
     }
 
     public DexPatchApplier(
@@ -105,10 +106,12 @@ public class DexPatchApplier {
         this.patchFile = patchFileIn;
         this.patchedDex = new Dex(patchFileIn.getPatchedDexSize());
         this.oldToPatchedIndexMap = new SparseIndexMap();
+        System.out.println("DexPatchApplier() called with: oldDexIn = [" + oldDexIn + "], patchFileIn = [" + patchFileIn + "]");
     }
 
     // 真正处理dex文件的地方
     public void executeAndSaveTo(OutputStream out) throws IOException {
+        System.out.println("executeAndSaveTo: ");
         // Before executing, we should check if this patch can be applied to
         // old dex we passed in.
         byte[] oldDexSign = this.oldDex.computeSignature(false);

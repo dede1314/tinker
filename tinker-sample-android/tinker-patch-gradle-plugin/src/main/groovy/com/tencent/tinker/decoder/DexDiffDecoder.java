@@ -193,6 +193,7 @@ public class DexDiffDecoder extends BaseDecoder {
         // protection tools.
         // If this attribute is true, the generated patch package will contain a
         // dex including all changed classes instead of any dexdiff patch-info files.
+        System.out.println("onAllPatchesEnd "+config.mIsProtectedApp);
         if (config.mIsProtectedApp) {
            //  加固模式使用smali生成dex文件？
             generateChangedClassesDexFile();
@@ -264,6 +265,7 @@ public class DexDiffDecoder extends BaseDecoder {
 
             DexBuilder dexBuilder = new DexBuilder(Opcodes.forApi(29));
             for (org.jf.dexlib2.iface.ClassDef classDef : dexFile.getClasses()) {
+                System.out.println("generateChangedClassesDexFile classDef:"+classDef);
                 if (!descOfChangedClassesInCurrDex.contains(classDef.getType())) {
                     continue;
                 }

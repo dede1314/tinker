@@ -69,6 +69,7 @@ public class TinkerDexLoader {
      */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public static boolean loadTinkerJars(final TinkerApplication application, String directory, String oatDir, Intent intentResult, boolean isSystemOTA, boolean isProtectedApp) {
+        Log.d(TAG, "loadTinkerJars() called with: application = [" + application + "], directory = [" + directory + "], oatDir = [" + oatDir + "], intentResult = [" + intentResult + "], isSystemOTA = [" + isSystemOTA + "], isProtectedApp = [" + isProtectedApp + "]");
         if (LOAD_DEX_LIST.isEmpty() && classNDexInfo.isEmpty()) {
             Log.w(TAG, "there is no dex to load");
             return true;
@@ -215,6 +216,7 @@ public class TinkerDexLoader {
      * @return boolean
      */
     public static boolean checkComplete(String directory, ShareSecurityCheck securityCheck, String oatDir, Intent intentResult) {
+        Log.d(TAG, "checkComplete() called with: directory = [" + directory + "], securityCheck = [" + securityCheck + "], oatDir = [" + oatDir + "], intentResult = [" + intentResult + "]");
         String meta = securityCheck.getMetaContentMap().get(DEX_MEAT_FILE);
         //not found dex
         if (meta == null) {

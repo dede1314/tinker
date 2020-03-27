@@ -81,6 +81,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
     //loadTinkerJars/loadTinkerResources/
 
     private void tryLoadPatchFilesInternal(TinkerApplication app, Intent resultIntent) {
+        Log.d(TAG, "tryLoadPatchFilesInternal() called with: app = [" + app + "], resultIntent = [" + resultIntent + "]");
         final int tinkerFlag = app.getTinkerFlags();
 
         if (!ShareTinkerInternals.isTinkerEnabled(tinkerFlag)) {
@@ -316,6 +317,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
                 && ShareTinkerInternals.isSystemOTA(patchInfo.fingerPrint)//Q&A  patchinfo 怎样持有fingerPrint
                 && Build.VERSION.SDK_INT >= 21 && !ShareTinkerInternals.isAfterAndroidO();
 
+        Log.e(TAG, "tryLoadPatchFilesInternal: isSystemOTA"+isSystemOTA);
         resultIntent.putExtra(ShareIntentUtil.INTENT_PATCH_SYSTEM_OTA, isSystemOTA);
 
         //we should first try rewrite patch info file, if there is a error, we can't load jar

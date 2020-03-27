@@ -64,6 +64,7 @@ public class TinkerResourceLoader {
      * Load tinker resources
      */
     public static boolean loadTinkerResources(TinkerApplication application, String directory, Intent intentResult) {
+        Log.d(TAG, "loadTinkerResources() called with: application = [" + application + "], directory = [" + directory + "], intentResult = [" + intentResult + "]");
         // 检查 res_meta.txt 中读取出来的 md5 值，如果 resPatchInfo 或者 md5 是空的，就说明补丁包中没有资源补丁，不需要加载
         if (resPatchInfo == null || resPatchInfo.resArscMd5 == null) {
             return true;
@@ -109,6 +110,7 @@ public class TinkerResourceLoader {
      * @return boolean
      */
     public static boolean checkComplete(Context context, String directory, ShareSecurityCheck securityCheck, Intent intentResult) {
+        Log.d(TAG, "checkComplete() called with: context = [" + context + "], directory = [" + directory + "], securityCheck = [" + securityCheck + "], intentResult = [" + intentResult + "]");
         // 读取 assets/res_meta.txt
         String meta = securityCheck.getMetaContentMap().get(RESOURCE_META_FILE);
         //not found resource
@@ -166,6 +168,7 @@ public class TinkerResourceLoader {
         private static boolean started = false;
 
         static void tryStart(Application app) {
+            Log.d(TAG, "tryStart() called with: app = [" + app + "]");
             if (Build.VERSION.SDK_INT < 26 || started) {
                 return;
             }
