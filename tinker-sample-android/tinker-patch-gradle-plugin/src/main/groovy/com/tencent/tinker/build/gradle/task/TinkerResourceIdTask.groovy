@@ -19,6 +19,7 @@ package com.tencent.tinker.build.gradle.task
 import com.tencent.tinker.aapt.AaptResourceCollector
 import com.tencent.tinker.aapt.RDotTxtEntry
 import com.tencent.tinker.build.gradle.TinkerPatchPlugin
+import com.tencent.tinker.util.FileOperation
 import groovy.io.FileType
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -111,6 +112,7 @@ public class TinkerResourceIdTask extends DefaultTask {
             def projectOptions = getProjectOptions(project)
             Object enumValue = resolveEnumValue("ENABLE_AAPT2", Class.forName("com.android.build.gradle.options.BooleanOption"))
             aapt2Enabled = projectOptions.get(enumValue)
+            println("isAapt2EnabledCompat aapt2Enabled "+aapt2Enabled)
         } catch (Exception e) {
             try {
                 //retry for agp <= 2.3.3
@@ -355,8 +357,9 @@ public class TinkerResourceIdTask extends DefaultTask {
         project.extensions.tinkerPatch.buildConfig.usingResourceMapping = true
         Map<RDotTxtEntry.RType, Set<RDotTxtEntry>> rTypeResourceMap = PatchUtil.readRTxt(resourceMappingFile)
 
-
+       println("here is applyResourceId")
         if (!isAapt2EnabledCompat(project)) {
+            println("here is applyResourceId 1 aapt2 false")
             String idsXml = resDir + "/values/ids.xml";
             String publicXml = resDir + "/values/public.xml";
             FileOperation.deleteFile(idsXml);
@@ -377,6 +380,7 @@ public class TinkerResourceIdTask extends DefaultTask {
                 project.logger.error("tinker gen resource idx.xml in ${RESOURCE_IDX_XML}")
             }
         } else {
+            println("here is applyResourceId 1 aapt2 true")
             File stableIdsFile = project.file(RESOURCE_PUBLIC_TXT)
             FileOperation.deleteFile(stableIdsFile);
             ArrayList<String> sortedLines = getSortedStableIds(rTypeResourceMap)

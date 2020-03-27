@@ -18,6 +18,7 @@ package com.tencent.tinker.build.gradle.task
 
 import com.tencent.tinker.build.gradle.TinkerPatchPlugin
 import com.tencent.tinker.commons.util.IOHelper
+import com.tencent.tinker.util.FileOperation
 import groovy.xml.Namespace
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -41,6 +42,7 @@ public class TinkerManifestTask extends DefaultTask {
 
     @TaskAction
     def updateManifest() {
+        println("here is TinkerManifestTask ")
         // Parse the AndroidManifest.xml
         String tinkerValue = project.extensions.tinkerPatch.buildConfig.tinkerId
         if (tinkerValue == null || tinkerValue.isEmpty()) {

@@ -47,7 +47,7 @@ class TinkerPatchPlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project project) {
-        print("hello tinker plugin ")
+        println("hello tinker plugin ")
         mProject = project
 
         //osdetector change its plugin name in 1.4.0

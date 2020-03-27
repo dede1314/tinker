@@ -19,6 +19,7 @@ package com.tencent.tinker.build.gradle.task
 import com.tencent.tinker.build.gradle.TinkerPatchPlugin
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
+import com.tencent.tinker.util.FileOperation
 
 /**
  * The configuration properties.

@@ -45,6 +45,7 @@ public class TinkerPatchSchemaTask extends DefaultTask {
 
     @TaskAction
     def tinkerPatch() {
+        println("here is TinkerPatchSchemaTask tinkerPatch")
         //开始打包patch
         configuration.checkParameter()
         configuration.buildConfig.checkParameter()
