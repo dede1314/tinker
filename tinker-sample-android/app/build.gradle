@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.sensorsdata.android'
-
+sensorsAnalytics {
+    disableAppClick = false
+}
 
 dependencies {
     if (is_gradle_3()) {
@@ -48,9 +50,7 @@ def gitSha() {
 
 def javaVersion = JavaVersion.VERSION_1_7
 
-sensorsAnalytics {
-    disableAppClick = false
-}
+
 
 android {
     compileSdkVersion 28
@@ -154,7 +154,7 @@ def bakPath = file("${buildDir}/bakApk/")
  */
 ext {
     //for some reason, you may want to ignore tinkerBuild, such as instant run debug build?
-    tinkerEnabled = false
+    tinkerEnabled = true
 
     //for normal build
     //old apk file to build patch apk
