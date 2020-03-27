@@ -12,12 +12,14 @@ dependencies {
         api("com.tencent.tinker:tinker-android-lib:${TINKER_VERSION}") { changing = true }
 
         // Maven local cannot handle transist dependencies.
-        implementation("com.tencent.tinker:tinker-android-loader:${TINKER_VERSION}") { changing = true }
+//        implementation("com.tencent.tinker:tinker-android-loader:${TINKER_VERSION}") { changing = true }
 
-        annotationProcessor("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
-        compileOnly("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
+//        annotationProcessor("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
+//        compileOnly("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
 
         implementation "com.android.support:multidex:1.0.1"
+        api project(':tinker-android:tinker-android-loader')
+
         //use to test multiDex
 //    implementation group: 'com.google.guava', name: 'guava', version: '19.0'
 //    implementation "org.scala-lang:scala-library:2.11.7"
