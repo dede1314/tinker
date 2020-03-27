@@ -21,7 +21,6 @@ import com.tencent.android.dex.Dex;
 import com.tencent.android.dex.DexFormat;
 import com.tencent.tinker.build.util.MD5;
 import com.tencent.tinker.build.util.TinkerPatchException;
-import com.tencent.tinker.build.util.TypedValue;
 import com.tencent.tinker.commons.dexpatcher.DexPatchApplier;
 import com.tencent.tinker.commons.dexpatcher.DexPatcherLogger.IDexPatcherLogger;
 import com.tencent.tinker.dexpatcher.DexPatchGenerator;
@@ -32,6 +31,7 @@ import com.tencent.tinker.util.DexClassesComparator;
 import com.tencent.tinker.util.ExcludedClassModifiedChecker;
 import com.tencent.tinker.util.FileOperation;
 import com.tencent.tinker.util.Logger;
+import com.tencent.tinker.util.TypedValue;
 import com.tencent.tinker.util.Utils;
 
 import org.jf.dexlib2.Opcodes;

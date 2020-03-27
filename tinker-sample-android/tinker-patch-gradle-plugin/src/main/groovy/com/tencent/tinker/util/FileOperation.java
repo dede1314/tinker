@@ -17,7 +17,6 @@
 package com.tencent.tinker.util;
 
 import com.tencent.tinker.build.util.MD5;
-import com.tencent.tinker.build.util.TypedValue;
 import com.tencent.tinker.commons.util.IOHelper;
 import com.tencent.tinker.patch.Configuration;
 

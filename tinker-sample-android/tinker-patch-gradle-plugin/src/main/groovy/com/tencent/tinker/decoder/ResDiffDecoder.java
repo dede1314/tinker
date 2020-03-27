@@ -20,11 +20,11 @@ import com.tencent.tinker.apkparser.AndroidParser;
 import com.tencent.tinker.bsdiff.BSDiff;
 import com.tencent.tinker.build.util.MD5;
 import com.tencent.tinker.build.util.TinkerPatchException;
-import com.tencent.tinker.build.util.TypedValue;
 import com.tencent.tinker.info.InfoWriter;
 import com.tencent.tinker.patch.Configuration;
 import com.tencent.tinker.util.FileOperation;
 import com.tencent.tinker.util.Logger;
+import com.tencent.tinker.util.TypedValue;
 import com.tencent.tinker.util.Utils;
 
 import java.io.File;

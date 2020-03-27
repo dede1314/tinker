@@ -20,10 +20,10 @@ package com.tencent.tinker.decoder;
 
 import com.tencent.tinker.build.util.MD5;
 import com.tencent.tinker.build.util.TinkerPatchException;
-import com.tencent.tinker.build.util.TypedValue;
 import com.tencent.tinker.patch.Configuration;
 import com.tencent.tinker.util.FileOperation;
 import com.tencent.tinker.util.Logger;
+import com.tencent.tinker.util.TypedValue;
 import com.tencent.tinker.util.Utils;
 
 import java.io.File;

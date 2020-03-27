@@ -17,11 +17,11 @@
 package com.tencent.tinker.builder;
 
 
-import com.tencent.tinker.build.util.TypedValue;
 import com.tencent.tinker.commons.util.IOHelper;
 import com.tencent.tinker.patch.Configuration;
 import com.tencent.tinker.util.FileOperation;
 import com.tencent.tinker.util.Logger;
+import com.tencent.tinker.util.TypedValue;
 
 import java.io.BufferedInputStream;
 import java.io.File;

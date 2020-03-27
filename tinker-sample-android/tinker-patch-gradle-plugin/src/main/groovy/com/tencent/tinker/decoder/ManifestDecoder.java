@@ -19,9 +19,9 @@ package com.tencent.tinker.decoder;
 
 import com.tencent.tinker.apkparser.AndroidParser;
 import com.tencent.tinker.build.util.TinkerPatchException;
-import com.tencent.tinker.build.util.TypedValue;
 import com.tencent.tinker.patch.Configuration;
 import com.tencent.tinker.util.Logger;
+import com.tencent.tinker.util.TypedValue;
 import com.tencent.tinker.util.Utils;
 
 import org.dom4j.Attribute;

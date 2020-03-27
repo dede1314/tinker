@@ -17,7 +17,6 @@
 package com.tencent.tinker.util;
 
 
-import com.tencent.tinker.build.util.TypedValue;
 import com.tencent.tinker.info.InfoWriter;
 import com.tencent.tinker.patch.Configuration;
 

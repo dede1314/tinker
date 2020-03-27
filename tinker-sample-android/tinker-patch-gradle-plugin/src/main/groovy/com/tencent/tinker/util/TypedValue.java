@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tencent.tinker.build.util;
+package com.tencent.tinker.util;
 
 /**
  * Container for a dynamically typed data value. Primarily used with

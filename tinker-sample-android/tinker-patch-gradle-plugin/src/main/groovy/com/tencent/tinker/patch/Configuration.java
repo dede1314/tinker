@@ -18,9 +18,9 @@ package com.tencent.tinker.patch;
 
 import com.tencent.tinker.build.patch.InputParam;
 import com.tencent.tinker.build.util.TinkerPatchException;
-import com.tencent.tinker.build.util.TypedValue;
 import com.tencent.tinker.commons.util.IOHelper;
 import com.tencent.tinker.util.FileOperation;
+import com.tencent.tinker.util.TypedValue;
 import com.tencent.tinker.util.Utils;
 
 import org.w3c.dom.Document;

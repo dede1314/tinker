@@ -18,9 +18,9 @@ package com.tencent.tinker.info;
 
 import com.tencent.tinker.apkparser.AndroidParser;
 import com.tencent.tinker.build.util.TinkerPatchException;
-import com.tencent.tinker.build.util.TypedValue;
 import com.tencent.tinker.commons.util.IOHelper;
 import com.tencent.tinker.patch.Configuration;
+import com.tencent.tinker.util.TypedValue;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

@@ -19,7 +19,7 @@ class SensorsAnalyticsPlugin implements Plugin<Project> {
         }
 
         if (!disableSensorsAnalyticsPlugin) {
-            println("------------您已开启了神策插件--------------")
+            println("------------您已开启了神策插件 1.0.3--------------")
             AppExtension appExtension = project.extensions.findByType(AppExtension.class)
             appExtension.registerTransform(new SensorsAnalyticsTransform(project, extension))
         } else {
