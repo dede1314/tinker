@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.tencent</groupId>
+  <artifactId>tinker.patch</artifactId>
+  <version>1.0.0</version>
+  <name>Tinker Patch Gradle Plugin</name>
+  <description>tinker</description>
+  <url>https://github.com/Tencent/tinker</url>
+  <licenses>
+    <license>
+      <name>BSD License</name>
+      <url>https://opensource.org/licenses/BSD-3-Clause</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>Tencent Wechat</id>
+      <name>Tencent Wechat, Inc.</name>
+    </developer>
+  </developers>
+  <scm>
+    <url>https://github.com/Tencent/tinker.git</url>
+  </scm>
+  <dependencies>
+    <dependency>
+      <groupId>com.google.gradle</groupId>
+      <artifactId>osdetector-gradle-plugin</artifactId>
+      <version>1.6.0</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>11.0.2</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.ow2.asm</groupId>
+      <artifactId>asm</artifactId>
+      <version>6.0</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.smali</groupId>
+      <artifactId>dexlib2</artifactId>
+      <version>2.3.1</version>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>*</artifactId>
+          <groupId>com.google.guava</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>dom4j</groupId>
+      <artifactId>dom4j</artifactId>
+      <version>1.6.1</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.tencent.mm</groupId>
+      <artifactId>apk-parser-lib</artifactId>
+      <version>1.2.3</version>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+</project>

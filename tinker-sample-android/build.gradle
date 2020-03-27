@@ -16,10 +16,10 @@ buildscript {
         } else {
             classpath 'com.android.tools.build:gradle:2.3.3'
         }
-        classpath("com.tencent.tinker:tinker-patch-gradle-plugin:${TINKER_VERSION}") {
-            changing = TINKER_VERSION?.endsWith("-SNAPSHOT")
-            exclude group: 'com.android.tools.build', module: 'gradle'
-        }
+//        classpath("com.tencent.tinker:tinker-patch-gradle-plugin:${TINKER_VERSION}") {
+//            changing = TINKER_VERSION?.endsWith("-SNAPSHOT")
+//            exclude group: 'com.android.tools.build', module: 'gradle'
+//        }
         classpath 'com.sensorsdata:autotrack.android:1.0.1'// 需要先执行plugin的build.gradle中的uploadArchives
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
         classpath "com.github.dcendents:android-maven-gradle-plugin:2.1"

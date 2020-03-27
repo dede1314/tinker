@@ -8,9 +8,18 @@ dependencies {
     implementation gradleApi()
     implementation localGroovy()
 //    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':tinker-patch-lib')
+//    implementation project(':tinker-patch-lib')
     implementation 'com.google.gradle:osdetector-gradle-plugin:1.6.0'
     compileOnly 'com.android.tools.build:gradle:3.1.4'
+
+//    api group: 'com.tencent.mm', name: 'apk-parser-lib', version: '1.2.3'
+    implementation group: 'com.google.guava', name: 'guava', version: '11.0.2'
+    implementation group: 'org.ow2.asm', name: 'asm', version: '6.0'
+    implementation (group: 'org.smali', name: 'dexlib2', version: '2.3.1') {
+        exclude group: 'com.google.guava'
+    }
+    implementation group: 'dom4j', name: 'dom4j', version: '1.6.1'
+    implementation group: 'com.tencent.mm', name: 'apk-parser-lib', version: '1.2.3'
 }
 
 repositories {
@@ -30,15 +39,15 @@ sourceSets {
     }
 }
 
-//apply from: rootProject.file('gradle/java-artifacts.gradle')
-//apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+apply from: rootProject.file('gradle/java-artifacts.gradle')
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
 
 
 uploadArchives {
     println("start upload tinker plugin ")
     repositories.mavenDeployer {
         //本地仓库路径，以放到项目根目录下的 repo 的文件夹为例
-        repository(url: uri('../../repo'))
+        repository(url: uri('../repo'))
 
         //groupId ，自行定义
         pom.groupId = 'com.tencent'
@@ -47,6 +56,6 @@ uploadArchives {
         pom.artifactId = 'tinker.patch'
 
         //插件版本号
-        pom.version = '1.0.0'
+        pom.version = '1.0.1'
     }
 }

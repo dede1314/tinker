@@ -16,12 +16,9 @@
 
 package com.tencent.tinker.build.gradle.task
 
-import com.tencent.tinker.build.aapt.AaptResourceCollector
-import com.tencent.tinker.build.aapt.AaptUtil
-import com.tencent.tinker.build.aapt.PatchUtil
-import com.tencent.tinker.build.aapt.RDotTxtEntry
+import com.tencent.tinker.aapt.AaptResourceCollector
+import com.tencent.tinker.aapt.RDotTxtEntry
 import com.tencent.tinker.build.gradle.TinkerPatchPlugin
-import com.tencent.tinker.build.util.FileOperation
 import groovy.io.FileType
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException

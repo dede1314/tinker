@@ -19,9 +19,7 @@ package com.tencent.tinker.build.gradle
 import com.android.build.api.transform.Transform
 import com.tencent.tinker.build.gradle.extension.*
 import com.tencent.tinker.build.gradle.task.*
-import com.tencent.tinker.build.util.FileOperation
 import com.tencent.tinker.build.util.TypedValue
-import com.tencent.tinker.build.util.Utils
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project

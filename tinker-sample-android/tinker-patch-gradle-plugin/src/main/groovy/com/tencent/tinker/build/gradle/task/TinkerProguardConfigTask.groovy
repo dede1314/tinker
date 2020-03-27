@@ -17,7 +17,6 @@
 package com.tencent.tinker.build.gradle.task
 
 import com.tencent.tinker.build.gradle.TinkerPatchPlugin
-import com.tencent.tinker.build.util.FileOperation
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
