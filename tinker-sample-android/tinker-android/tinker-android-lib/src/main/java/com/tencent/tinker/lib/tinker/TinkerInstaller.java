@@ -64,7 +64,7 @@ public class TinkerInstaller {
     public static Tinker install(ApplicationLike applicationLike, LoadReporter loadReporter, PatchReporter patchReporter,
                                  PatchListener listener, Class<? extends AbstractResultService> resultServiceClass,
                                  AbstractPatch upgradePatchProcessor) {
-        Log.d(TAG, "install() called with: applicationLike = [" + applicationLike + "], loadReporter = [" + loadReporter + "], patchReporter = [" + patchReporter + "], listener = [" + listener + "], resultServiceClass = [" + resultServiceClass + "], upgradePatchProcessor = [" + upgradePatchProcessor + "]");
+        Log.e(TAG, "install() called with: applicationLike = [" + applicationLike + "], loadReporter = [" + loadReporter + "], patchReporter = [" + patchReporter + "], listener = [" + listener + "], resultServiceClass = [" + resultServiceClass + "], upgradePatchProcessor = [" + upgradePatchProcessor + "]");
         // 构造者模式
         Tinker tinker = new Tinker.Builder(applicationLike.getApplication())
             .tinkerFlags(applicationLike.getTinkerFlags())

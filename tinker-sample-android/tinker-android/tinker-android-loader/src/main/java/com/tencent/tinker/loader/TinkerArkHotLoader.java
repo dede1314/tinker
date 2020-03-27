@@ -39,7 +39,7 @@ import dalvik.system.PathClassLoader;
  * pre-load patch dex files
  */
 public class TinkerArkHotLoader {
-    private static final String TAG = "Tinker.TinkerArkHotLoader";
+    private static final String TAG = "Tinker.TinkerArkHotLoad";
 
     private static final String ARK_MEAT_FILE = ShareConstants.ARKHOT_META_FILE;
     private static final String ARKHOT_PATH = ShareConstants.ARKHOTFIX_PATH;
@@ -60,6 +60,7 @@ public class TinkerArkHotLoader {
      */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public static boolean loadTinkerArkHot(final TinkerApplication application, String directory, Intent intentResult) {
+        Log.d(TAG, "loadTinkerArkHot() called with: application = [" + application + "], directory = [" + directory + "], intentResult = [" + intentResult + "]");
         if (arkHotApkInfo.isEmpty()) {
             Log.w(TAG, "there is no apk to load");
             return true;
@@ -106,6 +107,7 @@ public class TinkerArkHotLoader {
      * @return boolean
      */
     public static boolean checkComplete(String directory, ShareSecurityCheck securityCheck, Intent intentResult) {
+        Log.d(TAG, "checkComplete() called with: directory = [" + directory + "], securityCheck = [" + securityCheck + "], intentResult = [" + intentResult + "]");
         String meta = securityCheck.getMetaContentMap().get(ARK_MEAT_FILE);
         if (meta == null) {
             return true;

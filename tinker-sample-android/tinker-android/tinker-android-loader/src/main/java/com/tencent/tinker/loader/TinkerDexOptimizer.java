@@ -104,6 +104,7 @@ public final class TinkerDexOptimizer {
         private final ResultCallback callback;
 
         OptimizeWorker(Context context, File dexFile, File optimizedDir, boolean useInterpretMode, String targetISA, ResultCallback cb) {
+            Log.d(TAG, "OptimizeWorker() called with: context = [" + context + "], dexFile = [" + dexFile + "], optimizedDir = [" + optimizedDir + "], useInterpretMode = [" + useInterpretMode + "], targetISA = [" + targetISA + "], cb = [" + cb + "]");
             this.context = context;
             this.dexFile = dexFile;
             this.optimizedDir = optimizedDir;

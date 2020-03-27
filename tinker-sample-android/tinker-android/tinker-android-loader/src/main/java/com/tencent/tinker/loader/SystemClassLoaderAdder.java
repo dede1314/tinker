@@ -216,6 +216,7 @@ public class SystemClassLoaderAdder {
         private static void install(ClassLoader loader, List<File> additionalClassPathEntries)
                 throws IllegalArgumentException, IllegalAccessException, NoSuchMethodException,
                 InvocationTargetException, IOException, ClassNotFoundException, SecurityException {
+            Log.d(TAG, "install() called with: loader = [" + loader + "], additionalClassPathEntries = [" + additionalClassPathEntries + "]");
             Class<?>  extendedClassLoaderHelper = ClassLoader.getSystemClassLoader()
                     .getParent().loadClass("com.huawei.ark.classloader.ExtendedClassLoaderHelper");
 
@@ -239,6 +240,7 @@ public class SystemClassLoaderAdder {
                                     File optimizedDirectory)
             throws IllegalArgumentException, IllegalAccessException,
             NoSuchFieldException, InvocationTargetException, NoSuchMethodException, IOException {
+            Log.d(TAG, "install() called with: loader = [" + loader + "], additionalClassPathEntries = [" + additionalClassPathEntries + "], optimizedDirectory = [" + optimizedDirectory + "]");
             /* The patched class loader is expected to be a descendant of
              * dalvik.system.BaseDexClassLoader. We modify its
              * dalvik.system.DexPathList pathList field to append additional DEX
@@ -267,6 +269,7 @@ public class SystemClassLoaderAdder {
             Object dexPathList, ArrayList<File> files, File optimizedDirectory,
             ArrayList<IOException> suppressedExceptions)
             throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+            Log.d(TAG, "makePathElements() called with: dexPathList = [" + dexPathList + "], files = [" + files + "], optimizedDirectory = [" + optimizedDirectory + "], suppressedExceptions = [" + suppressedExceptions + "]");
 
             Method makePathElements;
             try {
@@ -304,6 +307,7 @@ public class SystemClassLoaderAdder {
                                     File optimizedDirectory)
             throws IllegalArgumentException, IllegalAccessException,
             NoSuchFieldException, InvocationTargetException, NoSuchMethodException, IOException {
+            Log.d(TAG, "install() called with: loader = [" + loader + "], additionalClassPathEntries = [" + additionalClassPathEntries + "], optimizedDirectory = [" + optimizedDirectory + "]");
             /* The patched class loader is expected to be a descendant of
              * dalvik.system.BaseDexClassLoader. We modify its
              * dalvik.system.DexPathList pathList field to append additional DEX
@@ -332,6 +336,7 @@ public class SystemClassLoaderAdder {
             Object dexPathList, ArrayList<File> files, File optimizedDirectory,
             ArrayList<IOException> suppressedExceptions)
             throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+            Log.d(TAG, "makeDexElements() called with: dexPathList = [" + dexPathList + "], files = [" + files + "], optimizedDirectory = [" + optimizedDirectory + "], suppressedExceptions = [" + suppressedExceptions + "]");
 
             Method makeDexElements = null;
             try {
@@ -367,6 +372,7 @@ public class SystemClassLoaderAdder {
                                     File optimizedDirectory)
             throws IllegalArgumentException, IllegalAccessException,
             NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
+            Log.d(TAG, "install() called with: loader = [" + loader + "], additionalClassPathEntries = [" + additionalClassPathEntries + "], optimizedDirectory = [" + optimizedDirectory + "]");
             /* The patched class loader is expected to be a descendant of
              * dalvik.system.BaseDexClassLoader. We modify its
              * dalvik.system.DexPathList pathList field to append additional DEX
@@ -387,6 +393,7 @@ public class SystemClassLoaderAdder {
             Object dexPathList, ArrayList<File> files, File optimizedDirectory)
             throws IllegalAccessException, InvocationTargetException,
             NoSuchMethodException {
+            Log.d(TAG, "makeDexElements() called with: dexPathList = [" + dexPathList + "], files = [" + files + "], optimizedDirectory = [" + optimizedDirectory + "]");
             Method makeDexElements =
                 ShareReflectUtil.findMethod(dexPathList, "makeDexElements", ArrayList.class, File.class);
 
@@ -405,6 +412,7 @@ public class SystemClassLoaderAdder {
         private static void install(ClassLoader loader, List<File> additionalClassPathEntries, File optimizedDirectory)
             throws IllegalArgumentException, IllegalAccessException,
             NoSuchFieldException, IOException {
+            Log.d(TAG, "install() called with: loader = [" + loader + "], additionalClassPathEntries = [" + additionalClassPathEntries + "], optimizedDirectory = [" + optimizedDirectory + "]");
             /* The patched class loader is expected to be a descendant of
              * dalvik.system.DexClassLoader. We modify its
              * fields mPaths, mFiles, mZips and mDexs to append additional DEX

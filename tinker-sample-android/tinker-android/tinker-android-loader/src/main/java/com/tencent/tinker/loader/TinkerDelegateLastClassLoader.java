@@ -79,6 +79,7 @@ public class TinkerDelegateLastClassLoader extends PathClassLoader {
 
     @Override
     public Enumeration<URL> getResources(String name) throws IOException {
+        Log.d(TAG, "getResources() called with: name = [" + name + "]");
         @SuppressWarnings("unchecked")
         final Enumeration<URL>[] resources = (Enumeration<URL>[]) new Enumeration<?>[] {
                 Object.class.getClassLoader().getResources(name),

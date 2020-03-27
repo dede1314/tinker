@@ -85,6 +85,7 @@ class TinkerResourcePatcher {
     // 并且将更新资源要用到的Field和Method保存起来方便加载补丁时的使用.
     // https://blog.csdn.net/l2show/article/details/53454933
     public static void isResourceCanPatch(Context context) throws Throwable {
+        Log.d(TAG, "isResourceCanPatch() called with: context = [" + context + "]");
         //   - Replace mResDir to point to the external resource file instead of the .apk. This is
         //     used as the asset path for new Resources objects.
         //   - Set Application#mLoadedApk to the found LoadedApk instance
@@ -187,6 +188,7 @@ class TinkerResourcePatcher {
      * @throws Throwable
      */
     public static void monkeyPatchExistingResources(Context context, String externalResourceFile) throws Throwable {
+        Log.d(TAG, "monkeyPatchExistingResources() called with: context = [" + context + "], externalResourceFile = [" + externalResourceFile + "]");
         if (externalResourceFile == null) {
             return;
         }
@@ -216,6 +218,7 @@ class TinkerResourcePatcher {
                 }
                 // 从 LoadedApk 对象中获取 mResDir 属性
                 final String resDirPath = (String) resDir.get(loadedApk);
+                Log.e(TAG, "monkeyPatchExistingResources: resDirPath:"+resDirPath);
                 if (appInfo.sourceDir.equals(resDirPath)) {
                     // 将 mResDir 的值 hook 成资源补丁 apk 的路径
                     resDir.set(loadedApk, externalResourceFile);
@@ -297,6 +300,7 @@ class TinkerResourcePatcher {
      * MiuiResource change TypedArray to MiuiTypedArray, but it get string block from offset instead of assetManager
      */
     private static void clearPreloadTypedArrayIssue(Resources resources) {
+        Log.d(TAG, "clearPreloadTypedArrayIssue() called with: resources = [" + resources + "]");
         // Perform this trick not only in Miui system since we can't predict if any other
         // manufacturer would do the same modification to Android.
         // if (!isMiuiSystem) {
@@ -319,6 +323,7 @@ class TinkerResourcePatcher {
     }
 
     private static boolean checkResUpdate(Context context) {
+        Log.d(TAG, "checkResUpdate() called with: context = [" + context + "]");
         InputStream is = null;
         try {
             is = context.getAssets().open(TEST_ASSETS_VALUE);

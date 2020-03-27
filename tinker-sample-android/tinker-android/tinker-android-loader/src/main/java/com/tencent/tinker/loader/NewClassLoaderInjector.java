@@ -37,6 +37,7 @@ import dalvik.system.DelegateLastClassLoader;
 final class NewClassLoaderInjector {
     private static final String TAG = "tinker.NewClassLoaderI";
     public static ClassLoader inject(Application app, ClassLoader oldClassLoader, List<File> patchedDexes) throws Throwable {
+        Log.d(TAG, "inject() called with: app = [" + app + "], oldClassLoader = [" + oldClassLoader + "], patchedDexes = [" + patchedDexes + "]");
         final String[] patchedDexPaths = new String[patchedDexes.size()];
         for (int i = 0; i < patchedDexPaths.length; ++i) {
             patchedDexPaths[i] = patchedDexes.get(i).getAbsolutePath();

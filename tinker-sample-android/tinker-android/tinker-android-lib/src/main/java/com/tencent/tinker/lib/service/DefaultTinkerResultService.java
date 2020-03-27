@@ -17,6 +17,8 @@
 package com.tencent.tinker.lib.service;
 
 
+import android.util.Log;
+
 import com.tencent.tinker.lib.tinker.Tinker;
 import com.tencent.tinker.lib.tinker.TinkerLoadResult;
 import com.tencent.tinker.lib.util.TinkerLog;
@@ -30,7 +32,7 @@ import java.io.File;
  * Created by zhangshaowen on 16/3/19.
  */
 public class DefaultTinkerResultService extends AbstractResultService {
-    private static final String TAG = "Tinker.DefaultTinkerResultService";
+    private static final String TAG = "Tinker.DefaultTinkerRe";
 
     /**
      * we may want to use the new patch just now!!
@@ -39,6 +41,7 @@ public class DefaultTinkerResultService extends AbstractResultService {
      */
     @Override
     public void onPatchResult(PatchResult result) {
+        Log.d(TAG, "onPatchResult() called with: result = [" + result + "]");
         if (result == null) {
             TinkerLog.e(TAG, "DefaultTinkerResultService received null result!!!!");
             return;

@@ -528,6 +528,7 @@ public class DexDiffPatchInternal extends BasePatchInternal {
                 ZipEntry rawApkFileEntry = apk.getEntry(patchRealPath);
                 Log.e(TAG, "extractDexDiffInternals: oldDexCrc" + oldDexCrc);
                 // 从这里开始，就是遍历 patchList 中的记录，进行一个个 dex 文件合成了。一开头会去校验合成的文件是否存在，存在的话就跳过，进行下一个。
+                Log.e(TAG, "extractDexDiffInternals: oldDexCrc:"+oldDexCrc);
                 if (oldDexCrc.equals("0")) {// oldDexCrc什么情况下等于0？新增的dex.
                     // 如果 oldDexCrc 为0，就说明基准包中对应的 oldDex 文件不存在，直接按照 patch 信息重新打包 dex 即可。
                     if (patchFileEntry == null) {
@@ -543,6 +544,7 @@ public class DexDiffPatchInternal extends BasePatchInternal {
                         return false;
                     }
                 } else if (dexDiffMd5.equals("0")) {// dexDiffMd5什么情况下等于0，加固模式下等于0
+                    Log.e(TAG, "extractDexDiffInternals: dexDiffMd5==0");
                     // 如果 oldDexCrc 为0，就说明基准包中对应的 oldDex 文件不存在，直接按照 patch 信息重新打包 dex 即可 ---》适用于非加固模式
                     // skip process old dex for real dalvik vm
                     Log.e(TAG, "extractDexDiffInternals: dexDiffMd5 =0 ");

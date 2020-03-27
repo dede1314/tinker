@@ -97,7 +97,7 @@ public class BasePatchInternal {
                 }
             }
         }
-
+        Log.d(TAG, "extract() returned: " + isExtractionSuccessful);
         return isExtractionSuccessful;
     }
 

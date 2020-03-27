@@ -19,6 +19,7 @@ package com.tencent.tinker.lib.service;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.tencent.tinker.lib.util.TinkerLog;
 import com.tencent.tinker.loader.TinkerRuntimeException;
@@ -28,7 +29,7 @@ import com.tencent.tinker.loader.shareutil.ShareIntentUtil;
  * Created by zhangshaowen on 16/3/14.
  */
 public abstract class AbstractResultService extends IntentService {
-    private static final String TAG = "Tinker.AbstractResultService";
+    private static final String TAG = "Tinker.AbstractResultSe";
 
     private static final String RESULT_EXTRA = "result_extra";
 
@@ -57,7 +58,7 @@ public abstract class AbstractResultService extends IntentService {
             return;
         }
         PatchResult result = (PatchResult) ShareIntentUtil.getSerializableExtra(intent, RESULT_EXTRA);
-
+        Log.e(TAG, "onHandleIntent: result:"+result);
         onPatchResult(result);
     }
 
