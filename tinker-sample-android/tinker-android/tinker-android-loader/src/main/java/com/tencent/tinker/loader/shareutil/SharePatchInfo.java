@@ -243,5 +243,15 @@ public class SharePatchInfo {
         return false;
     }
 
-
+    @Override
+    public String toString() {
+        return "SharePatchInfo{" +
+                "oldVersion='" + oldVersion + '\'' +
+                ", newVersion='" + newVersion + '\'' +
+                ", isProtectedApp=" + isProtectedApp +
+                ", isRemoveNewVersion=" + isRemoveNewVersion +
+                ", fingerPrint='" + fingerPrint + '\'' +
+                ", oatDir='" + oatDir + '\'' +
+                '}';
+    }
 }

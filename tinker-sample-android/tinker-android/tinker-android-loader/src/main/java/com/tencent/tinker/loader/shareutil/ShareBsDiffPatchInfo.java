@@ -16,6 +16,8 @@
 
 package com.tencent.tinker.loader.shareutil;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -23,6 +25,7 @@ import java.util.ArrayList;
  * Created by zhangshaowen on 16/3/16.
  */
 public class ShareBsDiffPatchInfo {
+    private static final String TAG = "tinker.ShareBsDiffPatch";
     public String name;
     public String md5;
     public String rawCrc;
@@ -45,6 +48,7 @@ public class ShareBsDiffPatchInfo {
         }
         String[] lines = meta.split("\n");
         for (final String line : lines) {
+            Log.e(TAG, "parseDiffPatchInfo: line:"+line);
             if (line == null || line.length() <= 0) {
                 continue;
             }

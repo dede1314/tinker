@@ -136,6 +136,7 @@ public class DexDiffPatchInternal extends BasePatchInternal {
                 int returnType;
                 try {
                     returnType = ShareElfFile.getFileTypeByMagic(file);
+                    Log.e(TAG, "waitAndCheckDexOptFile: returnType:"+returnType);
                 } catch (IOException e) {
                     // read error just continue
                     continue;

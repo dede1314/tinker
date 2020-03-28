@@ -45,9 +45,9 @@ public class TinkerDexLoader {
 
     private static final String TAG = "Tinker.TinkerDexLoader";
 
-    private static final String DEX_MEAT_FILE               = ShareConstants.DEX_META_FILE;
-    private static final String DEX_PATH                    = ShareConstants.DEX_PATH;
-    private static final String DEFAULT_DEX_OPTIMIZE_PATH   = ShareConstants.DEFAULT_DEX_OPTIMIZE_PATH;
+    private static final String DEX_MEAT_FILE = ShareConstants.DEX_META_FILE;
+    private static final String DEX_PATH = ShareConstants.DEX_PATH;
+    private static final String DEFAULT_DEX_OPTIMIZE_PATH = ShareConstants.DEFAULT_DEX_OPTIMIZE_PATH;
     private static final String INTERPRET_DEX_OPTIMIZE_PATH = ShareConstants.INTERPRET_DEX_OPTIMIZE_PATH;
 
     private static final ArrayList<ShareDexDiffPatchInfo> LOAD_DEX_LIST = new ArrayList<>();
@@ -103,7 +103,7 @@ public class TinkerDexLoader {
                     //it is good to delete the mismatch file
                     ShareIntentUtil.setIntentReturnCode(intentResult, ShareConstants.ERROR_LOAD_PATCH_VERSION_DEX_MD5_MISMATCH);
                     intentResult.putExtra(ShareIntentUtil.INTENT_PATCH_MISMATCH_DEX_PATH,
-                        file.getAbsolutePath());
+                            file.getAbsolutePath());
                     return false;
                 }
                 Log.i(TAG, "verify dex file:" + file.getPath() + " md5, use time: " + (System.currentTimeMillis() - start));
@@ -121,7 +121,7 @@ public class TinkerDexLoader {
                     if (!SharePatchFileUtil.verifyDexFileMd5(classNFile, info.rawName, info.destMd5InArt)) {
                         ShareIntentUtil.setIntentReturnCode(intentResult, ShareConstants.ERROR_LOAD_PATCH_VERSION_DEX_MD5_MISMATCH);
                         intentResult.putExtra(ShareIntentUtil.INTENT_PATCH_MISMATCH_DEX_PATH,
-                            classNFile.getAbsolutePath());
+                                classNFile.getAbsolutePath());
                         return false;
                     }
                 }
@@ -164,29 +164,29 @@ public class TinkerDexLoader {
             // 只要用户是ART环境并且做了OTA升级则在加载dex补丁的时候就会先把最近一次的补丁全部DexFile.loadDex一遍.
             // 这么做的原因是有些场景做了OTA后,oat的规则可能发生变化,在这种情况下去加载上个系统版本oat过的dex就会出现问题.
             TinkerDexOptimizer.optimizeAll(
-                application, legalFiles, optimizeDir, true, targetISA,
-                new TinkerDexOptimizer.ResultCallback() {
-                    long start;
+                    application, legalFiles, optimizeDir, true, targetISA,
+                    new TinkerDexOptimizer.ResultCallback() {
+                        long start;
 
-                    @Override
-                    public void onStart(File dexFile, File optimizedDir) {
-                        start = System.currentTimeMillis();
-                        Log.i(TAG, "start to optimize dex:" + dexFile.getPath());
-                    }
+                        @Override
+                        public void onStart(File dexFile, File optimizedDir) {
+                            start = System.currentTimeMillis();
+                            Log.i(TAG, "start to optimize dex:" + dexFile.getPath());
+                        }
 
-                    @Override
-                    public void onSuccess(File dexFile, File optimizedDir, File optimizedFile) {
-                        // Do nothing.
-                        Log.i(TAG, "success to optimize dex " + dexFile.getPath() + ", use time " + (System.currentTimeMillis() - start));
-                    }
+                        @Override
+                        public void onSuccess(File dexFile, File optimizedDir, File optimizedFile) {
+                            // Do nothing.
+                            Log.i(TAG, "success to optimize dex " + dexFile.getPath() + ", use time " + (System.currentTimeMillis() - start));
+                        }
 
-                    @Override
-                    public void onFailed(File dexFile, File optimizedDir, Throwable thr) {
-                        parallelOTAResult[0] = false;
-                        parallelOTAThrowable[0] = thr;
-                        Log.i(TAG, "fail to optimize dex " + dexFile.getPath() + ", use time " + (System.currentTimeMillis() - start));
+                        @Override
+                        public void onFailed(File dexFile, File optimizedDir, Throwable thr) {
+                            parallelOTAResult[0] = false;
+                            parallelOTAThrowable[0] = thr;
+                            Log.i(TAG, "fail to optimize dex " + dexFile.getPath() + ", use time " + (System.currentTimeMillis() - start));
+                        }
                     }
-                }
             );
 
 
@@ -237,6 +237,7 @@ public class TinkerDexLoader {
         ShareDexDiffPatchInfo testInfo = null;
 
         for (ShareDexDiffPatchInfo info : allDexInfo) {
+            Log.e(TAG, "checkComplete: ShareDexDiffPatchInfo :" + info);
             //for dalvik, ignore art support dex
             if (isJustArtSupportDex(info)) {
                 continue;
@@ -249,15 +250,17 @@ public class TinkerDexLoader {
             if (isVmArt && info.rawName.startsWith(ShareConstants.TEST_DEX_NAME)) {
                 testInfo = info;
             } else if (isVmArt && ShareConstants.CLASS_N_PATTERN.matcher(info.realName).matches()) {
+                Log.e(TAG, "checkComplete: info:" + info);
                 classNDexInfo.add(info);
             } else {
                 dexes.put(info.realName, getInfoMd5(info));
+                Log.e(TAG, "checkComplete: info.realName :" + info.realName);
                 LOAD_DEX_LIST.add(info);
             }
         }
 
         if (isVmArt
-            && (testInfo != null || !classNDexInfo.isEmpty())) {
+                && (testInfo != null || !classNDexInfo.isEmpty())) {
             if (testInfo != null) {
                 classNDexInfo.add(ShareTinkerInternals.changeTestDexToClassN(testInfo, classNDexInfo.size() + 1));
             }
@@ -277,6 +280,7 @@ public class TinkerDexLoader {
 
         //fast check whether there is any dex files missing
         for (String name : dexes.keySet()) {
+            Log.e(TAG, "checkComplete: dexes name:" + name);
             File dexFile = new File(dexDirectory + name);
 
             if (!SharePatchFileUtil.isLegalFile(dexFile)) {

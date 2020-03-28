@@ -102,7 +102,9 @@ public class TinkerLoader extends AbstractTinkerLoader {
             ShareIntentUtil.setIntentReturnCode(resultIntent, ShareConstants.ERROR_LOAD_PATCH_DIRECTORY_NOT_EXIST);
             return;
         }
+
         String patchDirectoryPath = patchDirectoryFile.getAbsolutePath();
+        Log.e(TAG, "tryLoadPatchFilesInternal: patchDirectoryPath:" + patchDirectoryPath);
 
         // Q&A 7： 什么时候创建的目录？  --》 上面的getPatchDirectory方法
         //check patch directory whether exist
@@ -118,6 +120,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
         // 检查 patch.info 补丁信息文件是否存在
         //check patch info file whether exist
         if (!patchInfoFile.exists()) {
+            // 如果没有patch文件，则会从这里返回
             Log.w(TAG, "tryLoadPatchFiles:patch info not exist:" + patchInfoFile.getAbsolutePath());
             ShareIntentUtil.setIntentReturnCode(resultIntent, ShareConstants.ERROR_LOAD_PATCH_INFO_NOT_EXIST);
             return;
@@ -133,6 +136,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
             ShareIntentUtil.setIntentReturnCode(resultIntent, ShareConstants.ERROR_LOAD_PATCH_INFO_CORRUPTED);
             return;
         }
+        Log.e(TAG, "tryLoadPatchFilesInternal: patchInfo:" + patchInfo);
 
         final boolean isProtectedApp = patchInfo.isProtectedApp;
         resultIntent.putExtra(ShareIntentUtil.INTENT_IS_PROTECTED_APP, isProtectedApp);
@@ -141,6 +145,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
         String newVersion = patchInfo.newVersion;
         String oatDex = patchInfo.oatDir;
 
+        Log.e(TAG, "tryLoadPatchFilesInternal: oldVersion:" + oldVersion + " newVersion:" + newVersion + " oatDex:" + oatDex);
         if (oldVersion == null || newVersion == null || oatDex == null) {
             //it is nice to clean patch
             Log.w(TAG, "tryLoadPatchFiles:onPatchInfoCorrupted");
@@ -150,9 +155,11 @@ public class TinkerLoader extends AbstractTinkerLoader {
 
         boolean mainProcess = ShareTinkerInternals.isInMainProcess(app);
         boolean isRemoveNewVersion = patchInfo.isRemoveNewVersion;
+        Log.e(TAG, "tryLoadPatchFilesInternal: isRemoveNewVersion:"+isRemoveNewVersion);
 
         // So far new version is not loaded in main process and other processes.
         // We can remove new version directory safely.
+        // 只有在cleanPatch 时isRemoveNewVersion才为true.
         if (mainProcess && isRemoveNewVersion) {
             // 如果发现 patchInfo 中的 isRemoveNewVersion 为 true 并且在主进程中运行的话，就代表需要清除补丁了
             Log.w(TAG, "found clean patch mark and we are in main process, delete patch file now.");
@@ -218,6 +225,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
         }
         //tinker/patch.info/patch-641e634c
         String patchVersionDirectory = patchDirectoryPath + "/" + patchName;
+        Log.e(TAG, "tryLoadPatchFilesInternal: patchVersionDirectory:"+patchVersionDirectory);
 
         File patchVersionDirectoryFile = new File(patchVersionDirectory);
 
@@ -317,7 +325,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
                 && ShareTinkerInternals.isSystemOTA(patchInfo.fingerPrint)//Q&A  patchinfo 怎样持有fingerPrint
                 && Build.VERSION.SDK_INT >= 21 && !ShareTinkerInternals.isAfterAndroidO();
 
-        Log.e(TAG, "tryLoadPatchFilesInternal: isSystemOTA"+isSystemOTA);
+        Log.e(TAG, "tryLoadPatchFilesInternal: isSystemOTA" + isSystemOTA);
         resultIntent.putExtra(ShareIntentUtil.INTENT_PATCH_SYSTEM_OTA, isSystemOTA);
 
         //we should first try rewrite patch info file, if there is a error, we can't load jar

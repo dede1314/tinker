@@ -162,6 +162,7 @@ public class ShareTinkerInternals {
      * @return
      */
     public static int checkTinkerPackage(Context context, int tinkerFlag, File patchFile, ShareSecurityCheck securityCheck) {
+        Log.d(TAG, "checkTinkerPackage() called with: context = [" + context + "], tinkerFlag = [" + tinkerFlag + "], patchFile = [" + patchFile + "], securityCheck = [" + securityCheck + "]");
         // 检查补丁文件签名和 tinker id 是否一致
         // 这里为了快速校验,就只检验补丁包内部以meta.txt结尾的文件的签名，而其他的文件的合法性则通过meta.txt文件内部记录的补丁文件Md5值来校验
         int returnCode = checkSignatureAndTinkerID(context, patchFile, securityCheck);
@@ -423,6 +424,7 @@ public class ShareTinkerInternals {
                 current = ShareConstants.INTERPRET_DEX_OPTIMIZE_PATH;
             }
         }
+        Log.d(TAG, "getCurrentOatMode() returned: " + current);
         return current;
     }
 

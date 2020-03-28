@@ -128,6 +128,7 @@ public class ShareSecurityCheck {
                 if (!name.endsWith(ShareConstants.META_SUFFIX)) {
                     continue;
                 }
+                Log.e(TAG, "verifyPatchMetaSignature: name:"+name);
                 metaContentMap.put(name, SharePatchFileUtil.loadDigestes(jarFile, jarEntry));
                 Certificate[] certs = jarEntry.getCertificates();
 
@@ -175,6 +176,7 @@ public class ShareSecurityCheck {
             String packageName = context.getPackageName();
             PackageInfo packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_SIGNATURES);
             mPublicKeyMd5 = SharePatchFileUtil.getMD5(packageInfo.signatures[0].toByteArray());
+            Log.e(TAG, "init: mPublicKeyMd5:"+mPublicKeyMd5);
             if (mPublicKeyMd5 == null) {
                 throw new TinkerRuntimeException("get public key md5 is null");
             }

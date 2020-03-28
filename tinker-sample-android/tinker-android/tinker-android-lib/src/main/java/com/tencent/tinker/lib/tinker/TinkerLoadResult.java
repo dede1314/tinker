@@ -118,6 +118,7 @@ public class TinkerLoadResult {
             }
             final boolean isProtectedApp = ShareIntentUtil.getBooleanExtra(intentResult, ShareIntentUtil.INTENT_IS_PROTECTED_APP, false);
             patchInfo = new SharePatchInfo(oldVersion, newVersion, isProtectedApp, false, Build.FINGERPRINT, oatDir);
+            Log.e(TAG, "parseTinkerResult: patchInfo:"+patchInfo);
             versionChanged = !(oldVersion.equals(newVersion));
         }
 
