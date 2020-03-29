@@ -9,16 +9,19 @@ dependencies {
         implementation fileTree(dir: 'libs', include: ['*.jar'])
         testImplementation 'junit:junit:4.12'
         implementation "com.android.support:appcompat-v7:23.1.1"
-        api("com.tencent.tinker:tinker-android-lib:${TINKER_VERSION}") { changing = true }
+//        api("com.tencent.tinker:tinker-android-lib:${TINKER_VERSION}") { changing = true }
 
         // Maven local cannot handle transist dependencies.
 //        implementation("com.tencent.tinker:tinker-android-loader:${TINKER_VERSION}") { changing = true }
 
-//        annotationProcessor("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
-//        compileOnly("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
+        annotationProcessor("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
+        compileOnly("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
 
         implementation "com.android.support:multidex:1.0.1"
         api project(':tinker-android:tinker-android-loader')
+        api project(':tinker-android:tinker-android-lib')
+//        api("com.tencent.tinker:tinker-android-lib:${TINKER_VERSION}") { changing = true }
+
 
         //use to test multiDex
 //    implementation group: 'com.google.guava', name: 'guava', version: '19.0'
@@ -156,7 +159,7 @@ def bakPath = file("${buildDir}/bakApk/")
  */
 ext {
     //for some reason, you may want to ignore tinkerBuild, such as instant run debug build?
-    tinkerEnabled = true
+    tinkerEnabled = false
 
     //for normal build
     //old apk file to build patch apk

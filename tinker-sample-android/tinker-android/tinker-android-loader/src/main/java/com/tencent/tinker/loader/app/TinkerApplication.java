@@ -91,7 +91,7 @@ public abstract class TinkerApplication extends Application {
 
     private void loadTinker() {
         try {
-            Log.e("tinker test ", "loadTinker: " );
+            Log.e("tinker test ", "loadTinker: ");
             //reflect tinker loader, because loaderClass may be define by user!
             Class<?> tinkerLoadClass = Class.forName(loaderClassName, false, TinkerApplication.class.getClassLoader());
             Method loadMethod = tinkerLoadClass.getMethod(TINKER_LOADER_METHOD, TinkerApplication.class);
@@ -132,6 +132,7 @@ public abstract class TinkerApplication extends Application {
             // Q&A 4   内联？？？？
             return (Handler) inlineFenceCtor.newInstance(appLike);
         } catch (Throwable thr) {
+            thr.printStackTrace();
             throw new TinkerRuntimeException("createInlineFence failed", thr);
         }
     }
