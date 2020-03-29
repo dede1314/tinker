@@ -16,6 +16,8 @@
 
 package tinker.sample.android.util;
 
+import android.util.Log;
+
 import com.tencent.tinker.lib.listener.PatchListener;
 import com.tencent.tinker.lib.patch.AbstractPatch;
 import com.tencent.tinker.lib.patch.UpgradePatch;
@@ -95,6 +97,7 @@ public class TinkerManager {
         //you can set your own upgrade patch if you need
         AbstractPatch upgradePatchProcessor = new UpgradePatch();
 
+        Log.e(TAG, "installTinker: :");
         TinkerInstaller.install(appLike,
             loadReporter, patchReporter, patchListener,
             SampleResultService.class, upgradePatchProcessor);

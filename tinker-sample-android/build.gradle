@@ -20,7 +20,7 @@ buildscript {
 //            changing = TINKER_VERSION?.endsWith("-SNAPSHOT")
 //            exclude group: 'com.android.tools.build', module: 'gradle'
 //        }
-        classpath 'com.sensorsdata:autotrack.android:1.0.3'// 需要先执行plugin的build.gradle中的uploadArchives
+//        classpath 'com.sensorsdata:autotrack.android:1.0.3'// 需要先执行plugin的build.gradle中的uploadArchives
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
         classpath "com.github.dcendents:android-maven-gradle-plugin:2.1"
         classpath "com.github.jengelman.gradle.plugins:shadow:4.0.4"

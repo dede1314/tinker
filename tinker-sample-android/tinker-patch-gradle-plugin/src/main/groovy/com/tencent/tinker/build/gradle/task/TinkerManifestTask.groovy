@@ -18,7 +18,7 @@ package com.tencent.tinker.build.gradle.task
 
 import com.tencent.tinker.build.gradle.TinkerPatchPlugin
 import com.tencent.tinker.commons.util.IOHelper
-import com.tencent.tinker.util.FileOperation
+import com.tencent.tinker.build.util.FileOperation
 import groovy.xml.Namespace
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException

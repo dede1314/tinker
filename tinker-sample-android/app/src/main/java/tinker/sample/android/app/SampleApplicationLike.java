@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
 import com.tencent.tinker.anno.DefaultLifeCycle;
 import com.tencent.tinker.entry.ApplicationLifeCycle;
@@ -60,7 +61,7 @@ import tinker.sample.android.util.TinkerManager;
         application = "tinker.sample.android.app.SampleApplication",             //application name to generate
         flags = ShareConstants.TINKER_ENABLE_ALL)
 public class SampleApplicationLike extends DefaultApplicationLike {
-    private static final String TAG = "Tinker.SampleApplicationLike";
+    private static final String TAG = "Tinker.SampleApplicatio";
 
     public SampleApplicationLike(Application application, int tinkerFlags, boolean tinkerLoadVerifyFlag,
                                  long applicationStartElapsedTime, long applicationStartMillisTime, Intent tinkerResultIntent) {
@@ -93,6 +94,7 @@ public class SampleApplicationLike extends DefaultApplicationLike {
 
         //installTinker after load multiDex
         //or you can put com.tencent.tinker.** to main dex
+        Log.e(TAG, "onBaseContextAttached: :");
         TinkerManager.installTinker(this);
         Tinker tinker = Tinker.with(getApplication());
     }

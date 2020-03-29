@@ -131,7 +131,7 @@ public class DexDiffDecoder extends BaseDecoder {
         final String dexName = getRelativeDexName(oldFile, newFile);
 
         // first of all, we should check input files if excluded classes were modified.
-        Logger.d("Check for loader classes in dex: %s", dexName);
+        Logger.d(" 1111  Check for loader classes in dex: %s", dexName);
 
         try {
             excludedClassModifiedChecker.checkIfExcludedClassWasModifiedInNewDex(oldFile, newFile);
@@ -188,6 +188,7 @@ public class DexDiffDecoder extends BaseDecoder {
 
     @Override
     public void onAllPatchesEnd() throws Exception {
+        System.out.println("onAllPatchesEnd");
         if (!hasDexChanged) {
             Logger.d("No dexes were changed, nothing needs to be done next.");
             return;
@@ -196,6 +197,7 @@ public class DexDiffDecoder extends BaseDecoder {
         // protection tools.
         // If this attribute is true, the generated patch package will contain a
         // dex including all changed classes instead of any dexdiff patch-info files.
+        Logger.d("onAllPatchesEnd mIsProtectedApp "+config.mIsProtectedApp);
         if (config.mIsProtectedApp) {
            //  加固模式使用smali生成dex文件？
             generateChangedClassesDexFile();
@@ -204,11 +206,13 @@ public class DexDiffDecoder extends BaseDecoder {
             generatePatchInfoFile();
         }
 
+        Logger.d("DexDecoder:onAllPatchesEnd  %s", config.mIsProtectedApp);
         addTestDex();
     }
 
     @SuppressWarnings("NewApi")
     private void generateChangedClassesDexFile() throws IOException {
+        Logger.d( "generateChangedClassesDexFile() called");
         final String dexMode = config.mDexRaw ? "raw" : "jar";
 
         List<File> oldDexList = new ArrayList<>();
@@ -237,6 +241,7 @@ public class DexDiffDecoder extends BaseDecoder {
         Set<Dex> owners = new HashSet<>();
         Map<Dex, Set<String>> ownerToDescOfChangedClassesMap = new HashMap<>();
         for (DexClassInfo classInfo : classInfosInChangedClassesDex) {
+            Logger.d(  "generateChangedClassesDexFile  classInfo:"+classInfo);
             owners.add(classInfo.owner);
             Set<String> descOfChangedClasses = ownerToDescOfChangedClassesMap.get(classInfo.owner);
             if (descOfChangedClasses == null) {
@@ -354,6 +359,7 @@ public class DexDiffDecoder extends BaseDecoder {
 
     @SuppressWarnings("NewApi")
     private void generatePatchInfoFile() throws IOException {
+        Logger.d(  "generatePatchInfoFile() called");
         generatePatchedDexInfoFile();
 
         // generateSmallPatchedDexInfoFile is blocked by issue we found in ART environment
@@ -372,6 +378,7 @@ public class DexDiffDecoder extends BaseDecoder {
 
     @SuppressWarnings("NewApi")
     private void logDexesToDexMeta() throws IOException {
+        Logger.d(  "logDexesToDexMeta() called");
         Map<String, File> dexNameToClassNOldDexFileMap = new HashMap<>();
         Set<File> realClassNDexFiles = new HashSet<>();
 
@@ -428,6 +435,7 @@ public class DexDiffDecoder extends BaseDecoder {
 
     @SuppressWarnings("NewApi")
     private void generatePatchedDexInfoFile() throws IOException {
+        Logger.d( "generatePatchedDexInfoFile() called");
         // Generate dex diff out and full patched dex if a pair of dex is different.
         for (AbstractMap.SimpleEntry<File, File> oldAndNewDexFilePair : oldAndNewDexFilePairList) {
             File oldFile = oldAndNewDexFilePair.getKey();
@@ -448,6 +456,7 @@ public class DexDiffDecoder extends BaseDecoder {
     }
 
     private void diffDexPairAndFillRelatedInfo(File oldDexFile, File newDexFile, RelatedInfo relatedInfo) {
+        Logger.d(  "diffDexPairAndFillRelatedInfo() called with: oldDexFile = [" + oldDexFile + "], newDexFile = [" + newDexFile + "], relatedInfo = [" + relatedInfo + "]");
         File tempFullPatchDexPath = new File(config.mOutFolder + File.separator + TypedValue.DEX_TEMP_PATCH_DIR);
         final String dexName = getRelativeDexName(oldDexFile, newDexFile);
 
@@ -530,13 +539,14 @@ public class DexDiffDecoder extends BaseDecoder {
 
         File dest = new File(config.mTempResultDir + "/" + TEST_DEX_NAME);
         FileOperation.copyResourceUsingStream(TEST_DEX_NAME, dest);
-        Logger.d("\nAdd test install result dex: %s, size:%d", dest.getAbsolutePath(), dest.length());
+        Logger.d("\n 111  Add test install result dex: %s, size:%d", dest.getAbsolutePath(), dest.length());
         Logger.d("DexDecoder:write test dex meta file data: %s", meta);
 
         metaWriter.writeLineToInfoFile(meta);
     }
 
     private void checkCrossDexMovingClasses() {
+        Logger.d(  "checkCrossDexMovingClasses() called");
         // Here we will check if any classes that were deleted in one dex
         // would be added to another dex. e.g. classA is deleted in dex0 and
         // added in dex1.
@@ -571,6 +581,7 @@ public class DexDiffDecoder extends BaseDecoder {
      * and deleted class descriptor for further analysing in {@code checkCrossDexMovingClasses}.
      */
     private void collectAddedOrDeletedClasses(File oldFile, File newFile) throws IOException {
+        Logger.d( "collectAddedOrDeletedClasses() called with: oldFile = [" + oldFile + "], newFile = [" + newFile + "]");
         Dex oldDex = new Dex(oldFile);
         Dex newDex = new Dex(newFile);
 
@@ -632,6 +643,7 @@ public class DexDiffDecoder extends BaseDecoder {
     }
 
     private void checkDexChange(Dex originDex, Dex newDex) {
+        Logger.d( "checkDexChange() called with: originDex = [" + originDex + "], newDex = [" + newDex + "]");
         DexClassesComparator classesCmptor = new DexClassesComparator("*");
         classesCmptor.setIgnoredRemovedClassDescPattern(config.mDexLoaderPattern);
         classesCmptor.startCheck(originDex, newDex);
@@ -692,6 +704,7 @@ public class DexDiffDecoder extends BaseDecoder {
      * @throws IOException
      */
     protected void logToDexMeta(File newFile, File oldFile, File dexDiffFile, String destMd5InDvm, String destMd5InArt, String dexDiffMd5, long newOrFullPatchedCrc) {
+        Logger.d(  "logToDexMeta() called with: newFile = [" + newFile + "], oldFile = [" + oldFile + "], dexDiffFile = [" + dexDiffFile + "], destMd5InDvm = [" + destMd5InDvm + "], destMd5InArt = [" + destMd5InArt + "], dexDiffMd5 = [" + dexDiffMd5 + "], newOrFullPatchedCrc = [" + newOrFullPatchedCrc + "]");
         if (metaWriter == null && logWriter == null) {
             return;
         }
@@ -742,6 +755,7 @@ public class DexDiffDecoder extends BaseDecoder {
     }
 
     private String getRawOrWrappedDexMD5(File dexOrJarFile) {
+        Logger.d(  "getRawOrWrappedDexMD5() called with: dexOrJarFile = [" + dexOrJarFile + "]");
         final String name = dexOrJarFile.getName();
         if (name.endsWith(".dex")) {
             return MD5.getMD5(dexOrJarFile);

@@ -16,10 +16,13 @@
 
 package com.tencent.tinker.build.gradle.task
 
-import com.tencent.tinker.aapt.AaptResourceCollector
-import com.tencent.tinker.aapt.RDotTxtEntry
+
+import com.tencent.tinker.build.aapt.AaptResourceCollector
+import com.tencent.tinker.build.aapt.RDotTxtEntry
 import com.tencent.tinker.build.gradle.TinkerPatchPlugin
-import com.tencent.tinker.util.FileOperation
+import com.tencent.tinker.build.util.FileOperation
+import com.tencent.tinker.build.aapt.PatchUtil
+import com.tencent.tinker.build.aapt.AaptUtil
 import groovy.io.FileType
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -226,6 +229,7 @@ public class TinkerResourceIdTask extends DefaultTask {
      * get the sorted stable id lines
      */
     ArrayList<String> getSortedStableIds(Map<RDotTxtEntry.RType, Set<RDotTxtEntry>> rTypeResourceMap) {
+        println("getSortedStableIds")
         List<String> sortedLines = new ArrayList<>()
         Map<String, String> realNameMap = getRealNameMap()
         rTypeResourceMap?.each { key, entries ->

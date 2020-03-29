@@ -18,16 +18,16 @@ package com.tencent.tinker.build.gradle
 
 import com.android.build.api.transform.Transform
 import com.tencent.tinker.build.gradle.extension.*
-import com.tencent.tinker.util.FileOperation
-import com.tencent.tinker.util.Utils
 import com.tencent.tinker.build.gradle.task.*
-import com.tencent.tinker.util.TypedValue
+import com.tencent.tinker.build.util.TypedValue
+import com.tencent.tinker.build.util.Utils
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.FileCollection
 import org.jetbrains.annotations.NotNull
+import com.tencent.tinker.build.util.FileOperation
 
 import java.lang.reflect.Field
 import java.lang.reflect.Modifier
@@ -47,7 +47,7 @@ class TinkerPatchPlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project project) {
-        println("hello tinker plugin ")
+        println("hello tinker plugin 2 ")
         mProject = project
 
         //osdetector change its plugin name in 1.4.0

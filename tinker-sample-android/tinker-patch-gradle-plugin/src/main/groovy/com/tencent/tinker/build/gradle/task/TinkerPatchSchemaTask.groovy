@@ -18,7 +18,7 @@ package com.tencent.tinker.build.gradle.task
 
 import com.tencent.tinker.build.gradle.extension.TinkerPatchExtension
 import com.tencent.tinker.build.patch.InputParam
-import com.tencent.tinker.patch.Runner
+import com.tencent.tinker.build.patch.Runner
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.TaskAction
@@ -46,7 +46,7 @@ public class TinkerPatchSchemaTask extends DefaultTask {
 
     @TaskAction
     def tinkerPatch() {
-        println("here is TinkerPatchSchemaTask tinkerPatch")
+        println("here is TinkerPatchSchemaTask tinkerPatch 2")
         //开始打包patch
         configuration.checkParameter()
         configuration.buildConfig.checkParameter()

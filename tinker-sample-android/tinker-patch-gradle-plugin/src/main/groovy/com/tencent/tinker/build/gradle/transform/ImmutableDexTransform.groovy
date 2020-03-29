@@ -22,13 +22,13 @@ import com.android.build.gradle.internal.pipeline.TransformManager
 import com.android.build.gradle.internal.pipeline.TransformTask
 import com.google.common.base.Joiner
 import com.google.common.collect.Lists
-import com.tencent.android.dex.ClassDef
-import com.tencent.android.dex.Dex
+import com.tencent.tinker.android.dex.ClassDef
+import com.tencent.tinker.android.dex.Dex
 import com.tencent.tinker.build.gradle.TinkerPatchPlugin
 import com.tencent.tinker.build.immutable.ClassSimDef
 import com.tencent.tinker.build.immutable.DexRefData
-import com.tencent.tinker.util.FileOperation
-import com.tencent.tinker.util.Utils
+import com.tencent.tinker.build.util.FileOperation
+import com.tencent.tinker.build.util.Utils
 import org.gradle.api.Action
 import org.gradle.api.GradleException
 import org.gradle.api.Project

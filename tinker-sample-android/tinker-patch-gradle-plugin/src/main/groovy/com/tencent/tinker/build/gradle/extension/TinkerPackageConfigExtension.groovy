@@ -16,7 +16,7 @@
 
 package com.tencent.tinker.build.gradle.extension
 
-
+import com.tencent.tinker.build.apkparser.AndroidParser
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 
@@ -32,7 +32,7 @@ public class TinkerPackageConfigExtension {
      */
     private Map<String, String> fields
     private Project project;
-    private com.tencent.tinker.apkparser.AndroidParser androidManifest;
+    private AndroidParser androidManifest;
 
 
     public TinkerPackageConfigExtension(project) {

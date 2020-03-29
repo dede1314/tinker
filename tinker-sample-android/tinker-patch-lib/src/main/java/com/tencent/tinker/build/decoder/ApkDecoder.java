@@ -126,6 +126,7 @@ public class ApkDecoder extends BaseDecoder {
     //
     //         ii. 这个设计非常优雅和科学，毕竟你在遍历文件系统时想要做的事情无外乎发生在这几个时间点上，Java全部为你考虑好了，并搭好了框架！多么的贴心！！
     public boolean patch(File oldFile, File newFile) throws Exception {
+        Logger.d("ApkDecoder  start patch");
         writeToLogFile(oldFile, newFile);
         // Q&A 为什么针对manifest 单独处理？而不是下面的walkFileTree 的方式？因为manifest只有一个？
         // 为什么manifest是直接从两个apk中解析比较？而其他的是先解压后进行比较？
@@ -185,19 +186,20 @@ public class ApkDecoder extends BaseDecoder {
         // visitFile 正在访问一个文件时要干啥
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            Logger.d(  "visitFile() called with: file = [" + file + "], attrs = [" + attrs + "]");
             //Constructs a relative path between this path and a given path.
             Path relativePath = newApkPath.relativize(file);
 
             //Resolve the given path against this path.
             Path oldPath = oldApkPath.resolve(relativePath);
-
+            Logger.d(  "visitFile oldPath:"+oldPath);
             File oldFile = null;
             //is a new file?!
             if (oldPath.toFile().exists()) {
                 oldFile = oldPath.toFile();
             }
             String patternKey = relativePath.toString().replace("\\", "/");
-
+            Logger.d( "visitFile() called with: file = [" + file + "], attrs = [" + attrs + "]");
             if (Utils.checkFileInPattern(config.mDexFilePattern, patternKey)) {// 针对解压后的dex文件
                 //also treat duplicate file as unchanged
                 if (Utils.checkFileInPattern(config.mResFilePattern, patternKey) && oldFile != null) {

@@ -82,7 +82,7 @@ public class TinkerLoadResult {
         systemOTA = ShareIntentUtil.getBooleanExtra(intentResult, ShareIntentUtil.INTENT_PATCH_SYSTEM_OTA, false);
         oatDir = ShareIntentUtil.getStringExtra(intentResult, ShareIntentUtil.INTENT_PATCH_OAT_DIR);
         useInterpretMode = ShareConstants.INTERPRET_DEX_OPTIMIZE_PATH.equals(oatDir);
-        Log.e(TAG, "parseTinkerResult: useInterpretMode+"+useInterpretMode );
+        Log.e(TAG, "parseTinkerResult: useInterpretMode:"+useInterpretMode );
 
         final boolean isMainProcess = tinker.isMainProcess();
 
