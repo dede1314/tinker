@@ -107,7 +107,7 @@ public class ManifestDecoder extends BaseDecoder {
                     || !incProviders.isEmpty() || !incReceivers.isEmpty());
 
             if (!config.mSupportHotplugComponent && hasIncComponent) {
-                announceWarningOrException("manifest was changed, while hot plug component support mode is disabled. "
+                announceWarningOrException("111 manifest was changed, while hot plug component support mode is disabled. "
                         + "Such changes will not take effect, related components: \n"
                         + " activity: " + incActivities + "\n"
                         + " service: " + incServices + "\n"

@@ -69,6 +69,8 @@ public final class ExcludedClassModifiedChecker {
     }
 
     public void checkIfExcludedClassWasModifiedInNewDex(File oldFile, File newFile) throws IOException, TinkerPatchException {
+        System.out.println("checkIfExcludedClassWasModifiedInNewDex");
+        Logger.e("checkIfExcludedClassWasModifiedInNewDex");
         if (oldFile == null && newFile == null) {
             throw new TinkerPatchException("both oldFile and newFile are null.");
         }
@@ -214,7 +216,7 @@ public final class ExcludedClassModifiedChecker {
                 }
                 case STMCODE_ERROR_LOADER_CLASS_CHANGED: {
                     String msg =
-                        "some loader class has been changed in new primary dex."
+                        "111 some loader class has been changed in new primary dex."
                             + " Such these changes will not take effect!!"
                             + " related classes: "
                             + Utils.collectionToString(changedClassInfosMap.keySet());

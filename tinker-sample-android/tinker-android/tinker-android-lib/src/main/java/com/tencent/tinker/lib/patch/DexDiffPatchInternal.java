@@ -527,7 +527,6 @@ public class DexDiffPatchInternal extends BasePatchInternal {
 
                 ZipEntry patchFileEntry = patch.getEntry(patchRealPath);
                 ZipEntry rawApkFileEntry = apk.getEntry(patchRealPath);
-                Log.e(TAG, "extractDexDiffInternals: oldDexCrc" + oldDexCrc);
                 // 从这里开始，就是遍历 patchList 中的记录，进行一个个 dex 文件合成了。一开头会去校验合成的文件是否存在，存在的话就跳过，进行下一个。
                 Log.e(TAG, "extractDexDiffInternals: oldDexCrc:"+oldDexCrc);
                 if (oldDexCrc.equals("0")) {// oldDexCrc什么情况下等于0？新增的dex.

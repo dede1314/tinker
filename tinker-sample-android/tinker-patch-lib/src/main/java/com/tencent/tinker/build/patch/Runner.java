@@ -44,6 +44,7 @@ public class Runner {
     }
 
     public static void gradleRun(InputParam inputParam) {
+        System.out.println("gradleRun");
         mBeginTime = System.currentTimeMillis();
         Runner m = new Runner(true);
         m.run(inputParam);
@@ -89,7 +90,7 @@ public class Runner {
     //largeModSize:100kb
     //useApplyResource:true
     protected void tinkerPatch() {
-        Logger.d("-----------------------Tinker patch begin-----------------------");
+        Logger.d("-----------------------111 Tinker patch begin-----------------------");
 
             Logger.d(mConfig.toString());
         try {

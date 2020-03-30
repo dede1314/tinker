@@ -163,11 +163,11 @@ ext {
 
     //for normal build
     //old apk file to build patch apk
-    tinkerOldApkPath = "${bakPath}/app-debug-0329-17-04-50.apk"
+    tinkerOldApkPath = "${bakPath}/app-debug-0330-10-34-23.apk"
     //proguard mapping file to build patch apk
     tinkerApplyMappingPath = "${bakPath}/app-debug-1018-17-32-47-mapping.txt"
     //resource R.txt to build patch apk, must input if there is resource changed
-    tinkerApplyResourcePath = "${bakPath}/app-debug-0329-17-04-50-R.txt"
+    tinkerApplyResourcePath = "${bakPath}/app-debug-0330-10-34-23-R.txt"
 
     //only use for build all flavor, if not, just ignore this field
     tinkerBuildFlavorDirectory = "${bakPath}/app-1018-17-32-47"
@@ -202,6 +202,8 @@ if (buildWithTinker()) {
     apply plugin: 'com.tencent.tinker.patch'
 
     tinkerPatch {
+        allowLoaderInAnyDex=true
+        removeLoaderForAllDex=true
         /**
          * necessary，default 'null'
          * the old apk path, use to diff with the new apk to build

@@ -57,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, "ARK HOT Running status = " + isARKHotRunning);
         Log.e(TAG, "i am on onCreate classloader:" + MainActivity.class.getClassLoader().toString());
         //test resource change
-        Log.e(TAG, "i am on onCreate string:  123 " + getResources().getString(R.string.test_resource));
-//        Log.e(TAG, "i am on patch onCreate, Real test patch 3333 ");
+//        Log.e(TAG, "i am on onCreate string:  123 " + getResources().getString(R.string.test_resource));
+        Log.e(TAG, "i am on patch onCreate, Real test patch hahahaah 0330 ");
 
         mTvMessage = findViewById(R.id.tv_message);
 

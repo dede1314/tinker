@@ -201,16 +201,16 @@ public class ResDiffDecoder extends BaseDecoder {
             return false;
         }
         if (Utils.checkFileInPattern(config.mResIgnoreChangePattern, name)) {
-            Logger.d("found modify resource: " + name + ", but it match ignore change pattern, just ignore!");
+            Logger.d("111 found modify resource: " + name + ", but it match ignore change pattern, just ignore!");
             return false;
         }
         if (name.equals(TypedValue.RES_MANIFEST)) {
-            Logger.d("found modify resource: " + name + ", but it is AndroidManifest.xml, just ignore!");
+            Logger.d("111 found modify resource: " + name + ", but it is AndroidManifest.xml, just ignore!");
             return false;
         }
         if (name.equals(TypedValue.RES_ARSC)) {
             if (AndroidParser.resourceTableLogicalChange(config)) {
-                Logger.d("found modify resource: " + name + ", but it is logically the same as original new resources.arsc, just ignore!");
+                Logger.d("111 found modify resource: " + name + ", but it is logically the same as original new resources.arsc, just ignore!");
                 return false;
             }
         }

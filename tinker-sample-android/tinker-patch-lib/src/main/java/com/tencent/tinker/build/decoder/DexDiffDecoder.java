@@ -198,6 +198,7 @@ public class DexDiffDecoder extends BaseDecoder {
         // If this attribute is true, the generated patch package will contain a
         // dex including all changed classes instead of any dexdiff patch-info files.
         Logger.d("onAllPatchesEnd mIsProtectedApp "+config.mIsProtectedApp);
+        System.out.println(" 111   onAllPatchesEnd mIsProtectedApp "+config.mIsProtectedApp);
         if (config.mIsProtectedApp) {
            //  加固模式使用smali生成dex文件？
             generateChangedClassesDexFile();
@@ -207,6 +208,7 @@ public class DexDiffDecoder extends BaseDecoder {
         }
 
         Logger.d("DexDecoder:onAllPatchesEnd  %s", config.mIsProtectedApp);
+
         addTestDex();
     }
 

@@ -131,6 +131,7 @@ public class ShareTinkerInternals {
     }
 
     public static ShareDexDiffPatchInfo changeTestDexToClassN(ShareDexDiffPatchInfo rawDexInfo, int index) {
+        Log.d(TAG, "changeTestDexToClassN() called with: rawDexInfo = [" + rawDexInfo + "], index = [" + index + "]");
         if (rawDexInfo.rawName.startsWith(ShareConstants.TEST_DEX_NAME)) {
             String newName;
             if (index != 1) {

@@ -7,9 +7,9 @@ apply plugin: 'maven'
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
-//    implementation fileTree(dir: 'libs', include: ['*.jar'])
-//    implementation project(':tinker-patch-lib')
+//    implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
     implementation project(':tinker-patch-lib')
+
     implementation 'com.google.gradle:osdetector-gradle-plugin:1.6.0'
     compileOnly 'com.android.tools.build:gradle:3.1.4'
 
@@ -21,6 +21,11 @@ dependencies {
     }
     implementation group: 'dom4j', name: 'dom4j', version: '1.6.1'
     implementation group: 'com.tencent.mm', name: 'apk-parser-lib', version: '1.2.3'
+
+    configurations.all {
+        it.resolutionStrategy.cacheDynamicVersionsFor(5, 'minutes')
+        it.resolutionStrategy.cacheChangingModulesFor(0, 'seconds')
+    }
 }
 
 repositories {
@@ -28,17 +33,17 @@ repositories {
     jcenter()
 }
 
-//sourceSets {
-//    main {
-//        groovy {
-//            srcDir 'src/main/groovy'
-//        }
-//
-//        resources {
-//            srcDir 'src/main/resources'
-//        }
-//    }
-//}
+sourceSets {
+    main {
+        groovy {
+            srcDir 'src/main/groovy'
+        }
+
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
 
 //apply from: rootProject.file('gradle/java-artifacts.gradle')
 //apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
@@ -57,6 +62,6 @@ uploadArchives {
         pom.artifactId = 'tinker.android'
 
         //插件版本号
-        pom.version = '1.0.1'
+        pom.version = '1.0.3'
     }
 }

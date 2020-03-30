@@ -24,7 +24,7 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
         classpath "com.github.dcendents:android-maven-gradle-plugin:2.1"
         classpath "com.github.jengelman.gradle.plugins:shadow:4.0.4"
-        classpath 'com.tencent:tinker.android:1.0.1'
+        classpath 'com.tencent:tinker.android:1.0.3'
     }
     configurations.all {
         it.resolutionStrategy.cacheDynamicVersionsFor(5, 'minutes')

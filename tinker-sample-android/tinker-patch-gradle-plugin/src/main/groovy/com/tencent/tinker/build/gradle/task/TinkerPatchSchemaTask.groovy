@@ -46,7 +46,7 @@ public class TinkerPatchSchemaTask extends DefaultTask {
 
     @TaskAction
     def tinkerPatch() {
-        println("here is TinkerPatchSchemaTask tinkerPatch 2")
+        println("111 here is TinkerPatchSchemaTask tinkerPatch 2")
         //开始打包patch
         configuration.checkParameter()
         configuration.buildConfig.checkParameter()
@@ -92,6 +92,7 @@ public class TinkerPatchSchemaTask extends DefaultTask {
                .setArkHotName(configuration.arkHot.name)
 
         InputParam inputParam = builder.create()
+        println("111 here is TinkerPatchSchemaTask gradleRun ")
         Runner.gradleRun(inputParam);
     }
 }

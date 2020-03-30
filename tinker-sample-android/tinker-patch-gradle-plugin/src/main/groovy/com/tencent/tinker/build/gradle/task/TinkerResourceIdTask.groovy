@@ -350,7 +350,7 @@ public class TinkerResourceIdTask extends DefaultTask {
 
     @TaskAction
     def applyResourceId() {
-        println(" here is TinkerResourceIdTask applyResourceId")
+        println("111 here is TinkerResourceIdTask applyResourceId")
         String resourceMappingFile = project.extensions.tinkerPatch.buildConfig.applyResourceMapping
 
         // Parse the public.xml and ids.xml
@@ -362,9 +362,9 @@ public class TinkerResourceIdTask extends DefaultTask {
         project.extensions.tinkerPatch.buildConfig.usingResourceMapping = true
         Map<RDotTxtEntry.RType, Set<RDotTxtEntry>> rTypeResourceMap = PatchUtil.readRTxt(resourceMappingFile)
 
-       println("here is applyResourceId")
+       println("111here is applyResourceId")
         if (!isAapt2EnabledCompat(project)) {
-            println("here is applyResourceId 1 aapt2 false")
+            println("111 here is applyResourceId 1 aapt2 false")
             String idsXml = resDir + "/values/ids.xml";
             String publicXml = resDir + "/values/public.xml";
             FileOperation.deleteFile(idsXml);
@@ -377,15 +377,15 @@ public class TinkerResourceIdTask extends DefaultTask {
             File publicFile = new File(publicXml)
             if (publicFile.exists()) {
                 FileOperation.copyFileUsingStream(publicFile, project.file(RESOURCE_PUBLIC_XML))
-                project.logger.error("tinker gen resource public.xml in ${RESOURCE_PUBLIC_XML}")
+                project.logger.error("111 tinker gen resource public.xml in ${RESOURCE_PUBLIC_XML}")
             }
             File idxFile = new File(idsXml)
             if (idxFile.exists()) {
                 FileOperation.copyFileUsingStream(idxFile, project.file(RESOURCE_IDX_XML))
-                project.logger.error("tinker gen resource idx.xml in ${RESOURCE_IDX_XML}")
+                project.logger.error("111 tinker gen resource idx.xml in ${RESOURCE_IDX_XML}")
             }
         } else {
-            println("here is applyResourceId 1 aapt2 true")
+            println("111 here is applyResourceId 1 aapt2 true")
             File stableIdsFile = project.file(RESOURCE_PUBLIC_TXT)
             FileOperation.deleteFile(stableIdsFile);
             ArrayList<String> sortedLines = getSortedStableIds(rTypeResourceMap)

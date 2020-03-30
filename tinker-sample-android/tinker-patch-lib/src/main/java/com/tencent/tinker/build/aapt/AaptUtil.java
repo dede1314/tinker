@@ -80,6 +80,7 @@ public final class AaptUtil {
     }
 
     public static AaptResourceCollector collectResource(List<String> resourceDirectoryList, Map<RType, Set<RDotTxtEntry>> rTypeResourceMap) {
+        System.out.println("collectResource");
         AaptResourceCollector resourceCollector = new AaptResourceCollector(rTypeResourceMap);
         List<RDotTxtEntry> references = new ArrayList<>();
         for (String resourceDirectory : resourceDirectoryList) {

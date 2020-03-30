@@ -295,6 +295,7 @@ public class SharePatchFileUtil {
     }
 
     public static boolean verifyDexFileMd5(File file, String entryName, String md5) {
+        Log.d(TAG, "verifyDexFileMd5() called with: file = [" + file + "], entryName = [" + entryName + "], md5 = [" + md5 + "]");
         if (file == null || md5 == null || entryName == null) {
             return false;
         }

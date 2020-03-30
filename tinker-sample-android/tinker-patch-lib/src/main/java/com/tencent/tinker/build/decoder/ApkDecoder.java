@@ -79,7 +79,7 @@ public class ApkDecoder extends BaseDecoder {
         }
 
         String destPath = destFile.getAbsolutePath();
-        Logger.d("UnZipping apk to %s", destPath);
+        Logger.d("111 UnZipping apk to %s", destPath);
         FileOperation.unZipAPk(file.getAbsoluteFile().getAbsolutePath(), destPath);
 
     }
@@ -93,9 +93,9 @@ public class ApkDecoder extends BaseDecoder {
     //old apk: app-pp_release-release.apk, size=24103923, md5=fd9e01ee6f4f86f267d7368949143e50
     //new apk: app-pp_release-release.apk, size=24103739, md5=9944ec291fc80f57bf3e3e2b4ab607dd
     private void writeToLogFile(File oldFile, File newFile) throws IOException {
-        String line1 = "old apk1131: " + oldFile.getName() + ", size=" + FileOperation.getFileSizes(oldFile) + ", md5=" + MD5.getMD5(oldFile);
+        String line1 = "old apk: " + oldFile.getName() + ", size=" + FileOperation.getFileSizes(oldFile) + ", md5=" + MD5.getMD5(oldFile);
         String line2 = "new apk: " + newFile.getName() + ", size=" + FileOperation.getFileSizes(newFile) + ", md5=" + MD5.getMD5(newFile);
-        Logger.d("Analyze old and new apk files1:");
+        Logger.d("111 Analyze old and new apk files1:");
         Logger.d(line1);
         Logger.d(line2);
         Logger.d("");
@@ -111,22 +111,15 @@ public class ApkDecoder extends BaseDecoder {
 
     // Files.walkFileTree
     // 2) NIO.2的Files工具类提供了一个静态工具方法walkFileTree来高效并优雅地遍历文件系统；
-    //
     //    3) walkFileTree：
-    //
     //         i. 原型：static Path Files.walkFileTree(Path start, FileVisitor<? super Path> visitor);
-    //
     //         ii. 表示从start代表的节点开始遍历文件系统；
-    //
     //         iii. 其中visitor是遍历过程中的行为控制器；
-    //
     //    4) 遍历行为控制器——FileVisitor：
-    //
     //         i. 它是一个接口，里面定义了4个方法用来指定当你访问一个节点之前、之中、之后、失败时应该采取什么行动；
-    //
     //         ii. 这个设计非常优雅和科学，毕竟你在遍历文件系统时想要做的事情无外乎发生在这几个时间点上，Java全部为你考虑好了，并搭好了框架！多么的贴心！！
     public boolean patch(File oldFile, File newFile) throws Exception {
-        Logger.d("ApkDecoder  start patch");
+        Logger.d("111 ApkDecoder  start patch");
         writeToLogFile(oldFile, newFile);
         // Q&A 为什么针对manifest 单独处理？而不是下面的walkFileTree 的方式？因为manifest只有一个？
         // 为什么manifest是直接从两个apk中解析比较？而其他的是先解压后进行比较？

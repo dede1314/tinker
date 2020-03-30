@@ -42,7 +42,7 @@ public class TinkerManifestTask extends DefaultTask {
 
     @TaskAction
     def updateManifest() {
-        println("here is TinkerManifestTask ")
+        println("111 here is TinkerManifestTask ")
         // Parse the AndroidManifest.xml
         String tinkerValue = project.extensions.tinkerPatch.buildConfig.tinkerId
         if (tinkerValue == null || tinkerValue.isEmpty()) {
