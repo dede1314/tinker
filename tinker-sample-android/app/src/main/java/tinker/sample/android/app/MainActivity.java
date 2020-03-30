@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, "i am on onCreate classloader:" + MainActivity.class.getClassLoader().toString());
         //test resource change
 //        Log.e(TAG, "i am on onCreate string:  123 " + getResources().getString(R.string.test_resource));
-        Log.e(TAG, "i am on patch onCreate, Real test patch hahahaah 0330 ");
+        Log.e(TAG, "i am on patch onCreate,  0330 11:03   real patch");
 
         mTvMessage = findViewById(R.id.tv_message);
 

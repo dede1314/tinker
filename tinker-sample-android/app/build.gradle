@@ -20,7 +20,6 @@ dependencies {
         implementation "com.android.support:multidex:1.0.1"
         api project(':tinker-android:tinker-android-loader')
         api project(':tinker-android:tinker-android-lib')
-//        api("com.tencent.tinker:tinker-android-lib:${TINKER_VERSION}") { changing = true }
 
 
         //use to test multiDex
@@ -163,11 +162,11 @@ ext {
 
     //for normal build
     //old apk file to build patch apk
-    tinkerOldApkPath = "${bakPath}/app-debug-0330-10-34-23.apk"
+    tinkerOldApkPath = "${bakPath}/app-debug-0330-11-01-34.apk"
     //proguard mapping file to build patch apk
     tinkerApplyMappingPath = "${bakPath}/app-debug-1018-17-32-47-mapping.txt"
     //resource R.txt to build patch apk, must input if there is resource changed
-    tinkerApplyResourcePath = "${bakPath}/app-debug-0330-10-34-23-R.txt"
+    tinkerApplyResourcePath = "${bakPath}/app-debug-0330-11-01-34-R.txt"
 
     //only use for build all flavor, if not, just ignore this field
     tinkerBuildFlavorDirectory = "${bakPath}/app-1018-17-32-47"
