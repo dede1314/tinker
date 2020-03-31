@@ -73,6 +73,7 @@ public class ResDiffDecoder extends BaseDecoder {
 
     public ResDiffDecoder(Configuration config, String metaPath, String logPath) throws IOException {
         super(config);
+        System.out.println("ResDiffDecoder() called with: config = [" + config + "], metaPath = [" + metaPath + "], logPath = [" + logPath + "]");
 
         if (metaPath != null) {
             metaWriter = new InfoWriter(config, config.mTempResultDir + File.separator + metaPath);
@@ -162,6 +163,7 @@ public class ResDiffDecoder extends BaseDecoder {
 
     @Override
     public boolean patch(File oldFile, File newFile) throws IOException, TinkerPatchException {
+        System.out.println("ResDiffDecoder patch");
         String name = getRelativePathStringToNewFile(newFile);
 
         //actually, it won't go below

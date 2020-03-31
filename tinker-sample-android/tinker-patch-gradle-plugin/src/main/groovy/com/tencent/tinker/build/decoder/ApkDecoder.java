@@ -41,10 +41,10 @@ public class ApkDecoder extends BaseDecoder {
     private final File mOldApkDir;
     private final File mNewApkDir;
 
-    private final ManifestDecoder      manifestDecoder;
+    private final ManifestDecoder manifestDecoder;
     private final UniqueDexDiffDecoder dexPatchDecoder;
-    private final BsDiffDecoder        soPatchDecoder;
-    private final ResDiffDecoder       resPatchDecoder;
+    private final BsDiffDecoder soPatchDecoder;
+    private final ResDiffDecoder resPatchDecoder;
     private final ArkHotDecoder arkHotDecoder;
 
     /**
@@ -74,7 +74,7 @@ public class ApkDecoder extends BaseDecoder {
         String apkName = file.getName();
         if (!apkName.endsWith(TypedValue.FILE_APK)) {
             throw new TinkerPatchException(
-                String.format("input apk file path must end with .apk, yours %s\n", apkName)
+                    String.format("input apk file path must end with .apk, yours %s\n", apkName)
             );
         }
 
@@ -95,7 +95,7 @@ public class ApkDecoder extends BaseDecoder {
     private void writeToLogFile(File oldFile, File newFile) throws IOException {
         String line1 = "old apk: " + oldFile.getName() + ", size=" + FileOperation.getFileSizes(oldFile) + ", md5=" + MD5.getMD5(oldFile);
         String line2 = "new apk: " + newFile.getName() + ", size=" + FileOperation.getFileSizes(newFile) + ", md5=" + MD5.getMD5(newFile);
-        Logger.d("111 Analyze old and new apk files1:");
+        Logger.d("111 Analyze old and new apk files:");
         Logger.d(line1);
         Logger.d(line2);
         Logger.d("");
@@ -135,7 +135,7 @@ public class ApkDecoder extends BaseDecoder {
         for (File duplicateRes : resDuplicateFiles) {
             // resPatchDecoder.patch(duplicateRes, null);
             Logger.e("Warning: res file %s is also match at dex or library pattern, "
-                + "we treat it as unchanged in the new resource_out.zip", getRelativePathStringToOldFile(duplicateRes));
+                    + "we treat it as unchanged in the new resource_out.zip", getRelativePathStringToOldFile(duplicateRes));
         }
 
         soPatchDecoder.onAllPatchesEnd();
@@ -158,12 +158,12 @@ public class ApkDecoder extends BaseDecoder {
     }
 
     class ApkFilesVisitor extends SimpleFileVisitor<Path> {
-        BaseDecoder     dexDecoder;
-        BaseDecoder     soDecoder;
-        BaseDecoder     resDecoder;
-        Configuration   config;
-        Path            newApkPath;
-        Path            oldApkPath;
+        BaseDecoder dexDecoder;
+        BaseDecoder soDecoder;
+        BaseDecoder resDecoder;
+        Configuration config;
+        Path newApkPath;
+        Path oldApkPath;
 
         ApkFilesVisitor(Configuration config, Path newPath, Path oldPath, BaseDecoder dex, BaseDecoder so, BaseDecoder resDecoder) {
             this.config = config;
@@ -179,26 +179,25 @@ public class ApkDecoder extends BaseDecoder {
         // visitFile 正在访问一个文件时要干啥
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-            Logger.d(  "visitFile() called with: file = [" + file + "], attrs = [" + attrs + "]");
+//            Logger.d(  "visitFile() called with: file = [" + file + "], attrs = [" + attrs + "]");
             //Constructs a relative path between this path and a given path.
             Path relativePath = newApkPath.relativize(file);
 
             //Resolve the given path against this path.
             Path oldPath = oldApkPath.resolve(relativePath);
-            Logger.d(  "visitFile oldPath:"+oldPath);
+//            Logger.d(  "visitFile oldPath:"+oldPath);
             File oldFile = null;
             //is a new file?!
             if (oldPath.toFile().exists()) {
                 oldFile = oldPath.toFile();
             }
             String patternKey = relativePath.toString().replace("\\", "/");
-            Logger.d( "visitFile() called with: file = [" + file + "], attrs = [" + attrs + "]");
             if (Utils.checkFileInPattern(config.mDexFilePattern, patternKey)) {// 针对解压后的dex文件
                 //also treat duplicate file as unchanged
                 if (Utils.checkFileInPattern(config.mResFilePattern, patternKey) && oldFile != null) {
                     resDuplicateFiles.add(oldFile);
                 }
-
+                System.out.println("visitFile mDexFilePattern patternKey:" + patternKey + " relativePath:" + relativePath + " oldFile:" + oldFile);
                 try {
                     dexDecoder.patch(oldFile, file.toFile());
                 } catch (Exception e) {
@@ -211,6 +210,7 @@ public class ApkDecoder extends BaseDecoder {
                 if (Utils.checkFileInPattern(config.mResFilePattern, patternKey) && oldFile != null) {
                     resDuplicateFiles.add(oldFile);
                 }
+                System.out.println("visitFile mSoFilePattern patternKey:" + patternKey + " relativePath:" + relativePath + " oldFile:" + oldFile);
                 try {
                     soDecoder.patch(oldFile, file.toFile());
                 } catch (Exception e) {
@@ -220,6 +220,7 @@ public class ApkDecoder extends BaseDecoder {
             }
             // Q&A 此处有对manifest进行处理，为什么要处理两次
             if (Utils.checkFileInPattern(config.mResFilePattern, patternKey)) {
+                System.out.println("visitFile mResFilePattern patternKey:" + patternKey + " relativePath:" + relativePath + " oldFile:" + oldFile);
                 try {
                     resDecoder.patch(oldFile, file.toFile());
                 } catch (Exception e) {

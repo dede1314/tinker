@@ -60,7 +60,7 @@ public class SystemClassLoaderAdder {
     // install的做法就是，先获取BaseDexClassLoader的dexPathList对象，然后通过dexPathList的makeDexElements函数将我们要安装的dex转化成Element[]对象，
     // 最后将其和dexPathList的dexElements对象进行合并，就是新的Element[]对象，因为我们添加的dex都被放在dexElement数组的最前面，
     // 所以当通过findClass来查找这个类时，就是使用的我们最新的dex里面的类。
-    public static void installDexes(Application application, BaseDexClassLoader loader, File dexOptDir, List<File> files, boolean isProtectedApp)
+    public static void  installDexes(Application application, BaseDexClassLoader loader, File dexOptDir, List<File> files, boolean isProtectedApp)
         throws Throwable {
         Log.d(TAG, "installDexes() called with: application = [" + application + "], loader = [" + loader + "], dexOptDir = [" + dexOptDir + "], files = [" + files + "], isProtectedApp = [" + isProtectedApp + "]");
         Log.i(TAG, "installDexes dexOptDir: " + dexOptDir.getAbsolutePath() + ", dex size:" + files.size());

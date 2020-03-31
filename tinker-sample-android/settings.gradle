@@ -1,7 +1,7 @@
 include ':app'
 include ':plugin'
 include ':tinker-commons'
-include ':tinker-patch-lib'
+//include ':tinker-patch-lib'
 include ':tinker-patch-gradle-plugin'
 include ':tinker-android:tinker-android-loader'
 include ':tinker-android:tinker-android-lib'

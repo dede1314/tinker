@@ -33,6 +33,7 @@ import java.nio.ByteOrder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.AbstractList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -984,5 +985,22 @@ public final class Dex {
                ? Collections.<ClassDef>emptySet().iterator()
                : new ClassDefIterator();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Dex{" +
+                "tableOfContents=" + tableOfContents +
+                ", strings=" + strings +
+                ", typeIds=" + typeIds +
+                ", typeNames=" + typeNames +
+                ", protoIds=" + protoIds +
+                ", fieldIds=" + fieldIds +
+                ", methodIds=" + methodIds +
+                ", classDefs=" + classDefs +
+                ", data=" + data +
+                ", nextSectionStart=" + nextSectionStart +
+                ", signature=" + Arrays.toString(signature) +
+                '}';
     }
 }

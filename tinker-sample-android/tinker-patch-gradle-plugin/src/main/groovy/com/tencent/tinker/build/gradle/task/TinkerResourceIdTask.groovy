@@ -362,7 +362,7 @@ public class TinkerResourceIdTask extends DefaultTask {
         project.extensions.tinkerPatch.buildConfig.usingResourceMapping = true
         Map<RDotTxtEntry.RType, Set<RDotTxtEntry>> rTypeResourceMap = PatchUtil.readRTxt(resourceMappingFile)
 
-       println("111here is applyResourceId")
+       println("111 here is applyResourceId")
         if (!isAapt2EnabledCompat(project)) {
             println("111 here is applyResourceId 1 aapt2 false")
             String idsXml = resDir + "/values/ids.xml";

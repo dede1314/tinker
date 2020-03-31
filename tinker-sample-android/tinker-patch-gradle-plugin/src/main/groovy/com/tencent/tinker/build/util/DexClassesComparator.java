@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -166,6 +167,7 @@ public final class DexClassesComparator {
     }
 
     public void startCheck(DexGroup oldDexGroup, DexGroup newDexGroup) {
+        System.out.println("startCheck() called with: oldDexGroup = [" + oldDexGroup + "], newDexGroup = [" + newDexGroup + "]");
         // Init assist structures.
         addedClassInfoList.clear();
         deletedClassInfoList.clear();
@@ -179,9 +181,11 @@ public final class DexClassesComparator {
         // Map classDesc and typeIndex to classInfo
         // and collect typeIndex of classes to check in oldDexes.
         for (Dex oldDex : oldDexGroup.dexes) {
+            System.out.println("startCheck   oldDex:"+oldDex);
             int classDefIndex = 0;
             for (ClassDef oldClassDef : oldDex.classDefs()) {
                 String desc = oldDex.typeNames().get(oldClassDef.typeIndex);
+//                System.out.println("startCheck oldClassDef  desc:"+desc);
                 if (Utils.isStringMatchesPatterns(desc, patternsOfClassDescToCheck)) {
                     if (!oldDescriptorOfClassesToCheck.add(desc)) {
                         throw new IllegalStateException(
@@ -193,6 +197,7 @@ public final class DexClassesComparator {
                     }
                 }
                 DexClassInfo classInfo = new DexClassInfo(desc, classDefIndex, oldClassDef, oldDex);
+//                System.out.println("startCheck oldDexGroup  classInfo:"+classInfo);
                 ++classDefIndex;
                 oldClassDescriptorToClassInfoMap.put(desc, classInfo);
             }
@@ -201,8 +206,10 @@ public final class DexClassesComparator {
         // Map classDesc and typeIndex to classInfo
         // and collect typeIndex of classes to check in newDexes.
         for (Dex newDex : newDexGroup.dexes) {
+            System.out.println("startCheck   newDexGroup:"+newDex);
             int classDefIndex = 0;
             for (ClassDef newClassDef : newDex.classDefs()) {
+//                System.out.println("startCheck newDexGroup newClassDef:"+newClassDef);
                 String desc = newDex.typeNames().get(newClassDef.typeIndex);
                 if (Utils.isStringMatchesPatterns(desc, patternsOfClassDescToCheck)) {
                     if (!newDescriptorOfClassesToCheck.add(desc)) {
@@ -215,6 +222,7 @@ public final class DexClassesComparator {
                     }
                 }
                 DexClassInfo classInfo = new DexClassInfo(desc, classDefIndex, newClassDef, newDex);
+//                System.out.println("startCheck newDexGroup  classInfo:"+classInfo);
                 ++classDefIndex;
                 newClassDescriptorToClassInfoMap.put(desc, classInfo);
             }
@@ -224,6 +232,7 @@ public final class DexClassesComparator {
         deletedClassDescs.removeAll(newDescriptorOfClassesToCheck);
 
         for (String desc : deletedClassDescs) {
+//            System.out.println("startCheck  deletedClassDescs desc:"+desc);
             // These classes are deleted as we expect to, so we remove them
             // from result.
             if (Utils.isStringMatchesPatterns(desc, patternsOfIgnoredRemovedClassDesc)) {
@@ -238,6 +247,7 @@ public final class DexClassesComparator {
         addedClassDescs.removeAll(oldDescriptorOfClassesToCheck);
 
         for (String desc : addedClassDescs) {
+//            System.out.println("startCheck  addedClassDescs desc:"+desc);
             if (Utils.isStringMatchesPatterns(desc, patternsOfIgnoredRemovedClassDesc)) {
                 logger.i(TAG, "Ignored added class: %s", desc);
             } else {
@@ -250,8 +260,10 @@ public final class DexClassesComparator {
         mayBeChangedClassDescs.retainAll(newDescriptorOfClassesToCheck);
 
         for (String desc : mayBeChangedClassDescs) {
+//            System.out.println("startCheck  mayBeChangedClassDescs desc:"+desc);
             DexClassInfo oldClassInfo = oldClassDescriptorToClassInfoMap.get(desc);
             DexClassInfo newClassInfo = newClassDescriptorToClassInfoMap.get(desc);
+//            System.out.println("oldClassInfo:"+oldClassInfo+" newClassInfo:"+newClassInfo);
             switch (compareMode) {
                 case COMPARE_MODE_NORMAL: {
                     if (!isSameClass(
@@ -302,6 +314,7 @@ public final class DexClassesComparator {
             ClassDef oldClassDef,
             ClassDef newClassDef
     ) {
+        System.out.println("isClassChangeAffectedToReferrer() called with: oldDex = [" + oldDex + "], newDex = [" + newDex + "], oldClassDef = [" + oldClassDef + "], newClassDef = [" + newClassDef + "]");
         boolean result = false;
 
         String classDesc = oldDex.typeNames().get(oldClassDef.typeIndex);
@@ -1551,6 +1564,13 @@ public final class DexClassesComparator {
                 }
             }
             return new HashSet<>(classDescToInfoMap.values());
+        }
+
+        @Override
+        public String toString() {
+            return "DexGroup{" +
+                    "dexes=" + Arrays.toString(dexes) +
+                    '}';
         }
     }
 }

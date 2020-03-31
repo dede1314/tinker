@@ -85,6 +85,7 @@ public class DexDiffDecoder extends BaseDecoder {
 
     public DexDiffDecoder(Configuration config, String metaPath, String logPath) throws IOException {
         super(config);
+        System.out.println( "DexDiffDecoder() called with: metaPath = [" + metaPath + "], logPath = [" + logPath + "]");
 
         if (metaPath != null) {
             metaWriter = new InfoWriter(config, config.mTempResultDir + File.separator + metaPath);
@@ -238,6 +239,7 @@ public class DexDiffDecoder extends BaseDecoder {
         collector.setLogger(dexPatcherLoggerBridge);
         collector.setIncludeRefererToRefererAffectedClasses(true);
 
+        System.out.println("oldDexGroup:"+oldDexGroup+" newDexGroup:"+newDexGroup);
         Set<DexClassInfo> classInfosInChangedClassesDex = collector.doCollect(oldDexGroup, newDexGroup);
 
         Set<Dex> owners = new HashSet<>();
@@ -256,10 +258,12 @@ public class DexDiffDecoder extends BaseDecoder {
         StringBuilder metaBuilder = new StringBuilder();
         int changedDexId = 1;
         for (Dex dex : owners) {
+            System.out.println("generateChangedClassesDexFile dex:"+dex);
             Set<String> descOfChangedClassesInCurrDex = ownerToDescOfChangedClassesMap.get(dex);
             DexFile dexFile = new DexBackedDexFile(org.jf.dexlib2.Opcodes.forApi(20), dex.getBytes());
             boolean isCurrentDexHasChangedClass = false;
             for (org.jf.dexlib2.iface.ClassDef classDef : dexFile.getClasses()) {
+                System.out.println("generateChangedClassesDexFile classDef:"+classDef.getType());
                 if (descOfChangedClassesInCurrDex.contains(classDef.getType())) {
                     isCurrentDexHasChangedClass = true;
                     break;
@@ -282,6 +286,7 @@ public class DexDiffDecoder extends BaseDecoder {
 
                 List<BuilderField> builderFields = new ArrayList<>();
                 for (Field field : classDef.getFields()) {
+                    System.out.println("generateChangedClassesDexFile classDef.getFields()):"+field);
                     final BuilderField builderField = dexBuilder.internField(
                             field.getDefiningClass(),
                             field.getName(),
@@ -295,6 +300,7 @@ public class DexDiffDecoder extends BaseDecoder {
                 List<BuilderMethod> builderMethods = new ArrayList<>();
 
                 for (Method method : classDef.getMethods()) {
+                    System.out.println("generateChangedClassesDexFile classDef.getMethods()):"+method);
                     MethodImplementation methodImpl = method.getImplementation();
                     if (methodImpl != null) {
                         methodImpl = new BuilderMutableMethodImplementation(dexBuilder, methodImpl);
@@ -344,6 +350,7 @@ public class DexDiffDecoder extends BaseDecoder {
     }
 
     private void appendMetaLine(StringBuilder sb, Object... vals) {
+        System.out.println( "appendMetaLine() called with: sb = [" + sb + "], vals = [" + vals + "]");
         if (vals == null || vals.length == 0) {
             return;
         }
@@ -442,8 +449,10 @@ public class DexDiffDecoder extends BaseDecoder {
         for (AbstractMap.SimpleEntry<File, File> oldAndNewDexFilePair : oldAndNewDexFilePairList) {
             File oldFile = oldAndNewDexFilePair.getKey();
             File newFile = oldAndNewDexFilePair.getValue();
+            System.out.println("generatePatchedDexInfoFile oldFile:"+oldFile+" newFile:"+newFile);
             final String dexName = getRelativeDexName(oldFile, newFile);
             RelatedInfo relatedInfo = dexNameToRelatedInfoMap.get(dexName);
+            System.out.println("generatePatchedDexInfoFile relatedInfo:"+relatedInfo);
             if (!relatedInfo.oldMd5.equals(relatedInfo.newMd5)) {
                 diffDexPairAndFillRelatedInfo(oldFile, newFile, relatedInfo);
             } else {
@@ -479,6 +488,7 @@ public class DexDiffDecoder extends BaseDecoder {
             );
 
             dexPatchGen.executeAndSaveTo(dexDiffOut);
+            System.out.println("diffDexPairAndFillRelatedInfo executeAndSaveTo dexDiffOut:"+dexDiffOut);
         } catch (Exception e) {
             throw new TinkerPatchException(e);
         }
@@ -510,6 +520,7 @@ public class DexDiffDecoder extends BaseDecoder {
             relatedInfo.newOrFullPatchedFile = tempFullPatchedDexFile;
             relatedInfo.newOrFullPatchedMd5 = MD5.getMD5(tempFullPatchedDexFile);
             relatedInfo.newOrFullPatchedCRC = FileOperation.getFileCrc32(tempFullPatchedDexFile);
+            System.out.println("diffDexPairAndFillRelatedInfo relatedInfo:"+relatedInfo);
         } catch (Exception e) {
             e.printStackTrace();
             throw new TinkerPatchException(
@@ -604,6 +615,7 @@ public class DexDiffDecoder extends BaseDecoder {
         deletedClassDescs.removeAll(newClassDescs);
 
         for (String addedClassDesc : addedClassDescs) {
+            System.out.println( "collectAddedOrDeletedClasses() addedClassDesc:"+addedClassDesc);
             if (addedClassDescToDexNameMap.containsKey(addedClassDesc)) {
                 throw new TinkerPatchException(
                         String.format(
@@ -619,6 +631,7 @@ public class DexDiffDecoder extends BaseDecoder {
         }
 
         for (String deletedClassDesc : deletedClassDescs) {
+            System.out.println( "collectAddedOrDeletedClasses() deletedClassDesc:"+deletedClassDesc);
             if (deletedClassDescToDexNameMap.containsKey(deletedClassDesc)) {
                 throw new TinkerPatchException(
                         String.format(
@@ -828,6 +841,19 @@ public class DexDiffDecoder extends BaseDecoder {
          *  CRC32 of new dex, if new dex is marked to be copied directly.
          */
         long newOrFullPatchedCRC = 0;
+
+        @Override
+        public String toString() {
+            return "RelatedInfo{" +
+                    "newOrFullPatchedFile=" + newOrFullPatchedFile +
+                    ", dexDiffFile=" + dexDiffFile +
+                    ", oldMd5='" + oldMd5 + '\'' +
+                    ", newMd5='" + newMd5 + '\'' +
+                    ", dexDiffMd5='" + dexDiffMd5 + '\'' +
+                    ", newOrFullPatchedMd5='" + newOrFullPatchedMd5 + '\'' +
+                    ", newOrFullPatchedCRC=" + newOrFullPatchedCRC +
+                    '}';
+        }
     }
 
     private final class DexPatcherLoggerBridge implements IDexPatcherLogger {
