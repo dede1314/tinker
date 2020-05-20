@@ -34,6 +34,8 @@ import dalvik.system.DelegateLastClassLoader;
  * Created by tangyinsheng on 2019-10-31.
  */
 final class NewClassLoaderInjector {
+    // N 以上的直接替换classloader,运行时替换PathClassLoader方案
+    // https://mp.weixin.qq.com/s/h9BHnEkV0RMx0yIW1wpw9g
     public static ClassLoader inject(Application app, ClassLoader oldClassLoader, List<File> patchedDexes) throws Throwable {
         final String[] patchedDexPaths = new String[patchedDexes.size()];
         for (int i = 0; i < patchedDexPaths.length; ++i) {
@@ -122,6 +124,7 @@ final class NewClassLoaderInjector {
     // 层层反射将mClassLoader的引用替换为上面创建出来的AndroidNClassLoader对象.
     // 同时将Thread中持有的ClassLoader也同步替换为AndroidNClassLoader.
     // 至此PathClassLoader的修改和替换都已经完成了,接下来就可以正常得加载补丁dex了.
+    // https://mp.weixin.qq.com/s/h9BHnEkV0RMx0yIW1wpw9g    运行时替换PathClassLoader方案
     private static void doInject(Application app, ClassLoader classLoader) throws Throwable {
         Thread.currentThread().setContextClassLoader(classLoader);
 
