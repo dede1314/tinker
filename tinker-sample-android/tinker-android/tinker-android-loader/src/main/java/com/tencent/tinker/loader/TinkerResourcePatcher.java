@@ -187,6 +187,14 @@ class TinkerResourcePatcher {
      * @param externalResourceFile
      * @throws Throwable
      */
+    // inker的资源更新采用的InstantRun的资源补丁方式，全量替换资源。由于App加载资源是依赖Context.getResources()方法返回的Resources对象，
+    // Resources 内部包装了 AssetManager，最终由 AssetManager 从 apk 文件中加载资源。我们要做的就是新建一个AssetManager()，
+    // hook掉其中的addAssetPath()方法，将我们的资源补丁目录传递进去，然后循环替换Resources对象中的AssetManager对象，达到资源替换的目的。
+
+    // 简单描述为反射调用新建的AssetManager的addAssetPath将路径穿进去，然后主动调用ensureStringBlocks方法确保资源的字符串索引创建出来；
+    // 然后循环遍历持有Resources对象的references集合，依次替换其中的AssetManager为新建的AssetManager，
+    // 最后调用Resources.updateConfiguration将Resources对象的配置信息更新到最新状态，完成整个资源替换的过程。
+    // http://w4lle.com/2016/12/16/tinker/
     public static void monkeyPatchExistingResources(Context context, String externalResourceFile) throws Throwable {
         Log.d(TAG, "monkeyPatchExistingResources() called with: context = [" + context + "], externalResourceFile = [" + externalResourceFile + "]");
         if (externalResourceFile == null) {

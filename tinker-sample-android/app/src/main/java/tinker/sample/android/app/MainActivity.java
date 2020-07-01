@@ -54,11 +54,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         boolean isARKHotRunning = ShareTinkerInternals.isArkHotRuning();
-        Log.e(TAG, "ARK HOT Running status = " + isARKHotRunning);
         Log.e(TAG, "i am on onCreate classloader:" + MainActivity.class.getClassLoader().toString());
         //test resource change
 //        Log.e(TAG, "i am on onCreate string:  123 " + getResources().getString(R.string.test_resource));
-        Log.e(TAG, "i am on patch onCreate,  this is for test patch ");
+        Log.e(TAG, "this is for patch log  ");
 
         mTvMessage = findViewById(R.id.tv_message);
 

@@ -215,6 +215,7 @@ public class TinkerDexLoader {
      *
      * @return boolean
      */
+    // 校验dex_meta.xml文件中记载的dex补丁文件和经过opt优化过的文件是否存在
     public static boolean checkComplete(String directory, ShareSecurityCheck securityCheck, String oatDir, Intent intentResult) {
         Log.d(TAG, "checkComplete() called with: directory = [" + directory + "], securityCheck = [" + securityCheck + "], oatDir = [" + oatDir + "], intentResult = [" + intentResult + "]");
         String meta = securityCheck.getMetaContentMap().get(DEX_MEAT_FILE);

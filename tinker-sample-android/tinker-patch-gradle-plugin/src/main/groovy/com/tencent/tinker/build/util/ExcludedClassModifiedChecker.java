@@ -69,7 +69,7 @@ public final class ExcludedClassModifiedChecker {
     }
 
     public void checkIfExcludedClassWasModifiedInNewDex(File oldFile, File newFile) throws IOException, TinkerPatchException {
-        Logger.e("checkIfExcludedClassWasModifiedInNewDex");
+        Logger.e("checkIfExcludedClassWasModifiedInNewDex oldFile:"+oldFile+" newFile:"+newFile);
         if (oldFile == null && newFile == null) {
             throw new TinkerPatchException("both oldFile and newFile are null.");
         }

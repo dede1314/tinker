@@ -115,6 +115,8 @@ public abstract class TinkerApplication extends Application {
         try {
             // Q&A 4 看注释意思是：通过反射创建代理，所以不需要访问primary dex。那么问题来来，如果不需要去primary dex，那是在哪个dex中？
             // 如果不用反射，还可以使用什么办法？
+            // 避免出现Class ref in pre-verified class问题，通过反射将tinker和applicationlike类解耦开。反射最直接的目的也是为了隔离开这两个类
+            // 通过反射，将Tinker组建和App隔离开，并且先后顺序是先Tinker后App，这样可以防止App中的代码提前加载，确保App中所有的代码都可以具有被热修复的能力包括ApplicationLike。
             // Use reflection to create the delegate so it doesn't need to go into the primary dex.
             // And we can also patch it
             final Class<?> delegateClass = Class.forName(delegateClassName, false, mCurrentClassLoader);

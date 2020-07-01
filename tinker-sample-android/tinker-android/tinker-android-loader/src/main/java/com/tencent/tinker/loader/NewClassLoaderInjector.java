@@ -129,6 +129,7 @@ final class NewClassLoaderInjector {
     // 层层反射将mClassLoader的引用替换为上面创建出来的AndroidNClassLoader对象.
     // 同时将Thread中持有的ClassLoader也同步替换为AndroidNClassLoader.
     // 至此PathClassLoader的修改和替换都已经完成了,接下来就可以正常得加载补丁dex了.
+    // android N 替换为自己的classloader,而引用原来classloader的地方有loadedApk,resource,mDrawableInflater这三个地方。所以都需要反射替换。
     private static void doInject(Application app, ClassLoader classLoader) throws Throwable {
         Log.d(TAG, "doInject() called with: app = [" + app + "], classLoader = [" + classLoader + "]");
         Thread.currentThread().setContextClassLoader(classLoader);

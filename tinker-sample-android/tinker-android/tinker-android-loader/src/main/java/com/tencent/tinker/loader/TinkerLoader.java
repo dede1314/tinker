@@ -67,7 +67,6 @@ public class TinkerLoader extends AbstractTinkerLoader {
 
     // tinkerFlag是否开启，否则不加载
     //tinker目录是否生成，没有则表示没有生成全量的dex，不需要重新加载
-    //tinker目录是否生成，没有则表示没有生成全量的dex，不需要重新加载
     //tinker/patch.info是否存在，否则不加载
     //读取patch.info，读取失败则不加载
     //比较patchInfo的新旧版本，都为空则不加载
@@ -352,6 +351,7 @@ public class TinkerLoader extends AbstractTinkerLoader {
         }
 
         //now we can load patch jar
+        // 调用loadTinkerJars加载补丁dex
         if (!isArkHotRuning && isEnabledForDex) {
             // 在收到补丁时已经完成了dex2oat的操作，这次直接load
             boolean loadTinkerJars = TinkerDexLoader.loadTinkerJars(app, patchVersionDirectory, oatDex, resultIntent, isSystemOTA, isProtectedApp);

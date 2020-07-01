@@ -129,6 +129,7 @@ public class DexDiffDecoder extends BaseDecoder {
     @SuppressWarnings("NewApi")
     @Override
     public boolean patch(final File oldFile, final File newFile) throws IOException, TinkerPatchException {
+        Logger.d("patch() called with: oldFile = [" + oldFile + "], newFile = [" + newFile + "]");
         final String dexName = getRelativeDexName(oldFile, newFile);
 
         // first of all, we should check input files if excluded classes were modified.
